@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{1E9C62F6-8426-441A-AF00-659C33E04BC2}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.32819.101</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PS2PEDLL_EXPORTS;__WIN32__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <StructMemberAlignment>16Bytes</StructMemberAlignment>
+      <PrecompiledHeaderOutputFile>.\Debug/PS2PEDLL.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Debug/PS2PE.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ModuleDefinitionFile>.\ps2pe.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/PS2PE.pdb</ProgramDatabaseFile>
+      <ImportLibrary>.\Debug/PS2PE.lib</ImportLibrary>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/PS2PEDLL.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0416</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PS2PEDLL_EXPORTS;__WIN32__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <StructMemberAlignment>16Bytes</StructMemberAlignment>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/PS2PEDLL.pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Release/PS2PE.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ModuleDefinitionFile>.\ps2pe.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>.\Release/PS2PE.pdb</ProgramDatabaseFile>
+      <ImportLibrary>.\Release/PS2PE.lib</ImportLibrary>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/PS2PEDLL.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0416</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\Elf.cpp" />
+    <ClCompile Include="Common\EmuBios.cpp" />
+    <ClCompile Include="Common\EmuDepend.cpp" />
+    <ClCompile Include="Common\EmuDisassembly.cpp" />
+    <ClCompile Include="Common\EmuDma.cpp" />
+    <ClCompile Include="Common\EmuExecute.cpp" />
+    <ClCompile Include="Common\EmuFifo.cpp" />
+    <ClCompile Include="Common\EmuGif.cpp" />
+    <ClCompile Include="Common\EmuGS.cpp" />
+    <ClCompile Include="Common\EmuInstructions.cpp" />
+    <ClCompile Include="Common\EmuIntc.cpp" />
+    <ClCompile Include="Common\EmuIpu.cpp" />
+    <ClCompile Include="Common\EmuMain.cpp" />
+    <ClCompile Include="Common\EmuMemory.cpp" />
+    <ClCompile Include="Common\EmuPAD.cpp" />
+    <ClCompile Include="Common\EmuRecCOP0.cpp" />
+    <ClCompile Include="Common\EmuRecCOP1.cpp" />
+    <ClCompile Include="Common\EmuRecCore.cpp" />
+    <ClCompile Include="Common\EmuRecGeneric.cpp" />
+    <ClCompile Include="Common\EmuRecMMI.cpp" />
+    <ClCompile Include="Common\EmuRecompiler.cpp" />
+    <ClCompile Include="Common\EmuRecRegimm.cpp" />
+    <ClCompile Include="Common\EmuRecSpecial.cpp" />
+    <ClCompile Include="Common\EmuRecX86.cpp" />
+    <ClCompile Include="Common\EmuSema.cpp" />
+    <ClCompile Include="Common\EmuSif.cpp" />
+    <ClCompile Include="Common\EmuThread.cpp" />
+    <ClCompile Include="Common\EmuTimer.cpp" />
+    <ClCompile Include="Common\EmuVif.cpp" />
+    <ClCompile Include="Common\EmuVU.cpp" />
+    <ClCompile Include="PS2PEDLL.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\EmuCop0.cpp" />
+    <ClCompile Include="Common\EmuCop1.cpp" />
+    <ClCompile Include="Common\EmuCop2.cpp" />
+    <ClCompile Include="Common\EmuCore.cpp" />
+    <ClCompile Include="Common\EmuMmi.cpp" />
+    <ClCompile Include="Common\EmuRegimm.cpp" />
+    <ClCompile Include="Common\EmuSpecial.cpp" />
+    <None Include="ps2pe.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ps2pe.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\Elf.h" />
+    <ClInclude Include="Common\EmuBios.h" />
+    <ClInclude Include="Common\EmuDisassembly.h" />
+    <ClInclude Include="Common\EmuDma.h" />
+    <ClInclude Include="Common\EmuExecute.h" />
+    <ClInclude Include="Common\EmuFifo.h" />
+    <ClInclude Include="Common\EmuGif.h" />
+    <ClInclude Include="Common\EmuGS.h" />
+    <ClInclude Include="Common\EmuIntc.h" />
+    <ClInclude Include="Common\EmuIpu.h" />
+    <ClInclude Include="Common\EmuMain.h" />
+    <ClInclude Include="Common\EmuMemory.h" />
+    <ClInclude Include="Common\EmuPAD.h" />
+    <ClInclude Include="Common\EmuPS2Core.h" />
+    <ClInclude Include="Common\EmuRecompiler.h" />
+    <ClInclude Include="Common\EmuRecX86.h" />
+    <ClInclude Include="Common\EmuSema.h" />
+    <ClInclude Include="Common\EmuSif.h" />
+    <ClInclude Include="Common\EmuThread.h" />
+    <ClInclude Include="Common\EmuTimer.h" />
+    <ClInclude Include="Common\EmuVif.h" />
+    <ClInclude Include="Common\EmuVU.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="StdAfx.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

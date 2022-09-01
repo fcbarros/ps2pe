@@ -1,0 +1,54 @@
+; 
+
+LIBRARY      "ps2pe"
+DESCRIPTION  'PS2PE dll'
+
+EXPORTS
+    ; Explicit exports can go here
+	EmuInitialize					@2
+	EmuRelease						@3
+	EmuReset						@4
+	EmuSetBiosFile					@5
+	EmuLoad							@6
+	EmuInstructionIndex				@7
+	EmuAddBreakPoint				@8
+	EmuRemoveBreakPoint				@9
+	EmuIsBreakPoint					@10
+	EmuLog							@11
+	EmuConsole						@12
+	EmuSetConsoleCallback			@13
+	EmuGetClock						@14
+	EmuRun							@15
+	EmuExecute						@16
+	EmuStepOver						@17
+	EmuStepInto						@18
+	EmuGetRegs						@19
+	EmuGetTotalInstructions			@20
+	EmuGetInstructionsStats			@21
+	EmuGetRunningStats				@22
+	EmuGetLoadedStats				@23
+	EmuSetByte						@24
+	EmuSetShort						@25
+	EmuSetWord						@26
+	EmuSetDWord						@27
+	EmuGetByte						@28
+	EmuGetShort						@29
+	EmuGetWord						@30
+	EmuGetDWord						@31
+	EmuAddInstructionBreakpoint		@32
+	EmuRemoveInstructionBreakpoint	@33
+	EmuIsInstructionBreakpoint		@34
+	EmuGetInstructionInfo			@35
+	EmuFindLabel					@36
+	EmuGetDisassemblySymbol			@37
+	EmuDisassembly					@38
+	EmuGetCOP0RegName				@39
+	EmuGetCOP1RegName				@40
+	EmuGetCOP2FPRegName				@41
+	EmuGetCOP2IPRegName				@42
+	EmuGetR5900RegName				@43
+	EmuPADConfig					@44
+	EmuGSInitWindow				    @45
+	EmuGSConfigure				    @46
+	EmuGSCloseWindow				@47
+	EmuConfig						@48

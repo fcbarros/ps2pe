@@ -1,0 +1,357 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About PS2PE"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "PS2PE Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2002",IDC_STATIC,39,40,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "by GoldFinger and Raptor",IDC_STATIC,43,24,119,8,
+                    SS_NOPREFIX
+END
+
+IDD_PSOPS2_DIALOG DIALOGEX 0, 0, 317, 249
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "PS2 Personal Emulator"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "Tab1",IDC_TAB_REGS,"SysTabControl32",TCS_RIGHT | 
+                    TCS_VERTICAL,7,49,96,70
+    CONTROL         "Tab2",IDC_TAB_DEBUG,"SysTabControl32",TCS_RIGHT | 
+                    TCS_VERTICAL,2,199,88,50
+    CONTROL         "List3",IDC_LIST_GPRS_1,"SysListView32",LVS_REPORT | 
+                    LVS_NOSCROLL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,203,6,23,23
+    CONTROL         "List3",IDC_LIST_COP0_1,"SysListView32",LVS_REPORT | 
+                    LVS_NOSCROLL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,203,33,27,21
+    CONTROL         "List3",IDC_LIST_GPRS_2,"SysListView32",LVS_REPORT | 
+                    LVS_NOSCROLL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,231,7,27,23
+    CONTROL         "List3",IDC_LIST_COP0_2,"SysListView32",LVS_REPORT | 
+                    LVS_NOSCROLL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,234,33,26,21
+    CONTROL         "List3",IDC_LIST_COP1_2,"SysListView32",LVS_REPORT | 
+                    LVS_NOSCROLL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,233,56,25,23
+    CONTROL         "List3",IDC_LIST_COP1_1,"SysListView32",LVS_REPORT | 
+                    LVS_NOSCROLL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,204,56,25,24
+    CONTROL         "List1",IDC_LIST_DISASSEMBLY,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | NOT WS_VISIBLE | 
+                    WS_BORDER | WS_TABSTOP,97,191,39,38
+    CONTROL         "List1",IDC_LIST_MEMORY,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | 
+                    LVS_NOSCROLL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    NOT WS_VISIBLE | WS_BORDER | WS_TABSTOP,143,192,44,35
+    LISTBOX         IDC_LIST_LOG,262,12,48,40,LBS_NOINTEGRALHEIGHT | NOT 
+                    WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Instructions Stats",IDC_STATIC_GROUP_INSTRUCTIONS_STATS,
+                    5,130,72,40,NOT WS_VISIBLE
+    GROUPBOX        "Loaded Instructions Stats",
+                    IDC_STATIC_GROUP_LOADED_STATS,74,128,72,40,NOT 
+                    WS_VISIBLE
+    GROUPBOX        "Running Instructions Stats",
+                    IDC_STATIC_GROUP_RUNNING_STATS,146,133,72,40,NOT 
+                    WS_VISIBLE
+    CONTROL         "List1",IDC_LIST_LOADED,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER | 
+                    WS_TABSTOP,83,137,39,32
+    CONTROL         "List1",IDC_LIST_INSTRUCTIONS,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER | 
+                    WS_TABSTOP,9,140,39,32
+    CONTROL         "List1",IDC_LIST_RUNNING,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER | 
+                    WS_TABSTOP,151,141,39,32
+    GROUPBOX        "",IDC_GROUP_GOTO,91,8,91,20
+    EDITTEXT        IDC_EDIT_GOTO,93,14,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Go to",IDC_BUTTON_GOTO,131,12,50,14
+    GROUPBOX        "",IDC_GROUP_FIND,103,30,91,20
+    EDITTEXT        IDC_EDIT_FIND,105,36,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Find",IDC_BUTTON_FIND,143,34,50,14
+    CONTROL         "List3",IDC_LIST_COP2_2,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER | 
+                    WS_TABSTOP,233,83,25,23
+    CONTROL         "List3",IDC_LIST_COP2_1,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER | 
+                    WS_TABSTOP,203,83,25,24
+    CONTROL         "List3",IDC_LIST_COP2_4,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER | 
+                    WS_TABSTOP,233,110,25,23
+    CONTROL         "List3",IDC_LIST_COP2_3,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | NOT WS_VISIBLE | WS_BORDER | 
+                    WS_TABSTOP,203,110,25,24
+    EDITTEXT        IDC_LIST_CONSOLE,223,163,76,48,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | NOT 
+                    WS_VISIBLE
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "PS2PE Windows Interface\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "PS2PE\0"
+            VALUE "LegalCopyright", "Copyright (C) 2002\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "PS2PE.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "PS2PE Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About PSOPS2..."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Portuguese (Brazil) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PTB)
+#ifdef _WIN32
+LANGUAGE LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_CONFIG DIALOG DISCARDABLE  0, 0, 242, 116
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "PS2PE Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,171,19,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,171,40,50,14
+    GROUPBOX        "GS Plugin",IDC_STATIC,7,7,145,34
+    COMBOBOX        IDC_COMBO1,13,18,132,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "PAD Plugin",IDC_STATIC,7,41,145,34
+    COMBOBOX        IDC_COMBO2,13,52,132,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "SPU Plugin",IDC_STATIC,7,75,145,34
+    COMBOBOX        IDC_COMBO3,13,86,132,30,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_CONFIG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 109
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\PSOPS2.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\PSOPS2.ico"
+IDI_PS2PE               ICON    DISCARDABLE     "res\\main.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_TOOLBAR_FILE TOOLBAR DISCARDABLE  16, 16
+BEGIN
+    BUTTON      ID_BUTTON_OPEN
+    BUTTON      ID_BUTTON_OPTIONS
+    BUTTON      ID_BUTTON_PAD_CONFIG
+    BUTTON      ID_BUTTON_CONFIG
+END
+
+IDR_TOOLBAR_DEBUG TOOLBAR DISCARDABLE  16, 16
+BEGIN
+    BUTTON      ID_BUTTON_RUN
+    BUTTON      ID_BUTTON_PAUSE
+    BUTTON      ID_BUTTON_STEP_OVER
+    BUTTON      ID_BUTTON_STEP_INTO
+    BUTTON      ID_BUTTON_RESTART
+    BUTTON      ID_BUTTON_EXEC
+    BUTTON      ID_BUTTON_BIOS
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_TOOLBAR_FILE        BITMAP  DISCARDABLE     "res\\toolbar1.bmp"
+IDR_TOOLBAR_DEBUG       BITMAP  DISCARDABLE     "res\\bmp00001.bmp"
+#endif    // Portuguese (Brazil) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\PSOPS2.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
