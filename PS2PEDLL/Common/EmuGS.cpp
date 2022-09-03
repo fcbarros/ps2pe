@@ -75,7 +75,7 @@ void Emu_GS_Init( void )
 
     if ( GSpreg )
     {
-//        GSpreg( EmuGsMemory );
+        GSpreg( EmuGsMemory );
     }
     GSinit( );
 
@@ -157,7 +157,6 @@ void Emu_GS_ProcessMessages( void )
         RDTSC( End );
 
         if ( ( End - StartV ) > TicksMinV )
-//        if ( ( COP0Regs.Count & 0x1FFFF ) > 100000 )
         {
             Emu_GS_Privileg_Reg->CSR |= 0x0000000C;
             Emu_Intc_Control_Reg->STAT_GS = 1;
@@ -202,15 +201,15 @@ void Emu_GS_ProcessMessages( void )
 void Emu_GS_WriteCallback( EMU_U32 Address )
 {
 #ifdef EMU_LOG
-   EmuLog( "GS: %.8X = %.16X\n", Address, EmuMemGetDWord( Address ) );
+   EmuLog( "GS: %.8X = %.16X\n", Address, EMemory.GetDWord( Address ) );
 #endif
-//    if ( GSwritePReg )
+    if ( GSwritePReg )
     {
-//        GSwritePReg( Address );
+        GSwritePReg( Address );
     }
-//    else
+    else
     {
-        GSwrite64( Address, EmuMemGetDWord( Address ) );
+        GSwrite64( Address, EMemory.GetDWord( Address ) );
     }
 }
 
@@ -223,7 +222,7 @@ void Emu_GS_ReadCallback( EMU_U32 Address, EMU_U08 * RealAddress )
 //
 void Emu_GS_Bios_GetIMR( void ) 
 { // 0x70
-    R5900Regs.V0.u64_00_63 = EmuMemGetDWord( 0x12001010 );
+    R5900Regs.V0.u64_00_63 = EMemory.GetDWord( 0x12001010 );
 }
 
 //
@@ -231,7 +230,7 @@ void Emu_GS_Bios_GetIMR( void )
 //
 void Emu_GS_Bios_PutIMR( void ) 
 { // 0x71
-    EmuMemSetDWord( 0x12001010, R5900Regs.A0.u64_00_63 );
+    EMemory.SetDWord( 0x12001010, R5900Regs.A0.u64_00_63 );
 }
 
 void Emu_GS_Bios_SetGsCrt( void ) 

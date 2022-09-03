@@ -13,28 +13,8 @@
 #include "EmuBios.h"
 
 
-EMU_U32        MemorySize;
-EMU_U32        MemoryMask;
-EMU_U32        PageSize;
-EMU_U32        PageMask;
-EMU_U32        NumberOfFrames;
-EMU_U32        NumberOfPages;
-EMU_U32        CurrentNumberOfPages;
-
-EMM_Data_Type       MainMemory;
-stTLB_Entry         * Table;
-
-EMM_MapType            * Mapping;
-EMM_WriteCallBackType	WriteCallBacks;
-EMM_ReadCallBackType	ReadCallBacks;
-
-EMU_U08                * RaftMemory;
-
-
-inline void EmuMemCallCallBackWrite( EMU_U32 Address );
-inline void EmuMemCallCallBackRead( EMU_U32 Address );
-
-void EmuMemInit( EMU_U32 gMemorySize, EMU_U32 gPageSize )
+CMemoryTLB::CMemoryTLB( EMU_U32 gMemorySize,
+                        EMU_U32 gPageSize )
 {
     MemorySize = gMemorySize;
     PageSize = 65536; //gPageSize;
@@ -52,23 +32,23 @@ void EmuMemInit( EMU_U32 gMemorySize, EMU_U32 gPageSize )
 
     RaftMemory = new EMU_U08[ 1024 * 1024 ]; // 1 Megabyte
 
-    EmuMemClear( );
+    Clear( );
 }
 
-void EmuMemShutdown( void )
+CMemoryTLB::~CMemoryTLB( void )
 {
     delete[] MainMemory.Byte;
 
     delete[] RaftMemory;
 }
 
-void EmuMemClear( void )
+void CMemoryTLB::Clear( void )
 {
     memset( Mapping, 0, NumberOfPages * sizeof( EMM_MapType ) );
     CurrentNumberOfPages = 0;
 }
 
-EMU_U08 * EmuMemGetRealPointer( EMU_U32 Address )
+EMU_U08 * CMemoryTLB::GetRealPointer( EMU_U32 Address )
 {
     if (( Address >= 0x80000000 ) && ( Address < 0xA0000000 ) )
     {
@@ -146,58 +126,58 @@ EMU_U08 * EmuMemGetRealPointer( EMU_U32 Address )
         EMM_MapType &Entry = Mapping[ Address >> 16 ];
         if ( ! Entry.InMemory )
         {
-            EmuMemReplace( Address );
+            Replace( Address );
         }
 
         return &MainMemory.Byte[ Entry.Page | ( Address & MemoryMask ) ];
     }
 }
 
-void EmuMemSetByte( EMU_U32 Address, EMU_U08 Data )
+void CMemoryTLB::SetByte( EMU_U32 Address, EMU_U08 Data )
 {
-    *(EMU_U08*)EmuMemGetRealPointer( Address ) = Data;
-    EmuMemCallCallBackWrite( Address );
+    *(EMU_U08*)GetRealPointer( Address ) = Data;
+    CallCallBackWrite( Address );
 }
 
-void EmuMemSetShort( EMU_U32 Address, EMU_U16 Data )
+void CMemoryTLB::SetShort( EMU_U32 Address, EMU_U16 Data )
 {
-    *(EMU_U16*)EmuMemGetRealPointer( Address ) = Data;
-    EmuMemCallCallBackWrite( Address );
+    *(EMU_U16*)GetRealPointer( Address ) = Data;
+    CallCallBackWrite( Address );
 }
 
-void EmuMemSetWord( EMU_U32 Address, EMU_U32 Data )
+void CMemoryTLB::SetWord( EMU_U32 Address, EMU_U32 Data )
 {
-    *(EMU_U32*)EmuMemGetRealPointer( Address ) = Data;
-    EmuMemCallCallBackWrite( Address );
+    *(EMU_U32*)GetRealPointer( Address ) = Data;
+    CallCallBackWrite( Address );
 }
 
-void EmuMemSetDWord( EMU_U32 Address, EMU_U64 Data )
+void CMemoryTLB::SetDWord( EMU_U32 Address, EMU_U64 Data )
 {
-    *(EMU_U64*)EmuMemGetRealPointer( Address ) = Data;
-    EmuMemCallCallBackWrite( Address );
+    *(EMU_U64*)GetRealPointer( Address ) = Data;
+    CallCallBackWrite( Address );
 }
 
-EMU_U08 EmuMemGetByte( EMU_U32 Address )
+EMU_U08 CMemoryTLB::GetByte( EMU_U32 Address )
 {
-    return *(EMU_U08*)EmuMemGetRealPointer( Address );
+    return *(EMU_U08*)GetRealPointer( Address );
 }
 
-EMU_U16 EmuMemGetShort( EMU_U32 Address )
+EMU_U16 CMemoryTLB::GetShort( EMU_U32 Address )
 {
-    return *(EMU_U16*)EmuMemGetRealPointer( Address );
+    return *(EMU_U16*)GetRealPointer( Address );
 }
 
-EMU_U32 EmuMemGetWord( EMU_U32 Address )
+EMU_U32 CMemoryTLB::GetWord( EMU_U32 Address )
 {
-    return *(EMU_U32*)EmuMemGetRealPointer( Address );
+    return *(EMU_U32*)GetRealPointer( Address );
 }
 
-EMU_U64 EmuMemGetDWord( EMU_U32 Address )
+EMU_U64 CMemoryTLB::GetDWord( EMU_U32 Address )
 {
-    return *(EMU_U64*)EmuMemGetRealPointer( Address );
+    return *(EMU_U64*)GetRealPointer( Address );
 }
 
-void EmuMemReplace( EMU_U32 Address )
+void CMemoryTLB::Replace( EMU_U32 Address )
 {
     EMM_MapType &Entry = Mapping[ Address >> 16 ];
 
@@ -242,10 +222,10 @@ void EmuMemReplace( EMU_U32 Address )
 */
     Entry.InMemory = 1;
     Entry.Modified = 1;
-    Entry.LastAcessed = EmuMemGetTime( );
+    Entry.LastAcessed = GetTime( );
 }
 
-void EmuMemLoad( EMU_U32 Address )
+void CMemoryTLB::Load( EMU_U32 Address )
 {
     FILE * pPageFile = NULL;
     char FileName[ 256 ];
@@ -264,7 +244,7 @@ void EmuMemLoad( EMU_U32 Address )
     Entry.Modified = 0;
 }
 
-void EmuMemSave( EMU_U32 Address )
+void CMemoryTLB::Save( EMU_U32 Address )
 {
     FILE * pPageFile = NULL;
     char FileName[ 256 ];
@@ -283,7 +263,7 @@ void EmuMemSave( EMU_U32 Address )
     Entry.Modified = 0;
 }
 
-void EmuMemAddWriteCallBack( EMU_U32 StartAddress,
+void CMemoryTLB::AddWriteCallBack( EMU_U32 StartAddress,
                     EMU_U32 EndAddress,
                     EMM_WRITECALLBACK CallBack )
 {
@@ -296,7 +276,7 @@ void EmuMemAddWriteCallBack( EMU_U32 StartAddress,
     WriteCallBacks.push_back( CallBack_temp );
 }
 
-void EmuMemAddReadCallBack( EMU_U32 StartAddress,
+void CMemoryTLB::AddReadCallBack( EMU_U32 StartAddress,
                     EMU_U32 EndAddress,
                     EMM_READCALLBACK CallBack )
 {
@@ -309,7 +289,7 @@ void EmuMemAddReadCallBack( EMU_U32 StartAddress,
     ReadCallBacks.push_back( CallBack_temp );
 }
 
-inline void EmuMemCallCallBackWrite( EMU_U32 Address )
+inline void CMemoryTLB::CallCallBackWrite( EMU_U32 Address )
 {
     for ( unsigned int i = 0; i < WriteCallBacks.size( ); i++ )
     {
@@ -322,7 +302,7 @@ inline void EmuMemCallCallBackWrite( EMU_U32 Address )
     }
 }
 
-inline void EmuMemCallCallBackRead( EMU_U32 Address, EMU_U08 * RealAddress )
+inline void CMemoryTLB::CallCallBackRead( EMU_U32 Address, EMU_U08 * RealAddress )
 {
     for ( unsigned int i = 0; i < ReadCallBacks.size( ); i++ )
     {
@@ -335,14 +315,14 @@ inline void EmuMemCallCallBackRead( EMU_U32 Address, EMU_U08 * RealAddress )
     }
 }
 
-EMU_U64 EmuMemGetTime( void )
+EMU_U64 CMemoryTLB::GetTime( void )
 {
     register EMU_U64 Ticks;
     RDTSC( Ticks );
     return Ticks;
 }
 
-bool EmuMemAddFromFile( const char * FileName,
+bool CMemoryTLB::AddFromFile( const char * FileName,
                               EMU_U32 Offset,
                               EMU_U32 FileSize,
                               EMU_U32 EmuAddress,
@@ -363,7 +343,7 @@ bool EmuMemAddFromFile( const char * FileName,
     EMM_MapType Entry = Mapping[ StartPage ];
     if ( ! Entry.InMemory )
     {
-        EmuMemReplace( EmuAddress );
+        Replace( EmuAddress );
         Entry = Mapping[ EmuAddress >> 16 ];
     }
 
@@ -384,7 +364,7 @@ bool EmuMemAddFromFile( const char * FileName,
             Entry = Mapping[ EmuAddress >> 16 ];
             if ( ! Entry.InMemory )
             {
-                EmuMemReplace( EmuAddress );
+                Replace( EmuAddress );
                 Entry = Mapping[ EmuAddress >> 16 ];
             }
             EndAddr = ( EmuAddress & 0xFFFF0000 ) + PageSize;
@@ -401,7 +381,7 @@ bool EmuMemAddFromFile( const char * FileName,
     return true;
 }
 
-EMU_U08 * EmuMemReadContinuosArea( EMU_U32 Address, EMU_U32 Size )
+EMU_U08 * CMemoryTLB::ReadContinuosArea( EMU_U32 Address, EMU_U32 Size )
 {
     if (( Address >= 0x80000000 ) && ( Address < 0xA0000000 ) )
     {
@@ -482,7 +462,7 @@ EMU_U08 * EmuMemReadContinuosArea( EMU_U32 Address, EMU_U32 Size )
         EMM_MapType Entry = Mapping[ StartPage ];
         if ( ! Entry.InMemory )
         {
-            EmuMemReplace( Address );
+            Replace( Address );
             Entry = Mapping[ Address >> 16 ];
         }
 
@@ -505,7 +485,7 @@ EMU_U08 * EmuMemReadContinuosArea( EMU_U32 Address, EMU_U32 Size )
                 Entry = Mapping[ Address >> 16 ];
                 if ( ! Entry.InMemory )
                 {
-                    EmuMemReplace( Address );
+                    Replace( Address );
                     Entry = Mapping[ Address >> 16 ];
                 }
                 EndAddr = ( Address & 0xFFFF0000 ) + PageSize;

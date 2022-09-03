@@ -208,12 +208,12 @@ void Emu_Bios_Deci2Call( void )
             R5900Regs.A0.u32_00_31, R5900Regs.A1.u32_00_31 );
 #endif
 
-    EMU_U32 * addr = (EMU_U32*)EmuMemGetRealPointer( R5900Regs.A1.u32_00_31 );
+    EMU_U32 * addr = (EMU_U32*)EMemory.GetRealPointer( R5900Regs.A1.u32_00_31 );
     
     switch ( R5900Regs.A0.i32_00_31 ) 
     {
         case 1: // open
-            deci2addr = (EMU_U32*)EmuMemGetRealPointer( addr[1] );
+            deci2addr = (EMU_U32*)EMemory.GetRealPointer( addr[1] );
 #ifdef EMU_LOG
             EmuLog("  deci2open: %x,%x,%x,%x\n",
                      addr[3], addr[2], addr[1], addr[0] );
@@ -235,7 +235,7 @@ void Emu_Bios_Deci2Call( void )
                      deci2addr[3], deci2addr[2], deci2addr[1], deci2addr[0]);
 #endif
 //          cpuRegs.pc = deci2handler;
-            EmuConsole( "deci2msg: %s", (char*)EmuMemGetRealPointer( deci2addr[4] + 0xc ) );
+            EmuConsole( "deci2msg: %s", (char*)EMemory.GetRealPointer( deci2addr[4] + 0xc ) );
             deci2addr[3] = 0;
             R5900Regs.V0.u64_00_63 = 1;
             break;

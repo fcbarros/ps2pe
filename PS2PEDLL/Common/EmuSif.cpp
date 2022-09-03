@@ -144,8 +144,8 @@ void Emu_Sif_Bios_Call_Pad1( void )
 
         bout[12/4] = 1;
 
-        PadArea[port][0] = (pad_data*)EmuMemGetRealPointer( *(EMU_U32*)&bin[16/4] );
-        PadArea[port][1] = (pad_data*)EmuMemGetRealPointer( *(EMU_U32*)&bin[16/4] + sizeof( pad_data ) );
+        PadArea[port][0] = (pad_data*)EMemory.GetRealPointer( *(EMU_U32*)&bin[16/4] );
+        PadArea[port][1] = (pad_data*)EMemory.GetRealPointer( *(EMU_U32*)&bin[16/4] + sizeof( pad_data ) );
         PadArea[port][1]->frame = 0;
         PadArea[port][0]->frame = 0;
         PadArea[port][0]->state = PAD_STATE_STABLE;
@@ -202,8 +202,8 @@ void Emu_Sif_Bios_Call_XPad1( void )
 
         bout[ 12 / 4 ] = 1;
 
-        XPadArea[port][0] = (xpad_data*)EmuMemGetRealPointer( *(EMU_U32*)&bin[16/4] );
-        XPadArea[port][1] = (xpad_data*)EmuMemGetRealPointer( *(EMU_U32*)&bin[16/4] + sizeof( pad_data ) );
+        XPadArea[port][0] = (xpad_data*)EMemory.GetRealPointer( *(EMU_U32*)&bin[16/4] );
+        XPadArea[port][1] = (xpad_data*)EMemory.GetRealPointer( *(EMU_U32*)&bin[16/4] + sizeof( pad_data ) );
         XPadArea[port][1]->frame = 0;
         XPadArea[port][0]->frame = 0;
         XPadArea[port][0]->state = PAD_STATE_STABLE;
@@ -322,7 +322,7 @@ void Emu_Sif_Bios_Call_FileIO()
 
     case 2: // read
         i = bin[0] - 1;
-        ptr = (char*)EmuMemGetRealPointer( bin[1] );
+        ptr = (char*)EMemory.GetRealPointer( bin[1] );
         bout[0] = read( fileio[i].fd, ptr, bin[2] );
         EmuConsole( "read(%d) %x, args=%x,%x\n", fileio[i].fd, *bout, bin[1], bin[2] );
         break;
@@ -358,7 +358,7 @@ void Emu_Sif_Bios_isceSetDma( void )
     }
 
     addr = R5900Regs.A0.u32_00_31 + n_transfer * sizeof( struct t_sif_dma_transfer );
-    dmat = (struct t_sif_dma_transfer*)EmuMemGetRealPointer( addr );
+    dmat = (struct t_sif_dma_transfer*)EMemory.GetRealPointer( addr );
 
 #ifdef EMU_LOG
     EmuLog( "  n_transfer=%d, size=%x, attr=%x, dest=%x, src=%x\n",
@@ -366,8 +366,8 @@ void Emu_Sif_Bios_isceSetDma( void )
              dmat->dest, dmat->src );
 #endif
 
-    dmat->dest = EmuMemGetRealPointer( (EMU_U32)dmat->dest );
-    dmat->src  = EmuMemGetRealPointer( (EMU_U32)dmat->src );
+    dmat->dest = EMemory.GetRealPointer( (EMU_U32)dmat->dest );
+    dmat->src  = EMemory.GetRealPointer( (EMU_U32)dmat->src );
 
 //  BIOS_LOG("src %p, dst %p\n", dmat->src, dmat->dest);
 
@@ -390,7 +390,7 @@ void Emu_Sif_Bios_isceSetDma( void )
 
     case 0x80000009: // sif_bind
         bind = (struct t_sif_rpc_bind*)dmat->src;
-        client = (struct t_rpc_client_data*)EmuMemGetRealPointer( (EMU_U32)bind->client );
+        client = (struct t_rpc_client_data*)EMemory.GetRealPointer( (EMU_U32)bind->client );
 #ifdef EMU_LOG
         EmuLog( "  sif_bind %x\n", bind->rpc_number );
 #endif
@@ -449,11 +449,11 @@ void Emu_Sif_Bios_isceSetDma( void )
 
     case 0x8000000a: // sif_call
         call = (struct t_sif_rpc_call*)dmat->src;
-        bout = (EMU_U32*)EmuMemGetRealPointer( (EMU_U32)call->receive );
+        bout = (EMU_U32*)EMemory.GetRealPointer( (EMU_U32)call->receive );
         n_transfer--;
         addr = R5900Regs.A0.u32_00_31 + n_transfer * sizeof( struct t_sif_dma_transfer );
-        dmat = (struct t_sif_dma_transfer*)EmuMemGetRealPointer( addr );
-        bin = (EMU_U32*)EmuMemGetRealPointer( (EMU_U32)dmat->src );
+        dmat = (struct t_sif_dma_transfer*)EMemory.GetRealPointer( addr );
+        bin = (EMU_U32*)EMemory.GetRealPointer( (EMU_U32)dmat->src );
 
 #ifdef EMU_LOG
         EmuLog( "  sif_call %x, server=%x, send_size %x (bin=%x) recv_size=%x (bout=%x)\n", 
@@ -512,13 +512,13 @@ void Emu_Sif_Bios_isceSetDma( void )
 //
 void Emu_Sif_Bios_isceSetDChain( void )
 { // 0x78
-    EmuMemSetWord( 0xb000c000, 0 );
-    EmuMemSetWord( 0xb000c020, 0 );
+    EMemory.SetWord( 0xb000c000, 0 );
+    EMemory.SetWord( 0xb000c020, 0 );
 
     R5900Regs.SP.u64_00_63 -= 0x10;
 
-    EmuMemSetWord( 0xb000c000, 0x184 );
-    EmuMemSetWord( R5900Regs.SP.u32_00_31, EmuMemGetWord( 0xb000c000 ) );
+    EMemory.SetWord( 0xb000c000, 0x184 );
+    EMemory.SetWord( R5900Regs.SP.u32_00_31, EMemory.GetWord( 0xb000c000 ) );
     
     R5900Regs.SP.u64_00_63 += 0x10;
 }

@@ -54,7 +54,7 @@ void Emu_Intc_callback( EMU_U32 Address )
     }
     if ( Address == 0x1000F180 )
     {
-        EmuConsole( "%c", EmuMemGetByte( Address ) );
+        EmuConsole( "%c", EMemory.GetByte( Address ) );
     }
 }
 

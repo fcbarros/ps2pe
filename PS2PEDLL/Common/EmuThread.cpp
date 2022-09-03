@@ -75,7 +75,7 @@ EMU_U64 Emu_Thread_Create( EMU_U32 Address )
 
     EmuThreads[ Emu_Thread_NumThreads ].Id = Emu_Thread_NumThreads;
     EmuThreads[ Emu_Thread_NumThreads ].Address = Address;
-    EmuThreads[ Emu_Thread_NumThreads ].RealAddress = EmuMemGetRealPointer( Address );
+    EmuThreads[ Emu_Thread_NumThreads ].RealAddress = EMemory.GetRealPointer( Address );
     EmuThreads[ Emu_Thread_NumThreads ].Running = 0;
     thread = (EmuThread*)EmuThreads[ Emu_Thread_NumThreads ].RealAddress;
 
@@ -91,7 +91,7 @@ void Emu_Thread_Start( EMU_U32 Address )
 { // 0x22
     EmuThreads[ Address ].Running = 1;
 
-    EmuThread * thread = (EmuThread*)EmuMemGetRealPointer( Address );
+    EmuThread * thread = (EmuThread*)EMemory.GetRealPointer( Address );
 }
 
 //
@@ -109,7 +109,7 @@ EMU_U64 Emu_Thread_ReferStatus( EMU_U32 Address )
 { // 0x30
     EmuThread * thread;
 
-    thread = (EmuThread*)EmuMemGetRealPointer( Address );
+    thread = (EmuThread*)EMemory.GetRealPointer( Address );
 
     return 1;
 }

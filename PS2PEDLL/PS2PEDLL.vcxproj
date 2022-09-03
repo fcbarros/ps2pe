@@ -15,13 +15,14 @@
     <SccProjectName />
     <SccLocalPath />
     <ProjectGuid>{1E9C62F6-8426-441A-AF00-659C33E04BC2}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -43,7 +44,6 @@
     <_ProjectFileVersion>17.0.32819.101</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\Debug\</OutDir>
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -142,15 +142,6 @@
     <ClCompile Include="Common\EmuMain.cpp" />
     <ClCompile Include="Common\EmuMemory.cpp" />
     <ClCompile Include="Common\EmuPAD.cpp" />
-    <ClCompile Include="Common\EmuRecCOP0.cpp" />
-    <ClCompile Include="Common\EmuRecCOP1.cpp" />
-    <ClCompile Include="Common\EmuRecCore.cpp" />
-    <ClCompile Include="Common\EmuRecGeneric.cpp" />
-    <ClCompile Include="Common\EmuRecMMI.cpp" />
-    <ClCompile Include="Common\EmuRecompiler.cpp" />
-    <ClCompile Include="Common\EmuRecRegimm.cpp" />
-    <ClCompile Include="Common\EmuRecSpecial.cpp" />
-    <ClCompile Include="Common\EmuRecX86.cpp" />
     <ClCompile Include="Common\EmuSema.cpp" />
     <ClCompile Include="Common\EmuSif.cpp" />
     <ClCompile Include="Common\EmuThread.cpp" />
@@ -166,13 +157,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common\EmuCop0.cpp" />
-    <ClCompile Include="Common\EmuCop1.cpp" />
-    <ClCompile Include="Common\EmuCop2.cpp" />
-    <ClCompile Include="Common\EmuCore.cpp" />
-    <ClCompile Include="Common\EmuMmi.cpp" />
-    <ClCompile Include="Common\EmuRegimm.cpp" />
-    <ClCompile Include="Common\EmuSpecial.cpp" />
+    <None Include="Common\EmuCop0.inc" />
+    <None Include="Common\EmuCop1.inc" />
+    <None Include="Common\EmuCop2.inc" />
+    <None Include="Common\EmuCore.inc" />
+    <None Include="Common\EmuExecute.inc" />
+    <None Include="Common\EmuMmi.inc" />
+    <None Include="Common\EmuRegimm.inc" />
+    <None Include="Common\EmuSpecial.inc" />
+    <None Include="Common\EmuSyscall.inc" />
     <None Include="ps2pe.def" />
   </ItemGroup>
   <ItemGroup>
@@ -183,7 +176,6 @@
     <ClInclude Include="Common\EmuBios.h" />
     <ClInclude Include="Common\EmuDisassembly.h" />
     <ClInclude Include="Common\EmuDma.h" />
-    <ClInclude Include="Common\EmuExecute.h" />
     <ClInclude Include="Common\EmuFifo.h" />
     <ClInclude Include="Common\EmuGif.h" />
     <ClInclude Include="Common\EmuGS.h" />
@@ -193,14 +185,13 @@
     <ClInclude Include="Common\EmuMemory.h" />
     <ClInclude Include="Common\EmuPAD.h" />
     <ClInclude Include="Common\EmuPS2Core.h" />
-    <ClInclude Include="Common\EmuRecompiler.h" />
-    <ClInclude Include="Common\EmuRecX86.h" />
     <ClInclude Include="Common\EmuSema.h" />
     <ClInclude Include="Common\EmuSif.h" />
     <ClInclude Include="Common\EmuThread.h" />
     <ClInclude Include="Common\EmuTimer.h" />
     <ClInclude Include="Common\EmuVif.h" />
     <ClInclude Include="Common\EmuVU.h" />
+    <ClInclude Include="Common\UnitPS2.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>

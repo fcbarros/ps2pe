@@ -307,7 +307,7 @@ void Emu_Dma_Dest_Chain( EMU_U08 ChannelIndex, stEmu_Dma_Channel_Regs  * Channel
 
     while ( Channel->CHCR & 0x00000100 )
     {
-        pTag = (EMU_U32*)EmuMemGetRealPointer( Channel->TADR );
+        pTag = (EMU_U32*)EMemory.GetRealPointer( Channel->TADR );
         Channel->QWC  = pTag[0] & 0x0000FFFF;
         Channel->CHCR = ( Channel->CHCR & 0x0000FFFF ) | ( pTag[0] & 0xFFFF0000 );
 
@@ -358,7 +358,7 @@ void Emu_Dma_Set( EMU_U32 Address, EMU_U64 ChannelIndex )
 {
     stEmu_Dma_Channel_Regs  * Channel = Emu_Dma_Channel_Reg[ ChannelIndex ];
 
-    t_sif_dma_transfer * RealAddress = (t_sif_dma_transfer *)EmuMemGetRealPointer( Address );
+    t_sif_dma_transfer * RealAddress = (t_sif_dma_transfer *)EMemory.GetRealPointer( Address );
 }
 
 void Emu_Dma_Bios_AddHandler( void )
@@ -404,7 +404,7 @@ void Emu_Dma_RemoveHandler( EMU_U32 HandlerIndex )
 EMU_U64 Emu_Dma_Enable( EMU_U32 HandlerIndex ) 
 { // 0x16
     EMU_U32 tmp = 0x10000 << HandlerIndex;
-    EMU_U32 ret = EmuMemGetWord( 0xb000e010 - 0xa0000000 ) & tmp;
+    EMU_U32 ret = EMemory.GetWord( 0xb000e010 - 0xa0000000 ) & tmp;
 
     if ( ret )
     {
@@ -412,7 +412,7 @@ EMU_U64 Emu_Dma_Enable( EMU_U32 HandlerIndex )
     }
 
     Emu_Dma_Handler[ HandlerIndex ].active = 1;
-    EmuMemSetWord( 0xb000e010 - 0xa0000000, tmp );
+    EMemory.SetWord( 0xb000e010 - 0xa0000000, tmp );
 
     return 1;
 }

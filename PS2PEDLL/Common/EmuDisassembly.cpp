@@ -97,7 +97,7 @@ DLLEXPORT void CALLBACK EmuDisassembly( EMU_U32 Address, char * Buffer, EMU_U32 
 {
     static char stDisassembly[ 256 ];
 
-    EMU_U32 tInstruction = EmuMemGetWord( Address );
+    EMU_U32 tInstruction = EMemory.GetWord( Address );
     EMU_U32 Index = EmuInstructionIndex( tInstruction );
 
     strcpy( stDisassembly, EmuInstructions[ Index ].Name );

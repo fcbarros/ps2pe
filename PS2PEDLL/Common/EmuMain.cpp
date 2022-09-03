@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <time.h>
-#include <float.h>
 
 #include "EmuDma.h"
 #include "EmuDisassembly.h"
@@ -16,7 +15,6 @@
 #include "EmuVU.h"
 #include "EmuThread.h"
 #include "EmuBios.h"
-#include "EmuRecompiler.h"
 
 //////////////////////////////////////////////////////
 // Variables
@@ -27,6 +25,8 @@ EMU_U32 TotalInstructions = 0;
 double CPUClock;
 
 Elf32_File * ElfFile;
+
+CMemoryTLB EMemory( 32 * 1024 * 1024, 64 * 1024 );
 
 EMU_U08 EMemScratchPad[ 16 * 1024 ];
 
@@ -60,14 +60,10 @@ char SPUFileName[ 1024 ];
 
 EMUCONSOLECALLBACK EmuConsoleCallback;
 
-EMU_U32 StartAddress;
-EMU_U32 EndAddress;
 
 // Initializes Registers and anythings else needed
 DLLEXPORT void CALLBACK EmuInitialize( void )
 {
-    EmuMemInit( 32 * 1024 * 1024, 64 * 1024 );
-
     CPUClock = EmuGetClock( );
 
     EmuLoadConfig( );
@@ -104,7 +100,7 @@ DLLEXPORT void CALLBACK EmuInitialize( void )
     InstrBreakPoints.resize( TotalInstructions + 1 );
     EmuClearStats( );
 
-    EmuMemClear( );
+    EMemory.Clear( );
     
     BreakPoints.clear();
 
@@ -122,25 +118,23 @@ DLLEXPORT void CALLBACK EmuInitialize( void )
     Emu_Vu_Init( );
     Emu_Thread_Init( );
 
-    EmuRec_Init( 16 * 1024 * 1024 );
-
     EmuReset( );
 
-    EmuMemAddWriteCallBack( 0x12000000, 0x13FFFFFF, Emu_GS_WriteCallback );
-    EmuMemAddWriteCallBack( 0x1000F520, 0x1000F5FF, Emu_Dma_callback );
-    EmuMemAddWriteCallBack( 0x10003000, 0x100037FF, Emu_Gif_callback );
-    EmuMemAddWriteCallBack( 0x10000000, 0x10001FFF, Emu_Timer_callback );
-    EmuMemAddWriteCallBack( 0x10002000, 0x10002FFF, Emu_Ipu_callback );
-    EmuMemAddWriteCallBack( 0x10003800, 0x10003FFF, Emu_Vif_callback );
-    EmuMemAddWriteCallBack( 0x10004000, 0x10007FFF, Emu_Fifo_callback );
-    EmuMemAddWriteCallBack( 0x1000F000, 0x1000F1FF, Emu_Intc_callback );
-    EmuMemAddWriteCallBack( 0x1000F230, 0x1000F2FF, Emu_Sif_callback );
-    EmuMemAddWriteCallBack( 0x10008000, 0x1000EFFF, Emu_Dma_callback );
+//  EMemory.AddWriteCallBack( 0x10000000, 0x10001FFF, Emu_Timer_callback );
+//  EMemory.AddWriteCallBack( 0x10002000, 0x10002FFF, Emu_Ipu_callback );
+//  EMemory.AddWriteCallBack( 0x10003000, 0x100037FF, Emu_Gif_callback );
+//  EMemory.AddWriteCallBack( 0x10003800, 0x10003FFF, Emu_Vif_callback );
+//  EMemory.AddWriteCallBack( 0x10004000, 0x10007FFF, Emu_Fifo_callback );
+    EMemory.AddWriteCallBack( 0x10008000, 0x1000EFFF, Emu_Dma_callback );
+    EMemory.AddWriteCallBack( 0x1000F000, 0x1000F1FF, Emu_Intc_callback );
+    EMemory.AddWriteCallBack( 0x1000F230, 0x1000F2FF, Emu_Sif_callback );
+//  EMemory.AddWriteCallBack( 0x1000F520, 0x1000F5FF, Emu_Dma_callback );
 
-//    EmuMemAddWriteCallBack( 0x11000000, 0x11007FFF, Emu_Vu0_callback );
-//    EmuMemAddWriteCallBack( 0x11008000, 0x11FFFFFF, Emu_Vu1_callback );
+//  EMemory.AddWriteCallBack( 0x11000000, 0x11007FFF, Emu_Vu0_callback );
+//  EMemory.AddWriteCallBack( 0x11008000, 0x11FFFFFF, Emu_Vu1_callback );
 
-//    EmuMemAddReadCallBack( 0x12000000, 0x13FFFFFF, Emu_GS_ReadCallback );
+    EMemory.AddWriteCallBack( 0x12000000, 0x13FFFFFF, Emu_GS_WriteCallback );
+//    EMemory.AddReadCallBack( 0x12000000, 0x13FFFFFF, Emu_GS_ReadCallback );
 }
 
 DLLEXPORT void CALLBACK EmuReset( void )
@@ -185,8 +179,6 @@ DLLEXPORT void CALLBACK EmuReset( void )
     EmuInterruptIndex = 0;
 
     R5900Regs.PC = ElfFile->Header.e_entry;
-
-    EmuRec_Reset( );
 }
 
 DLLEXPORT void CALLBACK EmuSetBiosFile( const char * FileName )
@@ -211,10 +203,6 @@ DLLEXPORT void CALLBACK EmuRelease( void )
     }
 
     GSshutdown( );
-
-    EmuRec_Shutdown( );
-
-    EmuMemShutdown( );
 }
 
 EMU_U32 EmuInstructionIndex2( EMU_U32 tInst )
@@ -256,7 +244,7 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad( const char * FileName )
     EmuLog( "Reading ELF %s\n", FileName );
 #endif
 
-    EmuMemClear( );
+    EMemory.Clear( );
 
     Emu_Dma_Init( );
     Emu_Gif_Init( );
@@ -279,8 +267,6 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad( const char * FileName )
     {
         Emu_Bios_Load( BiosFileName );
     }
-    StartAddress = 0xFFFFFFFF;
-    EndAddress = 0x0;
 
     // Mapped memory
     for ( int i = 0; i < ElfFile->Header.e_phnum; i++ )
@@ -290,27 +276,18 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad( const char * FileName )
             case PT_LOAD:
                 if ( ElfFile->Program[ i ].p_memsz > 0 )
                 {
-                    EmuMemAddFromFile( FileName,
+                    EMemory.AddFromFile( FileName,
                                 ElfFile->Program[ i ].p_offset,
                                 ElfFile->Program[ i ].p_filesz,
                                 ElfFile->Program[ i ].p_vaddr,
                                 EMMP_READ | EMMP_WRITE| EMMP_EXEC );
                     EmuGenStats( ElfFile->Program[ i ].p_vaddr,
-                                 ElfFile->Program[ i ].p_vaddr + ElfFile->Program[ i ].p_filesz );
-                    if ( StartAddress > ElfFile->Program[ i ].p_vaddr )
-                    {
-                        StartAddress = ElfFile->Program[ i ].p_vaddr;
-                    }
-                    if ( EndAddress < ( ElfFile->Program[ i ].p_vaddr + ElfFile->Program[ i ].p_filesz ) )
-                    {
-                        EndAddress = ElfFile->Program[ i ].p_vaddr + ElfFile->Program[ i ].p_filesz;
-                    }
+                                 ElfFile->Program[ i ].p_vaddr +
+                                 ElfFile->Program[ i ].p_filesz );
                 }
             break;
         }
     }
-    R5900Regs.PC = ElfFile->Header.e_entry;
-    EmuRec_Recompile( R5900Regs.PC, EndAddress );
     R5900Regs.PC = ElfFile->Header.e_entry;
 
 #ifdef EMU_LOG
@@ -340,7 +317,7 @@ void EmuGenStats( EMU_U32 Start, EMU_U32 End )
     EMU_U32 Index;
     for ( EMU_U32 i = Start; i < End; i += 4 )
     {
-        Index = EmuInstructionIndex( EmuMemGetWord( i ) );
+        Index = EmuInstructionIndex( EMemory.GetWord( i ) );
 
         EmuInstructionsStats[ Index ].Total++;
     }
@@ -377,15 +354,6 @@ DLLEXPORT BOOL CALLBACK EmuIsBreakPoint( EMU_U32 Address )
 
 DLLEXPORT void CALLBACK EmuStepOver( EMU_U32 tAddress )
 {
-#ifdef __WIN32__
-    // Get current FPU control word and save it
-    EMU_U32 orig_cw = _controlfp( 0, 0 );
-
-    // Set precision control in FPU control word to single
-    // precision. This reduces the latency of divide and square
-    // root operations.
-    _controlfp( _PC_24, MCW_PC );
-#endif
     EmuStopRun = false;
 	EmuInBranchDelay = false;
     EmuExecuteFast( tAddress, false );
@@ -395,78 +363,27 @@ DLLEXPORT void CALLBACK EmuStepOver( EMU_U32 tAddress )
         EmuRun( R5900Regs.PC );
         EmuRemoveBreakPoint( tAddress + 8 );
     }
-#ifdef __WIN32__
-    // restore original FPU control word
-    _controlfp( orig_cw, 0xfffff );
-#endif
 }
 
-DLLEXPORT void CALLBACK EmuStepInto( EMU_U32 Address )
+DLLEXPORT void CALLBACK EmuStepInto( EMU_U32 tAddress )
 {
-#ifdef __WIN32__
-    // Get current FPU control word and save it
-    EMU_U32 orig_cw = _controlfp( 0, 0 );
-
-    // Set precision control in FPU control word to single
-    // precision. This reduces the latency of divide and square
-    // root operations.
-    _controlfp( _PC_24, MCW_PC );
-#endif
-
     EmuStopRun = false;
 	EmuInBranchDelay = false;
-//    EmuExecuteFast( Address, false );
-    EmuRec_RecompileExecute( Address, EndAddress, FALSE );
-
-#ifdef __WIN32__
-    // restore original FPU control word
-    _controlfp( orig_cw, 0xfffff );
-#endif
+    EmuExecuteFast( tAddress, false );
 }
 
 DLLEXPORT void CALLBACK EmuRun( unsigned int Address )
 {
-#ifdef __WIN32__
-    // Get current FPU control word and save it
-    EMU_U32 orig_cw = _controlfp( 0, 0 );
-
-    // Set precision control in FPU control word to single
-    // precision. This reduces the latency of divide and square
-    // root operations.
-    _controlfp( _PC_24, MCW_PC );
-#endif
-
     EmuStopRun = false;
     EmuRunDebug( Address, true );
     Emu_GS_CloseWindow( );
-
-#ifdef __WIN32__
-    // restore original FPU control word
-    _controlfp( orig_cw, 0xfffff );
-#endif
 }
 
 DLLEXPORT void CALLBACK EmuExecute( unsigned int Address )
 {
-#ifdef __WIN32__
-    // Get current FPU control word and save it
-    EMU_U32 orig_cw = _controlfp( 0, 0 );
-
-    // Set precision control in FPU control word to single
-    // precision. This reduces the latency of divide and square
-    // root operations.
-    _controlfp( _PC_24, MCW_PC );
-#endif
-
     EmuStopRun = false;
-//    EmuExecuteFast( Address, true );
-    EmuRec_RecompileExecute( Address, EndAddress, TRUE );
+    EmuExecuteFast( Address, true );
     Emu_GS_CloseWindow( );
-
-#ifdef __WIN32__
-    // restore original FPU control word
-    _controlfp( orig_cw, 0xfffff );
-#endif
 }
 
 DLLEXPORT void CALLBACK EmuLog( char * Format, ... )
@@ -566,42 +483,42 @@ DLLEXPORT EMU_U32 CALLBACK EmuGetTotalInstructions( void )
 
 DLLEXPORT void CALLBACK EmuSetByte( EMU_U32 Address, EMU_U08 Data )
 {
-    EmuMemSetByte( Address, Data );
+    EMemory.SetByte( Address, Data );
 }
 
 DLLEXPORT void CALLBACK EmuSetShort( EMU_U32 Address, EMU_U16 Data )
 {
-    EmuMemSetShort( Address, Data );
+    EMemory.SetShort( Address, Data );
 }
 
 DLLEXPORT void CALLBACK EmuSetWord( EMU_U32 Address, EMU_U32 Data )
 {
-    EmuMemSetWord( Address, Data );
+    EMemory.SetWord( Address, Data );
 }
 
 DLLEXPORT void CALLBACK EmuSetDWord( EMU_U32 Address, EMU_U64 Data )
 {
-    EmuMemSetDWord( Address, Data );
+    EMemory.SetDWord( Address, Data );
 }
 
 DLLEXPORT EMU_U08 CALLBACK EmuGetByte( EMU_U32 Address )
 {
-    return EmuMemGetByte( Address );
+    return EMemory.GetByte( Address );
 }
 
 DLLEXPORT EMU_U16 CALLBACK EmuGetShort( EMU_U32 Address )
 {
-    return EmuMemGetShort( Address );
+    return EMemory.GetShort( Address );
 }
 
 DLLEXPORT EMU_U32 CALLBACK EmuGetWord( EMU_U32 Address )
 {
-    return EmuMemGetWord( Address );
+    return EMemory.GetWord( Address );
 }
 
 DLLEXPORT EMU_U64 CALLBACK EmuGetDWord( EMU_U32 Address )
 {
-    return EmuMemGetDWord( Address );
+    return EMemory.GetDWord( Address );
 }
 
 DLLEXPORT void CALLBACK EmuGetInstructionsStats( EMU_U32 * TotalSupportedInstructions,
