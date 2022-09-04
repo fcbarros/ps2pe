@@ -63,7 +63,7 @@ EMU_U64 Emu_Sema_Create( EMU_U32 SemaAddress )
     static EMU_U64 semaid;
 
     semaid++;
-    sema = (t_sema*)EMemory.GetRealPointer( SemaAddress );
+    sema = (t_sema*)EmuMemGetRealPointer( SemaAddress );
     ksema[ semaid - 1 ] = SemaAddress;
 
     return semaid;

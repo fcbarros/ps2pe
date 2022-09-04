@@ -819,5 +819,3 @@ stDisassembly EmuInstructions[] =
     // Unknow opcode
     { "UNKNOW",     0xFFFFFFFF, 0x00000000, false }
 };
-
- 

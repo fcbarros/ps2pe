@@ -1,14 +1,7 @@
-
-#ifdef __WIN32__
-   #include <windows.h>
-#else
-#endif
-
 #include "EmuMain.h"
 #include "EmuGS.h"
 #include "EmuPad.h"
 #include "EmuIntc.h"
-
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -69,13 +62,13 @@ void Emu_GS_Init( void )
     GSTargetVSync = 60;
     GSTargetHSync = 15734;
 
-    TicksMinV = CPUClock / GSTargetVSync;
-    TicksMinH = CPUClock / GSTargetHSync;
+    TicksMinV = (EMU_U64)CPUClock / GSTargetVSync;
+    TicksMinH = (EMU_U64)CPUClock / GSTargetHSync;
     TicksMinVCK = TicksMinH / 10;
 
     if ( GSpreg )
     {
-        GSpreg( EmuGsMemory );
+//        GSpreg( EmuGsMemory );
     }
     GSinit( );
 
@@ -149,7 +142,7 @@ void Emu_GS_ProcessMessages( void )
 {
     if ( hWnd_GS )
     {
-        static __int64  StartV = 0,
+        static unsigned __int64  StartV = 0,
                         StartH = 0,
                         End = 0;
         static keyEvent * PADKeyPressed;
@@ -201,15 +194,15 @@ void Emu_GS_ProcessMessages( void )
 void Emu_GS_WriteCallback( EMU_U32 Address )
 {
 #ifdef EMU_LOG
-   EmuLog( "GS: %.8X = %.16X\n", Address, EMemory.GetDWord( Address ) );
+   EmuLog( "GS: %.8X = %.16X\n", Address, EmuMemGetDWord( Address ) );
 #endif
-    if ( GSwritePReg )
+//    if ( GSwritePReg )
     {
-        GSwritePReg( Address );
+//        GSwritePReg( Address );
     }
-    else
+//    else
     {
-        GSwrite64( Address, EMemory.GetDWord( Address ) );
+        GSwrite64( Address, EmuMemGetDWord( Address ) );
     }
 }
 
@@ -222,7 +215,7 @@ void Emu_GS_ReadCallback( EMU_U32 Address, EMU_U08 * RealAddress )
 //
 void Emu_GS_Bios_GetIMR( void ) 
 { // 0x70
-    R5900Regs.V0.u64_00_63 = EMemory.GetDWord( 0x12001010 );
+    R5900Regs.V0.u64_00_63 = EmuMemGetDWord( 0x12001010 );
 }
 
 //
@@ -230,7 +223,7 @@ void Emu_GS_Bios_GetIMR( void )
 //
 void Emu_GS_Bios_PutIMR( void ) 
 { // 0x71
-    EMemory.SetDWord( 0x12001010, R5900Regs.A0.u64_00_63 );
+    EmuMemSetDWord( 0x12001010, R5900Regs.A0.u64_00_63 );
 }
 
 void Emu_GS_Bios_SetGsCrt( void ) 

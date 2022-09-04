@@ -18,7 +18,6 @@
 
 #include "EmuPAD.h"
 
-
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // Defines
@@ -154,46 +153,46 @@
 
 typedef struct
 {
-    EMU_U64 PMODE;
-    EMU_U08 null0[8];
-    EMU_U64 SMODE1;
-    EMU_U08 null1[8];
-    EMU_U64 SMODE2;
-    EMU_U08 null2[8];
-    EMU_U64 SRFSH;
-    EMU_U08 null3[8];
-    EMU_U64 SYNCH1;
-    EMU_U08 null4[8];
-    EMU_U64 SYNCH2;
-    EMU_U08 null5[8];
-    EMU_U64 SYNCV;
-    EMU_U08 null6[8];
-    EMU_U64 DISPFB1;
-    EMU_U08 null7[8];
-    EMU_U64 DISPLAY1;
-    EMU_U08 null8[8];
-    EMU_U64 DISPFB2;
-    EMU_U08 null9[8];
-    EMU_U64 DISPLAY2;
-    EMU_U08 nullA[8];
-    EMU_U64 EXTBUF;
-    EMU_U08 nullB[8];
-    EMU_U64 EXTDATA;
-    EMU_U08 nullC[8];
-    EMU_U64 EXTWRITE;
-    EMU_U08 nullD[8];
-    EMU_U64 BGCOLOR;
-    EMU_U08 nullE[3864];
-    EMU_U64 CSR;
-    EMU_U08 nullF[8];
-    EMU_U64 IMR;
-    EMU_U08 nullG[40];
-    EMU_U64 BUSDIR;
-    EMU_U08 nullH[56];
-    EMU_U64 SIGBLID;
+	EMU_U64 PMODE;
+	EMU_U08 null0[8];
+	EMU_U64 SMODE1;
+	EMU_U08 null1[8];
+	EMU_U64 SMODE2;
+	EMU_U08 null2[8];
+	EMU_U64 SRFSH;
+	EMU_U08 null3[8];
+	EMU_U64 SYNCH1;
+	EMU_U08 null4[8];
+	EMU_U64 SYNCH2;
+	EMU_U08 null5[8];
+	EMU_U64 SYNCV;
+	EMU_U08 null6[8];
+	EMU_U64 DISPFB1;
+	EMU_U08 null7[8];
+	EMU_U64 DISPLAY1;
+	EMU_U08 null8[8];
+	EMU_U64 DISPFB2;
+	EMU_U08 null9[8];
+	EMU_U64 DISPLAY2;
+	EMU_U08 nullA[8];
+	EMU_U64 EXTBUF;
+	EMU_U08 nullB[8];
+	EMU_U64 EXTDATA;
+	EMU_U08 nullC[8];
+	EMU_U64 EXTWRITE;
+	EMU_U08 nullD[8];
+	EMU_U64 BGCOLOR;
+	EMU_U08 nullE[3864];
+	EMU_U64 CSR;
+	EMU_U08 nullF[8];
+	EMU_U64 IMR;
+	EMU_U08 nullG[40];
+	EMU_U64 BUSDIR;
+	EMU_U08 nullH[56];
+	EMU_U64 SIGBLID;
 } stEmu_GS_Privileg_Regs;
 
-extern stEmu_GS_Privileg_Regs * Emu_GS_Privileg_Reg;
+extern stEmu_GS_Privileg_Regs* Emu_GS_Privileg_Reg;
 
 extern EMU_U64 TicksMinV;
 extern EMU_U64 TicksMinH;
@@ -207,31 +206,31 @@ extern EMU_U64 TicksMinVCK;
 /////////////////////////////////////////////////////////////////////
 
 // Initializes GS memory pointers and registers
-void Emu_GS_Init( void );
+void Emu_GS_Init();
 // Resets registers and GS plugin
-void Emu_GS_Reset( void );
+void Emu_GS_Reset();
 // callback for write access
-void Emu_GS_WriteCallback( EMU_U32 Address );
+void Emu_GS_WriteCallback(EMU_U32 Address);
 // callback for read access
-void Emu_GS_ReadCallback( EMU_U32 Address, EMU_U08 * RealAddress );
+void Emu_GS_ReadCallback(EMU_U32 Address, EMU_U08* RealAddress);
 // Inits and creates the GS window
-void Emu_GS_InitWindow( void );
+void Emu_GS_InitWindow();
 // Calls the GS plugin configure method
-void Emu_GS_Configure( void );
+void Emu_GS_Configure();
 // Closes the GS window
-void Emu_GS_CloseWindow( void );
+void Emu_GS_CloseWindow();
 // Shutsdown GS, deallocating memory
-void Emu_GS_Shutdown( void );
+void Emu_GS_Shutdown();
 // Flushes GS fifo
-void Emu_GS_Flush( void );
+void Emu_GS_Flush();
 // Processes Window and GS messages
-void Emu_GS_ProcessMessages( void );
+void Emu_GS_ProcessMessages();
 // For Bios Call
-void Emu_GS_Bios_GetIMR( void );
-void Emu_GS_Bios_PutIMR( void );
-void Emu_GS_Bios_SetGsCrt( void );
+void Emu_GS_Bios_GetIMR();
+void Emu_GS_Bios_PutIMR();
+void Emu_GS_Bios_SetGsCrt();
 
-EMU_U08 * Emu_GS_GetPointer( EMU_U32 Address );
+EMU_U08* Emu_GS_GetPointer(EMU_U32 Address);
 
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
@@ -241,31 +240,31 @@ EMU_U08 * Emu_GS_GetPointer( EMU_U32 Address );
 
 #define DLLCALL	__stdcall
 
-typedef EMU_U32 (DLLCALL* _PS2EgetLibType)(void);
-typedef EMU_U32 (DLLCALL* _PS2EgetLibVersion)(void);
-typedef char * (DLLCALL* _PS2EgetLibName)(void);
+typedef EMU_U32(DLLCALL* _PS2EgetLibType)();
+typedef EMU_U32(DLLCALL* _PS2EgetLibVersion)();
+typedef char* (DLLCALL* _PS2EgetLibName)();
 
 // GS
-typedef EMU_I32 (DLLCALL* _GSinit)();
-typedef EMU_I32 (DLLCALL* _GSopen)(void *pDsp, char *Title);
+typedef EMU_I32(DLLCALL* _GSinit)();
+typedef EMU_I32(DLLCALL* _GSopen)(void* pDsp, char* Title);
 typedef void (DLLCALL* _GSclose)();
 typedef void (DLLCALL* _GSshutdown)();
 typedef void (DLLCALL* _GSvsync)();
 
 typedef void (DLLCALL* _GSwrite32)(EMU_U32 mem, EMU_U32 value);
 typedef void (DLLCALL* _GSwrite64)(EMU_U32 mem, EMU_U64 value);
-typedef EMU_U32 (DLLCALL* _GSread32)(EMU_U32 mem);
-typedef EMU_U64 (DLLCALL* _GSread64)(EMU_U32 mem);
+typedef EMU_U32(DLLCALL* _GSread32)(EMU_U32 mem);
+typedef EMU_U64(DLLCALL* _GSread64)(EMU_U32 mem);
 
 typedef void (CALLBACK* _GSwritePReg)(EMU_U32 mem);
-typedef void (CALLBACK* _GSpreg)(void *pPReg);
+typedef void (CALLBACK* _GSpreg)(void* pPReg);
 
-typedef void (DLLCALL* _GSgifTransfer)(EMU_U32  *pMem, EMU_U32 size);
+typedef void (DLLCALL* _GSgifTransfer)(EMU_U32* pMem, EMU_U32 size);
 typedef void (DLLCALL* _GSkeyEvent)(keyEvent* ev);
 
 typedef void (DLLCALL* _GSmakeSnapshot)();
 typedef void (DLLCALL* _GSconfigure)();
-typedef EMU_I32 (DLLCALL* _GStest)();
+typedef EMU_I32(DLLCALL* _GStest)();
 typedef void (DLLCALL* _GSabout)();
 
 // GS

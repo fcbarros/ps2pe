@@ -18,7 +18,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
     if ( strlen( CurrentDir ) <= 0 )
     {
        GetCurrentDirectory( sizeof( CurrentDir ), CurrentDir );
-       //EmuSetDir( CurrentDir );
+       EmuSetDir( CurrentDir );
     }
 
     switch ( ul_reason_for_call )

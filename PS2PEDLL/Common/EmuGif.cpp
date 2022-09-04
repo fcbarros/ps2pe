@@ -97,14 +97,14 @@ extern _GSgifTransfer       GSgifTransfer;
     if ( _addr & 0x80000000 ) \
         GSgifTransfer( (EMU_U32*)&EMemScratchPad[ _addr & 0x3FFF ], _qwc ); \
     else \
-        GSgifTransfer( (EMU_U32*)EMemory.ReadContinuosArea( _addr, _qwc * 16 ), _qwc ); \
+        GSgifTransfer( (EMU_U32*)EmuMemReadContinuosArea( _addr, _qwc * 16 ), _qwc ); \
 }
 
 #define EmuDmaGetPointer( ptr, _addr ) {\
     if ( _addr & 0x80000000 ) \
         ptr = (EMU_U32*)&EMemScratchPad[ _addr & 0x3FFF ]; \
     else \
-        ptr = (EMU_U32*)EMemory.GetRealPointer( _addr & 0x7FFFFFFF ); \
+        ptr = (EMU_U32*)EmuMemGetRealPointer( _addr & 0x7FFFFFFF ); \
 }
 
 void Emu_Gif_Transfer( stEmu_Dma_Channel_Regs * Channel )
@@ -215,4 +215,3 @@ EMU_U08 * Emu_Gif_GetPointer( EMU_U32 Address )
 {
     return &EmuGifMemory[ Address - EMU_GIF_START_ADDR ];
 }
-

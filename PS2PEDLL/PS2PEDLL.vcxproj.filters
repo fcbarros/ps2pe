@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1173845d-2bb9-4e2c-8053-7e22f892a91c}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Emulator Source">
+      <UniqueIdentifier>{9b276dd7-aeb0-44fd-8478-dc7a4e98dc7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Emulator Source\Core">
+      <UniqueIdentifier>{3b662a7a-645c-4240-a666-6a2052c08a27}</UniqueIdentifier>
+      <Extensions>inc</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Emulator Source\Recompiler">
+      <UniqueIdentifier>{670e1919-a727-43d0-b106-ac8fd32e7986}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{2118724d-bc38-4d4d-8ccb-e201f51c788b}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Emulator Headers">
+      <UniqueIdentifier>{cabb7b67-f0d2-4726-bd6a-4b362d2ace5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{82f43f3b-8b8a-49b2-b6c1-ec84951d034d}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\EmuRecCOP0.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecCOP1.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecCore.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecGeneric.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecMMI.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecompiler.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecRegimm.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecSpecial.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRecX86.cpp">
+      <Filter>Source Files\Emulator Source\Recompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Elf.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuBios.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuDepend.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuDisassembly.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuDma.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuExecute.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuFifo.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuGif.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuGS.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuInstructions.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuIntc.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuIpu.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuMain.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuMemory.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuPAD.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuSema.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuSif.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuThread.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuTimer.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuVif.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuVU.cpp">
+      <Filter>Source Files\Emulator Source</Filter>
+    </ClCompile>
+    <ClCompile Include="PS2PEDLL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuCore.cpp">
+      <Filter>Source Files\Emulator Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuCop0.cpp">
+      <Filter>Source Files\Emulator Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuCop1.cpp">
+      <Filter>Source Files\Emulator Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuCop2.cpp">
+      <Filter>Source Files\Emulator Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuMmi.cpp">
+      <Filter>Source Files\Emulator Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuRegimm.cpp">
+      <Filter>Source Files\Emulator Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EmuSpecial.cpp">
+      <Filter>Source Files\Emulator Source\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="pillgen.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ps2pe.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\Elf.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuBios.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuDisassembly.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuDma.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuFifo.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuGif.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuGS.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuIntc.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuIpu.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuMain.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuMemory.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuPAD.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuPS2Core.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuRecompiler.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuRecX86.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuSema.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuSif.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuThread.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuTimer.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuVif.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuVU.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EmuExecute.h">
+      <Filter>Header Files\Emulator Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ps2pe.def">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

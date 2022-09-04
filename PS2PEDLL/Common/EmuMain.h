@@ -31,37 +31,27 @@
 // General Defines
 /////////////////////////////////////////////////////////////////////
 
-//#define EMU_FLOAT_LOAD_CONDITION_REGISTER( a )      __asm FSTSW a
-#define EMU_FLOAT_LOAD_CONDITION_REGISTER( a )      a = 0;
-#define EMU_FLOAT_CHECK_OVERFLOW( a )               (( a ) & 0x0008)
-#define EMU_FLOAT_CHECK_UNDERFLOW( a )              (( a ) & 0x0010)
 
-//#define EMU_INTEGER_LOAD_CONDITION_REGISTER( a )    __asm LAHF; __asm mov a, eax;
-#define EMU_INTEGER_LOAD_CONDITION_REGISTER( a )    a = 0;
-#define EMU_INTEGER_CHECK_OVERFLOW( a )             (( a ) & 0x0800)
-#define EMU_INTEGER_CHECK_CARRY( a )                (( a ) & 0x0001)
-
-
-// PS2 R5900 clock 147.456 Mhz
-#define PS2_CORE_CLOCK			147456000	// hz
+// PS2 GS clock 147.456 Mhz
+#define GS_CORE_CLOCK			147456000	// hz
 
 // Core clock / 16
-#define PS2_CORE_CLOCK_16		  9216000	// hz
+#define GS_CORE_CLOCK_16		  9216000	// hz
 // Core clock / 256
-#define PS2_CORE_CLOCK_256		   576000	// hz
+#define GS_CORE_CLOCK_256		   576000	// hz
 
 
 /////////////////////////////////////////////////////////////////////
 // Structs
 /////////////////////////////////////////////////////////////////////
 
-typedef void (*EMUCONSOLECALLBACK)( char * );
+typedef void (*EMUCONSOLECALLBACK)(char*);
 
 // Struct related to Stats
 typedef struct
 {
-    EMU_U32 Index;
-    EMU_U32 Total;
+	EMU_U32 Index;
+	EMU_U32 Total;
 } stEmuInstructionCount;
 
 typedef std::vector<stEmuInstructionCount> sEmutStats;
@@ -79,9 +69,7 @@ extern sEmutStats EmuInstructionsStats;
 // Running instructions statistics
 extern sEmutStats EmuRunningStats;
 // Pointer to the Elf structure current loaded
-extern Elf32_File * ElfFile;
-// PS2 memory class
-extern CMemoryTLB EMemory;
+extern Elf32_File* ElfFile;
 // Core registers
 extern Emu_R5900_Regs R5900Regs;
 // COP0 registers
@@ -89,9 +77,9 @@ extern Emu_COP0_Regs COP0Regs;
 // COP1 registers
 extern Emu_COP1_Regs COP1Regs;
 // Registers - Backup for handlers
-extern Emu_R5900_Regs R5900RegsBackup[ 10 ];
-extern Emu_COP0_Regs COP0RegsBackup[ 10 ];
-extern Emu_COP1_Regs COP1RegsBackup[ 10 ];
+extern Emu_R5900_Regs R5900RegsBackup[10];
+extern Emu_COP0_Regs COP0RegsBackup[10];
+extern Emu_COP1_Regs COP1RegsBackup[10];
 // Is Emu in Interrupt
 extern EMU_U08 EmuInterruptIndex;
 // Is Emu in running mode?
@@ -105,12 +93,12 @@ extern std::vector<EMU_U32> BreakPoints;
 // Instructions Breakpoint
 extern std::vector<EMU_U32> InstrBreakPoints;
 // ScratchPad Memory
-extern EMU_U08 EMemScratchPad[ 16 * 1024 ];
+extern EMU_U08 EMemScratchPad[16 * 1024];
 
-extern char BiosFileName[ 1024 ];
-extern char GSFileName[ 1024 ];
-extern char PADFileName[ 1024 ];
-extern char SPUFileName[ 1024 ];
+extern char BiosFileName[1024];
+extern char GSFileName[1024];
+extern char PADFileName[1024];
+extern char SPUFileName[1024];
 
 
 /////////////////////////////////////////////////////////////////////
@@ -118,84 +106,86 @@ extern char SPUFileName[ 1024 ];
 /////////////////////////////////////////////////////////////////////
 
 // Initialize the Emulator, must be called once
-DLLEXPORT void CALLBACK EmuInitialize( void );
+DLLEXPORT void CALLBACK EmuInitialize(void);
 // Release memory related to the emulator
-DLLEXPORT void CALLBACK EmuRelease( void );
+DLLEXPORT void CALLBACK EmuRelease(void);
 // Do an Emulator Reset
-DLLEXPORT void CALLBACK EmuReset( void );
+DLLEXPORT void CALLBACK EmuReset(void);
 // Set the Bios File to load
-DLLEXPORT void CALLBACK EmuSetBiosFile( const char * FileName );
+DLLEXPORT void CALLBACK EmuSetBiosFile(const char* FileName);
 // Load an ELF file into memory
-DLLEXPORT EMU_I32 CALLBACK EmuLoad( const char * FileName );
+DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName);
 // Get the Index related to the EmuInstructions structure 
-DLLEXPORT EMU_U32 CALLBACK EmuInstructionIndex( EMU_U32 tInst );
+DLLEXPORT EMU_U32 CALLBACK EmuInstructionIndex(EMU_U32 tInst);
 // Add an Address breakpoint
-DLLEXPORT void CALLBACK EmuAddBreakPoint( EMU_U32 Address );
+DLLEXPORT void CALLBACK EmuAddBreakPoint(EMU_U32 Address);
 // Remove an Address breakpoint
-DLLEXPORT void CALLBACK EmuRemoveBreakPoint( EMU_U32 Address );
+DLLEXPORT void CALLBACK EmuRemoveBreakPoint(EMU_U32 Address);
 // Check to see if the address is a breakpoint
-DLLEXPORT BOOL CALLBACK EmuIsBreakPoint( EMU_U32 Address );
-DLLEXPORT void CALLBACK EmuLog( char * Format, ... );
-DLLEXPORT void CALLBACK EmuConsole( char * Format, ... );
-DLLEXPORT void CALLBACK EmuSetConsoleCallback( EMUCONSOLECALLBACK function );
-DLLEXPORT double CALLBACK EmuGetClock( void );
+DLLEXPORT BOOL CALLBACK EmuIsBreakPoint(EMU_U32 Address);
+DLLEXPORT void CALLBACK EmuLog(char* Format, ...);
+DLLEXPORT void CALLBACK EmuConsole(char* Format, ...);
+DLLEXPORT void CALLBACK EmuSetConsoleCallback(EMUCONSOLECALLBACK function);
+DLLEXPORT double CALLBACK EmuGetClock(void);
 // Runs the program, generate running stats and stops at breakpoints
-DLLEXPORT void CALLBACK EmuRun( EMU_U32 tAddress );
+DLLEXPORT void CALLBACK EmuRun(EMU_U32 tAddress);
 // Executes the program, does NOT stops at breakpoints or generates running stats
-DLLEXPORT void CALLBACK EmuExecute( EMU_U32 tAddress );
+DLLEXPORT void CALLBACK EmuExecute(EMU_U32 tAddress);
 // Executes the current instruction, if it is a jump, put a breakpoint
 // after the instruction and executes the jump
-DLLEXPORT void CALLBACK EmuStepOver( EMU_U32 tAddress );
-DLLEXPORT void CALLBACK EmuStepInto( EMU_U32 tAddress );
-DLLEXPORT void CALLBACK EmuGetRegs( Emu_R5900_Regs ** r5900regs, 
-                          Emu_COP0_Regs ** cop0regs,
-                          Emu_COP1_Regs ** cop1regs,
-                          EMU_VU_Regs ** vu0regs,
-                          EMU_VU_Regs ** vu1regs );
-DLLEXPORT EMU_U32 CALLBACK EmuGetTotalInstructions( void );
-DLLEXPORT void CALLBACK EmuGetInstructionsStats( EMU_U32 * TotalSupportedInstructions,
-                                       EMU_U32 * TotalDisassembledInstructions,
-                                       EMU_U32 * TotalImplementedInstructions );
-DLLEXPORT void CALLBACK EmuGetRunningStats( sEmutStats ** );
-DLLEXPORT void CALLBACK EmuGetLoadedStats( sEmutStats ** );
-DLLEXPORT void CALLBACK EmuSetByte( EMU_U32 Address, EMU_U08 Data );
-DLLEXPORT void CALLBACK EmuSetShort( EMU_U32 Address, EMU_U16 Data );
-DLLEXPORT void CALLBACK EmuSetWord( EMU_U32 Address, EMU_U32 Data );
-DLLEXPORT void CALLBACK EmuSetDWord( EMU_U32 Address, EMU_U64 Data );
-DLLEXPORT EMU_U08 CALLBACK EmuGetByte( EMU_U32 Address );
-DLLEXPORT EMU_U16 CALLBACK EmuGetShort( EMU_U32 Address );
-DLLEXPORT EMU_U32 CALLBACK EmuGetWord( EMU_U32 Address );
-DLLEXPORT EMU_U64 CALLBACK EmuGetDWord( EMU_U32 Address );
-DLLEXPORT void CALLBACK EmuAddInstructionBreakpoint( EMU_U32 InstIndex );
-DLLEXPORT void CALLBACK EmuRemoveInstructionBreakpoint( EMU_U32 InstIndex );
-DLLEXPORT BOOL CALLBACK EmuIsInstructionBreakpoint( EMU_U32 InstIndex );
-DLLEXPORT void CALLBACK EmuGetInstructionInfo( EMU_U32 InstIndex, 
-                                     char ** Name, 
-                                     BOOL * IsDisassembled,
-                                     BOOL * IsImplemented );
-DLLEXPORT void CALLBACK EmuConfig( void );
+DLLEXPORT void CALLBACK EmuStepOver(EMU_U32 tAddress);
+DLLEXPORT void CALLBACK EmuStepInto(EMU_U32 tAddress);
+DLLEXPORT void CALLBACK EmuGetRegs(Emu_R5900_Regs** r5900regs,
+	Emu_COP0_Regs** cop0regs,
+	Emu_COP1_Regs** cop1regs,
+	EMU_VU_Regs** vu0regs,
+	EMU_VU_Regs** vu1regs);
+DLLEXPORT EMU_U32 CALLBACK EmuGetTotalInstructions(void);
+DLLEXPORT void CALLBACK EmuGetInstructionsStats(EMU_U32* TotalSupportedInstructions,
+	EMU_U32* TotalDisassembledInstructions,
+	EMU_U32* TotalImplementedInstructions);
+DLLEXPORT void CALLBACK EmuGetRunningStats(sEmutStats**);
+DLLEXPORT void CALLBACK EmuGetLoadedStats(sEmutStats**);
+DLLEXPORT void CALLBACK EmuSetByte(EMU_U32 Address, EMU_U08 Data);
+DLLEXPORT void CALLBACK EmuSetShort(EMU_U32 Address, EMU_U16 Data);
+DLLEXPORT void CALLBACK EmuSetWord(EMU_U32 Address, EMU_U32 Data);
+DLLEXPORT void CALLBACK EmuSetDWord(EMU_U32 Address, EMU_U64 Data);
+DLLEXPORT EMU_U08 CALLBACK EmuGetByte(EMU_U32 Address);
+DLLEXPORT EMU_U16 CALLBACK EmuGetShort(EMU_U32 Address);
+DLLEXPORT EMU_U32 CALLBACK EmuGetWord(EMU_U32 Address);
+DLLEXPORT EMU_U64 CALLBACK EmuGetDWord(EMU_U32 Address);
+DLLEXPORT void CALLBACK EmuAddInstructionBreakpoint(EMU_U32 InstIndex);
+DLLEXPORT void CALLBACK EmuRemoveInstructionBreakpoint(EMU_U32 InstIndex);
+DLLEXPORT BOOL CALLBACK EmuIsInstructionBreakpoint(EMU_U32 InstIndex);
+DLLEXPORT void CALLBACK EmuGetInstructionInfo(EMU_U32 InstIndex,
+	char** Name,
+	BOOL* IsDisassembled,
+	BOOL* IsImplemented);
+DLLEXPORT void CALLBACK EmuConfig(void);
 // Returns a Name for a COP0 reg index
-DLLEXPORT void CALLBACK EmuGetCOP0RegName( EMU_U32 Reg, char * Buffer, EMU_U32 BufferSize );
+DLLEXPORT void CALLBACK EmuGetCOP0RegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 // Returns a Name for a COP1 reg index
-DLLEXPORT void CALLBACK EmuGetCOP1RegName( EMU_U32 Reg, char * Buffer, EMU_U32 BufferSize );
+DLLEXPORT void CALLBACK EmuGetCOP1RegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 // Returns a Name for a COP2 FP reg index
-DLLEXPORT void CALLBACK EmuGetCOP2FPRegName( EMU_U32 Reg, char * Buffer, EMU_U32 BufferSize );
+DLLEXPORT void CALLBACK EmuGetCOP2FPRegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 // Returns a Name for a COP2 IP reg index
-DLLEXPORT void CALLBACK EmuGetCOP2IPRegName( EMU_U32 Reg, char * Buffer, EMU_U32 BufferSize );
+DLLEXPORT void CALLBACK EmuGetCOP2IPRegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 // Returns a Name for a Main reg index
-DLLEXPORT void CALLBACK EmuGetR5900RegName( EMU_U32 Reg, char * Buffer, EMU_U32 BufferSize );
+DLLEXPORT void CALLBACK EmuGetR5900RegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 
 // Clear All statistics
-void EmuClearStats( void );
+void EmuClearStats(void);
 // Generate Loaded Stats from Start address to End address
-void EmuGenStats( EMU_U32 Start, EMU_U32 End );
+void EmuGenStats(EMU_U32 Start, EMU_U32 End);
 // Runs the program, generate running stats and stops at breakpoints
-void EmuRunDebug( EMU_U32 tAddress, bool InLoop );
+void EmuRunDebug(EMU_U32 tAddress, bool InLoop);
 // Executes the program, does NOT stops at breakpoints or generates running stats
-void EmuExecuteFast( EMU_U32 tAddress, bool InLoop );
-void EmuLoadConfig( void );
-void EmuSaveConfig( void );
-void EmuLoadPlugins( void );
+void EmuExecuteFast(EMU_U32 tAddress, bool InLoop);
+void EmuLoadConfig(void);
+void EmuSaveConfig(void);
+void EmuLoadPlugins(void);
+void EmuReleasePlugins(void);
+void EmuSetDir(char* Dir);
 
 
 #endif //__EMU_MAIN_H__

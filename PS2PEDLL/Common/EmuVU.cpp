@@ -1,4 +1,3 @@
-
 #include "EmuMain.h"
 #include "EmuVU.h"
 
@@ -8,7 +7,7 @@
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-EMU_U08 EmuVuMemory[ EMU_VU_END_ADDR - EMU_VU_START_ADDR ];
+EMU_U08 EmuVuMemory[EMU_VU_END_ADDR - EMU_VU_START_ADDR];
 
 // Pointer to control1 registers
 EMU_VU_Regs VU0Regs;
@@ -20,21 +19,21 @@ EMU_VU_Regs VU1Regs;
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_Vu_Init( void )
+void Emu_Vu_Init()
 {
-    Emu_Vu_Reset( );
+	Emu_Vu_Reset();
 }
 
-void Emu_Vu_Reset( void )
+void Emu_Vu_Reset()
 {
-    memset( &VU0Regs, 0, sizeof( EMU_VU_Regs ) );
-    memset( &VU1Regs, 0, sizeof( EMU_VU_Regs ) );
+	memset(&VU0Regs, 0, sizeof(EMU_VU_Regs));
+	memset(&VU1Regs, 0, sizeof(EMU_VU_Regs));
 
-    VU0Regs.CPR[ 0 ].W.f = 1.0f;
-    VU1Regs.CPR[ 0 ].W.f = 1.0f;
+	VU0Regs.CPR[0].W.f = 1.0f;
+	VU1Regs.CPR[0].W.f = 1.0f;
 }
 
-EMU_U08 * Emu_Vu_GetPointer( EMU_U32 Address )
+EMU_U08* Emu_Vu_GetPointer(EMU_U32 Address)
 {
-    return &EmuVuMemory[ Address - EMU_VU_START_ADDR ];
+	return &EmuVuMemory[Address - EMU_VU_START_ADDR];
 }

@@ -18,7 +18,7 @@
 
 typedef void (*EMUBIOSFUNCTIONS)( void );
 
-extern char * Emu_Bios_Calls_Names[ 256 ];
+extern const char * Emu_Bios_Calls_Names[ 256 ];
 
 #define EMU_BIOS_START_ADDR         0x1FC00000
 #define EMU_BIOS_END_ADDR           0x1FFFFFFF

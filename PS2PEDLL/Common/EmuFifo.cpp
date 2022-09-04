@@ -1,7 +1,5 @@
-
 #include "EmuMain.h"
 #include "EmuFifo.h"
-
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -57,18 +55,15 @@ void Emu_Fifo_callback( EMU_U32 Address )
     {
         // VIF0
     }
-    else
-    if ( Address < EMU_FIFO_GIF )
+    else if ( Address < EMU_FIFO_GIF )
     {
         // VIF1
     }
-    else
-    if ( Address < EMU_FIFO_OUT )
+    else if ( Address < EMU_FIFO_OUT )
     {
         // GIF
     }
-    else
-    if ( Address < EMU_FIFO_IN )
+    else if ( Address < EMU_FIFO_IN )
     {
         // OUT
     }
@@ -82,4 +77,3 @@ EMU_U08 * Emu_Fifo_GetPointer( EMU_U32 Address )
 {
     return &EmuFifoMemory[ Address - EMU_FIFO_START_ADDR ];
 }
-

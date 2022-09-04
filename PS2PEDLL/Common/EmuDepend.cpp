@@ -3,6 +3,8 @@
 #include "EmuGS.h"
 #include "EmuPAD.h"
 
+#include <string>
+
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 // External plugins defines
@@ -18,7 +20,15 @@ typedef char* (CALLBACK* LIBNAME)(void);
 #define PS2E_LT_PAD  0x2
 #define PS2E_LT_SPU2 0x4
 
+char EmuDLLDir[256];
 
+
+void EmuSetDir(char* Dir)
+{
+	memset(EmuDLLDir, 0, sizeof(EmuDLLDir));
+
+	strncpy_s(EmuDLLDir, sizeof(EmuDLLDir), Dir, sizeof(EmuDLLDir) - 1);
+}
 
 #ifdef __WIN32__
 //////////////////////////////////////////////////////////////////////
@@ -29,7 +39,6 @@ typedef char* (CALLBACK* LIBNAME)(void);
 
 
 #include <io.h>
-#include <string>
 
 #include <windows.h>
 #include <windowsx.h>
@@ -92,6 +101,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+		SetCurrentDirectory(EmuDLLDir);
 		gsPlugins.clear();
 		padPlugins.clear();
 		spuPlugins.clear();
@@ -119,7 +129,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Version = (LibVersion() >> 16);
 						Revision = (LibVersion() >> 8) & 0xFF;
 						Build = (LibVersion()) & 0xFF;
-						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
+						sprintf_s(Buffer, sizeof(Buffer), "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCGS, Buffer);
 						if (!strcmp(fileinfo.name, GSFileName))
 						{
@@ -132,7 +142,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Version = (LibVersion() >> 16);
 						Revision = (LibVersion() >> 8) & 0xFF;
 						Build = (LibVersion()) & 0xFF;
-						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
+						sprintf_s(Buffer, sizeof(Buffer), "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCPAD, Buffer);
 						if (!strcmp(fileinfo.name, PADFileName))
 						{
@@ -145,7 +155,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Version = (LibVersion() >> 16);
 						Revision = (LibVersion() >> 8) & 0xFF;
 						Build = (LibVersion()) & 0xFF;
-						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
+						sprintf_s(Buffer, sizeof(Buffer), "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCSPU, Buffer);
 						if (!strcmp(fileinfo.name, SPUFileName))
 						{
@@ -165,7 +175,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 		ComboBox_SetCurSel(hWCGS, GSidx);
 		ComboBox_SetCurSel(hWCPAD, PADidx);
 		ComboBox_SetCurSel(hWCSPU, SPUidx);
-		SetCurrentDirectory("..");
+		SetCurrentDirectory(EmuDLLDir);
 		return TRUE;
 
 	case WM_COMMAND:
@@ -179,12 +189,14 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 			hWCGS = GetDlgItem(hW, IDC_COMBO_GS);
 			hWCPAD = GetDlgItem(hW, IDC_COMBO_PAD);
 			hWCSPU = GetDlgItem(hW, IDC_COMBO_SPU);
-			strcpy(GSFileName, gsPlugins[ComboBox_GetCurSel(hWCGS)].c_str());
-			strcpy(PADFileName, padPlugins[ComboBox_GetCurSel(hWCPAD)].c_str());
-			strcpy(SPUFileName, spuPlugins[ComboBox_GetCurSel(hWCSPU)].c_str());
+			strcpy_s(GSFileName, gsPlugins[ComboBox_GetCurSel(hWCGS)].c_str());
+			strcpy_s(PADFileName, padPlugins[ComboBox_GetCurSel(hWCPAD)].c_str());
+			strcpy_s(SPUFileName, spuPlugins[ComboBox_GetCurSel(hWCSPU)].c_str());
 
 			EmuSaveConfig();
 			EmuLoadConfig();
+			EmuReleasePlugins();
+			EmuLoadPlugins();
 			EndDialog(hW, FALSE);
 			return TRUE;
 		}
@@ -238,9 +250,6 @@ void EmuLoadConfig(void)
 	memset(PADFileName, 0, sizeof(PADFileName));
 	memset(SPUFileName, 0, sizeof(SPUFileName));
 	memset(BiosFileName, 0, sizeof(BiosFileName));
-	strcpy(GSFileName, "plugins\\");
-	strcpy(PADFileName, "plugins\\");
-	strcpy(SPUFileName, "plugins\\");
 
 	if (RegOpenKeyEx(HKEY_CURRENT_USER, "Software\\PS2PE", 0, KEY_ALL_ACCESS, &myKey) != ERROR_SUCCESS)
 	{
@@ -251,21 +260,40 @@ void EmuLoadConfig(void)
 	}
 
 	GetKeyV("GSplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcat(GSFileName, Buffer);
+	strcpy_s(GSFileName, Buffer);
 	GetKeyV("PADplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcat(PADFileName, Buffer);
+	strcpy_s(PADFileName, Buffer);
 	GetKeyV("SPUplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcat(SPUFileName, Buffer);
+	strcpy_s(SPUFileName, Buffer);
 	GetKeyV("BIOSfile", BiosFileName, sizeof(BiosFileName), REG_SZ);
 
 	RegCloseKey(myKey);
 }
 
+void EmuReleasePlugins(void)
+{
+	if (GSdll)
+	{
+		FreeLibrary(GSdll);
+		GSdll = 0;
+	}
+	if (PADdll)
+	{
+		FreeLibrary(PADdll);
+		PADdll = 0;
+	}
+}
+
 void EmuLoadPlugins(void)
 {
+	char LibraryPath[1024];
+
+	SetCurrentDirectory(EmuDLLDir);
 	if (!GSdll)
 	{
-		GSdll = LoadLibrary(GSFileName);
+		strcpy_s(LibraryPath, "plugins\\");
+		strcat_s(LibraryPath, GSFileName);
+		GSdll = LoadLibrary(LibraryPath);
 
 		GSinit = (_GSinit)GetProcAddress(GSdll, "GSinit");
 		GSopen = (_GSopen)GetProcAddress(GSdll, "GSopen");
@@ -288,7 +316,9 @@ void EmuLoadPlugins(void)
 
 	if (!PADdll)
 	{
-		PADdll = LoadLibrary(PADFileName);
+		strcpy_s(LibraryPath, "plugins\\");
+		strcat_s(LibraryPath, PADFileName);
+		PADdll = LoadLibrary(LibraryPath);
 
 		PAD1init = (_PADinit)GetProcAddress(PADdll, "PADinit");
 		PAD1open = (_PADopen)GetProcAddress(PADdll, "PADopen");
