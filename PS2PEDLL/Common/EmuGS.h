@@ -247,7 +247,7 @@ typedef char* (DLLCALL* _PS2EgetLibName)();
 
 // GS
 typedef EMU_I32(DLLCALL* _GSinit)();
-typedef EMU_I32(DLLCALL* _GSopen)(void* pDsp, char* Title);
+typedef EMU_I32(DLLCALL* _GSopen)(void* pDsp, const char* Title);
 typedef void (DLLCALL* _GSclose)();
 typedef void (DLLCALL* _GSshutdown)();
 typedef void (DLLCALL* _GSvsync)();

@@ -19,7 +19,7 @@ stEmu_Timer_Control_Regs* Emu_Timer_Control_Reg[4];
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_Timer_Init(void)
+void Emu_Timer_Init()
 {
 	//    Emu_Timer_Control_Reg[ 0 ] = (stEmu_Timer_Control_Regs *) EMemory.GetRealPointer( EMU_TIMER0 );
 	//    Emu_Timer_Control_Reg[ 1 ] = (stEmu_Timer_Control_Regs *) EMemory.GetRealPointer( EMU_TIMER1 );
@@ -33,7 +33,7 @@ void Emu_Timer_Init(void)
 	Emu_Timer_Reset();
 }
 
-void Emu_Timer_Reset(void)
+void Emu_Timer_Reset()
 {
 	memset(Emu_Timer_Control_Reg[0], 0, sizeof(stEmu_Timer_Control_Regs));
 	memset(Emu_Timer_Control_Reg[1], 0, sizeof(stEmu_Timer_Control_Regs));

@@ -410,7 +410,7 @@ DLLEXPORT void CALLBACK EmuExecute(unsigned int Address)
 	Emu_GS_CloseWindow();
 }
 
-DLLEXPORT void CALLBACK EmuLog(char* Format, ...)
+DLLEXPORT void CALLBACK EmuLog(const char* Format, ...)
 {
 	if (fPointer)
 	{
@@ -482,7 +482,7 @@ DLLEXPORT void CALLBACK EmuGetRegs(Emu_R5900_Regs** r5900regs,
 	*vu1regs = &VU1Regs;
 }
 
-DLLEXPORT void CALLBACK EmuConsole(char* Format, ...)
+DLLEXPORT void CALLBACK EmuConsole(const char* Format, ...)
 {
 	if (EmuConsoleCallback)
 	{

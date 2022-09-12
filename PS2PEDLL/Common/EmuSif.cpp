@@ -39,14 +39,14 @@ static EMU_I32 reg4;
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_Sif_Init(void)
+void Emu_Sif_Init()
 {
 	Emu_Sif_Control_Reg = (stEmu_Sif_Control_Regs*)EmuSifMemory;
 
 	Emu_Sif_Reset();
 }
 
-void Emu_Sif_Reset(void)
+void Emu_Sif_Reset()
 {
 	memset(Emu_Sif_Control_Reg, 0, sizeof(stEmu_Sif_Control_Regs));
 
@@ -63,12 +63,12 @@ EMU_U08* Emu_Sif_GetPointer(EMU_U32 Address)
 	return &EmuSifMemory[Address - EMU_SIF_START_ADDR];
 }
 
-void Emu_Sif_Bios_isceDmaStat(void)
+void Emu_Sif_Bios_isceDmaStat()
 { // 0x76
 	R5900Regs.V0.u64_00_63 = 1;
 }
 
-void Emu_Sif_Bios_Call_Module(void)
+void Emu_Sif_Bios_Call_Module()
 {
 	char* fdesc;
 	char    fserv[256],
@@ -122,7 +122,7 @@ void Emu_Sif_Bios_Call_Module(void)
 	}
 }
 
-void Emu_Sif_Bios_Call_Pad1(void)
+void Emu_Sif_Bios_Call_Pad1()
 {
 	EMU_I32 port;
 
@@ -169,7 +169,7 @@ void Emu_Sif_Bios_Call_Pad1(void)
 	}
 }
 
-void Emu_Sif_Bios_Call_Pad2(void)
+void Emu_Sif_Bios_Call_Pad2()
 {
 	if (call->rpc_number != 1)
 	{
@@ -180,7 +180,7 @@ void Emu_Sif_Bios_Call_Pad2(void)
 	}
 }
 
-void Emu_Sif_Bios_Call_XPad1(void)
+void Emu_Sif_Bios_Call_XPad1()
 {
 	EMU_I32 port;
 
@@ -231,7 +231,7 @@ void Emu_Sif_Bios_Call_XPad1(void)
 	}
 }
 
-void Emu_Sif_Bios_Call_XPad2(void)
+void Emu_Sif_Bios_Call_XPad2()
 {
 	if (call->rpc_number != 1)
 	{
@@ -242,7 +242,7 @@ void Emu_Sif_Bios_Call_XPad2(void)
 	}
 }
 
-void Emu_Sif_Bios_Call_Npm(void)
+void Emu_Sif_Bios_Call_Npm()
 {
 	switch (call->rpc_number)
 	{
@@ -340,7 +340,7 @@ void Emu_Sif_Bios_Call_FileIO()
 //
 //  EMU_I32 k_isceSifSetDma( struct t_sif_dma_transfer *, EMU_I32);
 //
-void Emu_Sif_Bios_isceSetDma(void)
+void Emu_Sif_Bios_isceSetDma()
 { // 0x77
 	struct t_sif_dma_transfer* dmat;
 	struct t_sif_cmd_header* hdr;
@@ -509,7 +509,7 @@ void Emu_Sif_Bios_isceSetDma(void)
 //
 //  void isceSifSetDChain();
 //
-void Emu_Sif_Bios_isceSetDChain(void)
+void Emu_Sif_Bios_isceSetDChain()
 { // 0x78
 	EmuMemSetWord(0xb000c000, 0);
 	EmuMemSetWord(0xb000c020, 0);
@@ -525,7 +525,7 @@ void Emu_Sif_Bios_isceSetDChain(void)
 //
 //  EMU_I32 k_sceSifSetReg( EMU_I32, EMU_U32);
 //
-void Emu_Sif_Bios_sceSetReg(void)
+void Emu_Sif_Bios_sceSetReg()
 { // 0x79
 	switch (R5900Regs.A0.u32_00_31)
 	{
@@ -541,7 +541,7 @@ void Emu_Sif_Bios_sceSetReg(void)
 //
 //  EMU_I32 k_sceSifGetReg( EMU_I32);
 //
-void Emu_Sif_Bios_sceGetReg(void)
+void Emu_Sif_Bios_sceGetReg()
 { // 0x7a
 #ifdef EMU_LOG
 	EmuLog("   a0=%x\n", R5900Regs.A0.u32_00_31);

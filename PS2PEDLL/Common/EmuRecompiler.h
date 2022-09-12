@@ -239,7 +239,7 @@ struct stEmuRecInstruction
 	};
 	EMU_U08* CPUAddress;
 
-	stEmuRecInstruction(void)
+	stEmuRecInstruction()
 	{
 		CPUAddress = NULL;
 		Attributes = 0;
@@ -255,12 +255,12 @@ struct stEmuRecInstruction
 typedef std::map<EMU_U32, stEmuRecInstruction>   stEmuRecAddressTranslationTable;
 typedef std::vector<stEmuRecJumpRecord>         stEmuRecPendingJump;
 
-EMU_U08* EmuRec_CurrentAddress(void);
+EMU_U08* EmuRec_CurrentAddress();
 
 void EmuRec_PushPendingJump(EMU_U32* LinkAddress, EMU_U32 JumpTo);
 void EmuRec_Init(EMU_U32 Size);
-void EmuRec_Shutdown(void);
-void EmuRec_Reset(void);
+void EmuRec_Shutdown();
+void EmuRec_Reset();
 void EmuRec_Recompile(EMU_U32 StartAddress, EMU_U32 EndAddress);
 void EmuRec_RecompileExecute(EMU_U32 EntryPoint, EMU_U32 EndAddress, BOOL Loop);
 void EmuRec_RecompileInstruction(EMU_U32 Address, BOOL InBrachDelay);
@@ -270,20 +270,20 @@ void EmuRec_FreeCPUReg(EMU_U32 Code);
 EMU_I32 EmuRec_CheckIntRegCache(EMU_U32 R5900Register, EMU_U32 U32Index);
 EMU_U08* EmuRec_CheckAddress(EMU_U32 Address);
 void EmuRec_SetIntRegTime(EMU_U32 Register);
-void EmuRec_FreeAll(void);
-void EmuRec_FlushAll(void);
+void EmuRec_FreeAll();
+void EmuRec_FlushAll();
 void EmuRec_InsertAddress(EMU_U32 Address, EMU_U08* pMemory);
 void EmuRec_InsertRegDependency(EMU_U32 Address, EMU_U32 Index);
 void EmuRec_ResolveRegDependency(EMU_U32 Address);
-stEmuRecJumpRecord* EmuRec_CheckPendingJumps(void);
+stEmuRecJumpRecord* EmuRec_CheckPendingJumps();
 void EmuRec_InsertDependency(EMU_U32 Address);
-void EmuRec_PopPendingJump(void);
+void EmuRec_PopPendingJump();
 void EmuRec_PushPendingJump(EMU_U32* LinkAddress, EMU_U32 JumpTo);
 
 EMU_U32 EmuRec_GetIntReg(EMU_U32 R5900Register, EMU_U32 U32Index, BOOL ExecuteMove);
 void EmuRec_SetIntRegModified(EMU_U32 Register);
-void EmuRec_PushAll(void);
-void EmuRec_PopAll(void);
+void EmuRec_PushAll();
+void EmuRec_PopAll();
 
 
 typedef void (*EMURECFUNCTION)(EMU_U32);

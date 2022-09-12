@@ -55,14 +55,14 @@ void EmuMemInit(EMU_U32 gMemorySize, EMU_U32 gPageSize)
 	EmuMemClear();
 }
 
-void EmuMemShutdown(void)
+void EmuMemShutdown()
 {
 	delete[] MainMemory.Byte;
 
 	delete[] RaftMemory;
 }
 
-void EmuMemClear(void)
+void EmuMemClear()
 {
 	memset(Mapping, 0, NumberOfPages * sizeof(EMM_MapType));
 	CurrentNumberOfPages = 0;
@@ -335,7 +335,7 @@ inline void EmuMemCallCallBackRead(EMU_U32 Address, EMU_U08* RealAddress)
 	}
 }
 
-EMU_U64 EmuMemGetTime(void)
+EMU_U64 EmuMemGetTime()
 {
 	register EMU_U64 Ticks;
 	RDTSC(Ticks);

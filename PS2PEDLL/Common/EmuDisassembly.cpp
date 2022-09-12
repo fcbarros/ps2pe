@@ -36,7 +36,7 @@ DLLEXPORT void CALLBACK EmuGetDisassemblySymbol(EMU_U32 Address, char* Buffer, E
 	strncpy(Buffer, EmuDisassemblySymbol(Address), BufferSize);
 }
 
-char* EmuDisassemblySymbol(EMU_U32 Address)
+const char* EmuDisassemblySymbol(EMU_U32 Address)
 {
 	static char Symbol_str[256];
 	memset(Symbol_str, 0, sizeof(Symbol_str));
@@ -105,9 +105,9 @@ DLLEXPORT void CALLBACK EmuDisassembly(EMU_U32 Address, char* Buffer, EMU_U32 Bu
 	strncpy(Buffer, stDisassembly, BufferSize);
 }
 
-char* EmuDis_GetCOP0RegName(EMU_U32 Reg)
+const char* EmuDis_GetCOP0RegName(EMU_U32 Reg)
 {
-	static char* EmuCOP0RegName[32] = {
+	static const char* EmuCOP0RegName[32] = {
 		"Index", "Random", "EntryLo0", "EntryLo1",
 		"Context", "PageMask", "Wired", "Reserved0",
 		"BadVAddr", "Count", "EntryHi", "Compare",
@@ -120,9 +120,9 @@ char* EmuDis_GetCOP0RegName(EMU_U32 Reg)
 	return EmuCOP0RegName[Reg];
 }
 
-char* EmuDis_GetRegName(EMU_U32 Reg)
+const char* EmuDis_GetRegName(EMU_U32 Reg)
 {
-	static char* EmuRegName[36] = {
+	static const char* EmuRegName[36] = {
 		"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
 		"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
 		"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
@@ -132,9 +132,9 @@ char* EmuDis_GetRegName(EMU_U32 Reg)
 	return EmuRegName[Reg];
 }
 
-char* EmuDis_GetCOP1RegName(EMU_U32 Reg)
+const char* EmuDis_GetCOP1RegName(EMU_U32 Reg)
 {
-	static char* EmuRegName[35] = {
+	static const char* EmuRegName[35] = {
 		"fpr0", "fpr1", "fpr2", "fpr3", "fpr4", "fpr5", "fpr6", "fpr7",
 		"fpr8", "fpr9", "fpr10", "fpr11", "fpr12", "fpr13", "fpr14", "fpr15",
 		"fpr16", "fpr17", "fpr18", "fpr19", "fpr20", "fpr21", "fpr22", "fpr23",
@@ -144,9 +144,9 @@ char* EmuDis_GetCOP1RegName(EMU_U32 Reg)
 	return EmuRegName[Reg];
 }
 
-char* EmuDis_GetCOP2FPRegName(EMU_U32 Reg)
+const char* EmuDis_GetCOP2FPRegName(EMU_U32 Reg)
 {
-	static char* EmuRegName[33] = {
+	static const char* EmuRegName[33] = {
 		"vf0", "vf1", "vf2", "vf3", "vf4", "vf5", "vf6", "vf7",
 		"vf8", "vf9", "vf10", "vf11", "vf12", "vf13", "vf14", "vf15",
 		"vf16", "vf17", "vf18", "vf19", "vf20", "vf21", "vf22", "vf23",
@@ -156,9 +156,9 @@ char* EmuDis_GetCOP2FPRegName(EMU_U32 Reg)
 	return EmuRegName[Reg];
 }
 
-char* EmuDis_GetCOP2IPRegName(EMU_U32 Reg)
+const char* EmuDis_GetCOP2IPRegName(EMU_U32 Reg)
 {
-	static char* EmuRegName[32] = {
+	static const char* EmuRegName[32] = {
 		"vi0", "vi1", "vi2", "vi3", "vi4", "vi5", "vi6", "vi7",
 		"vi8", "vi9", "vi10", "vi11", "vi12", "vi13", "vi14", "vi15",
 		"status", "mac", "clipping", "reserved1", "r", "i", "q", "reserved2",
@@ -168,18 +168,16 @@ char* EmuDis_GetCOP2IPRegName(EMU_U32 Reg)
 }
 
 
-
-
 char Local_dis_str[256];
 
-char* EmuDis_Nothing(EMU_U32, EMU_U32 Code)
+const char* EmuDis_Nothing(EMU_U32, EMU_U32 Code)
 {
 	strcpy(Local_dis_str, "");
 
 	return Local_dis_str;
 }
 
-char* EmuDis_RS_RT_I16(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RS_RT_I16(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
@@ -191,14 +189,14 @@ char* EmuDis_RS_RT_I16(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_I26(EMU_U32 Address, EMU_U32 Code)
+const char* EmuDis_I26(EMU_U32 Address, EMU_U32 Code)
 {
 	EMU_U32 I26 = (Code & 0x03FFFFFF) << 2;
 	I26 |= (Address + 4) & 0xC0000000;
 
 	sprintf(Local_dis_str, " $%x", I26);
 
-	char* Label = EmuDisassemblySymbol(I26);
+	const char* Label = EmuDisassemblySymbol(I26);
 	if (strlen(Label) > 0)
 	{
 		strcat_s(Local_dis_str, "     ( ");
@@ -209,7 +207,7 @@ char* EmuDis_I26(EMU_U32 Address, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_0_RT_I16(EMU_U32, EMU_U32 Code)
+const char* EmuDis_0_RT_I16(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
 	EMU_U32 I16 = Code & 0x0000FFFF;
@@ -219,7 +217,7 @@ char* EmuDis_0_RT_I16(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_BASE_RT_OFF16(EMU_U32, EMU_U32 Code)
+const char* EmuDis_BASE_RT_OFF16(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 BASE = (Code >> 21) & 0x0000001F;
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
@@ -231,7 +229,7 @@ char* EmuDis_BASE_RT_OFF16(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_SYSCALL(EMU_U32, EMU_U32 Code)
+const char* EmuDis_SYSCALL(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 I20 = (Code >> 6) & 0x000FFFFF;
 
@@ -240,7 +238,7 @@ char* EmuDis_SYSCALL(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_0_RT_RD_SA(EMU_U32, EMU_U32 Code)
+const char* EmuDis_0_RT_RD_SA(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
 	EMU_U32 RD = (Code >> 11) & 0x0000001F;
@@ -252,7 +250,7 @@ char* EmuDis_0_RT_RD_SA(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_REGISTERED(EMU_U32, EMU_U32 Code)
+const char* EmuDis_REGISTERED(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 Index = EmuInstructionIndex(Code);
 	EMU_U32 I32 = ~EmuInstructions[Index].Mask &
@@ -265,7 +263,7 @@ char* EmuDis_REGISTERED(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RS_RT_BRANCH16(EMU_U32 Address, EMU_U32 Code)
+const char* EmuDis_RS_RT_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
@@ -278,7 +276,7 @@ char* EmuDis_RS_RT_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 		EmuDis_GetRegName(RS), EmuDis_GetRegName(RT),
 		OFF32);
 
-	char* Label = EmuDisassemblySymbol(OFF32);
+	const char* Label = EmuDisassemblySymbol(OFF32);
 	if (strlen(Label) > 0)
 	{
 		strcat_s(Local_dis_str, "     ( ");
@@ -289,7 +287,7 @@ char* EmuDis_RS_RT_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RS_0_BRANCH16(EMU_U32 Address, EMU_U32 Code)
+const char* EmuDis_RS_0_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 OFF32 = (Code & 0x0000FFFF) << 2;
@@ -301,7 +299,7 @@ char* EmuDis_RS_0_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 		EmuDis_GetRegName(RS),
 		OFF32);
 
-	char* Label = EmuDisassemblySymbol(OFF32);
+	const char* Label = EmuDisassemblySymbol(OFF32);
 	if (strlen(Label) > 0)
 	{
 		strcat_s(Local_dis_str, "     ( ");
@@ -312,7 +310,7 @@ char* EmuDis_RS_0_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_PREF(EMU_U32, EMU_U32 Code)
+const char* EmuDis_PREF(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 BASE = (Code >> 21) & 0x0000001F;
 	EMU_U32 HINT = (Code >> 16) & 0x0000001F;
@@ -340,7 +338,7 @@ char* EmuDis_PREF(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_JR(EMU_U32, EMU_U32 Code)
+const char* EmuDis_JR(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 
@@ -350,7 +348,7 @@ char* EmuDis_JR(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_JALR(EMU_U32, EMU_U32 Code)
+const char* EmuDis_JALR(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RD = (Code >> 11) & 0x0000001F;
@@ -361,7 +359,7 @@ char* EmuDis_JALR(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RS_RT_RD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RS_RT_RD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
@@ -375,7 +373,7 @@ char* EmuDis_RS_RT_RD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RT_FS(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RT_FS(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
 	EMU_U32 FS = (Code >> 11) & 0x0000001F;
@@ -387,7 +385,7 @@ char* EmuDis_RT_FS(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_FS_FD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_FS_FD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 FS = (Code >> 11) & 0x0000001F;
 	EMU_U32 FD = (Code >> 06) & 0x0000001F;
@@ -399,7 +397,7 @@ char* EmuDis_FS_FD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_FT_FS_FD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_FT_FS_FD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 FT = (Code >> 16) & 0x0000001F;
 	EMU_U32 FS = (Code >> 11) & 0x0000001F;
@@ -413,7 +411,7 @@ char* EmuDis_FT_FS_FD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_BASE_FT_OFF16(EMU_U32, EMU_U32 Code)
+const char* EmuDis_BASE_FT_OFF16(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 BASE = (Code >> 21) & 0x0000001F;
 	EMU_U32 FT = (Code >> 16) & 0x0000001F;
@@ -427,7 +425,7 @@ char* EmuDis_BASE_FT_OFF16(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RS_RT(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RS_RT(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
@@ -439,7 +437,7 @@ char* EmuDis_RS_RT(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RD = (Code >> 16) & 0x0000001F;
 
@@ -449,7 +447,7 @@ char* EmuDis_RD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RS(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RS(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 
@@ -459,7 +457,7 @@ char* EmuDis_RS(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_SHIFT_V(EMU_U32, EMU_U32 Code)
+const char* EmuDis_SHIFT_V(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
@@ -473,7 +471,7 @@ char* EmuDis_SHIFT_V(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RS_I16(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RS_I16(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_I64 I16 = (short)(Code & 0x0000FFFF);
@@ -485,7 +483,7 @@ char* EmuDis_RS_I16(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RD11(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RD11(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RD = (Code >> 11) & 0x0000001F;
 
@@ -495,7 +493,7 @@ char* EmuDis_RD11(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_0_RT_RD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_0_RT_RD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
 	EMU_U32 RD = (Code >> 11) & 0x0000001F;
@@ -506,7 +504,7 @@ char* EmuDis_0_RT_RD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_FT_FS(EMU_U32, EMU_U32 Code)
+const char* EmuDis_FT_FS(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 FT = (Code >> 16) & 0x0000001F;
 	EMU_U32 FS = (Code >> 11) & 0x0000001F;
@@ -518,7 +516,7 @@ char* EmuDis_FT_FS(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_FT_0_FD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_FT_0_FD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 FT = (Code >> 16) & 0x0000001F;
 	EMU_U32 FD = (Code >> 06) & 0x0000001F;
@@ -530,7 +528,7 @@ char* EmuDis_FT_0_FD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_BRANCH16(EMU_U32 Address, EMU_U32 Code)
+const char* EmuDis_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 {
 	EMU_U32 OFF32 = (short)(Code & 0x0000FFFF);
 	// Signed extended
@@ -540,7 +538,7 @@ char* EmuDis_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 	sprintf(Local_dis_str, " $%x",
 		OFF32);
 
-	char* Label = EmuDisassemblySymbol(OFF32);
+	const char* Label = EmuDisassemblySymbol(OFF32);
 	if (strlen(Label) > 0)
 	{
 		strcat(Local_dis_str, "     ( ");
@@ -551,7 +549,7 @@ char* EmuDis_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_SYNC_STYPE(EMU_U32, EMU_U32 Code)
+const char* EmuDis_SYNC_STYPE(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 SType = (Code >> 06) & 0x00000010;
 
@@ -567,7 +565,7 @@ char* EmuDis_SYNC_STYPE(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_RS_0_RD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_RS_0_RD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RD = (Code >> 11) & 0x0000001F;
@@ -579,7 +577,7 @@ char* EmuDis_RS_0_RD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_MC0(EMU_U32, EMU_U32 Code)
+const char* EmuDis_MC0(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
 	EMU_U32 RD = (Code >> 11) & 0x0000001F;
@@ -590,7 +588,7 @@ char* EmuDis_MC0(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_VU_RT_FD_INTERLOCK(EMU_U32, EMU_U32 Code)
+const char* EmuDis_VU_RT_FD_INTERLOCK(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
 	EMU_U32 FD = (Code >> 11) & 0x0000001F;
@@ -602,7 +600,7 @@ char* EmuDis_VU_RT_FD_INTERLOCK(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_VU_RT_ID_INTERLOCK(EMU_U32, EMU_U32 Code)
+const char* EmuDis_VU_RT_ID_INTERLOCK(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
 	EMU_U32 FD = (Code >> 11) & 0x0000001F;
@@ -614,7 +612,7 @@ char* EmuDis_VU_RT_ID_INTERLOCK(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_VU_DEST_FT_FS_FD_BC(EMU_U32, EMU_U32 Code)
+const char* EmuDis_VU_DEST_FT_FS_FD_BC(EMU_U32, EMU_U32 Code)
 {
 	/*    EMU_U32 DEST = ( Code >> 21 ) & 0x0000000F;
 		EMU_U32 FT = ( Code >> 16 ) & 0x0000001F;
@@ -631,7 +629,7 @@ char* EmuDis_VU_DEST_FT_FS_FD_BC(EMU_U32, EMU_U32 Code)
 	return "";
 }
 
-char* EmuDis_VU_DEST_FT_FS(EMU_U32, EMU_U32 Code)
+const char* EmuDis_VU_DEST_FT_FS(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 DEST = (Code >> 21) & 0x0000000F;
 	EMU_U32 FT = (Code >> 16) & 0x0000001F;
@@ -644,7 +642,7 @@ char* EmuDis_VU_DEST_FT_FS(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_BASE_VFT_OFF16(EMU_U32, EMU_U32 Code)
+const char* EmuDis_BASE_VFT_OFF16(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 BASE = (Code >> 21) & 0x0000001F;
 	EMU_U32 RT = (Code >> 16) & 0x0000001F;
@@ -656,7 +654,7 @@ char* EmuDis_BASE_VFT_OFF16(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_VU_DEST_FT_FS_FD(EMU_U32, EMU_U32 Code)
+const char* EmuDis_VU_DEST_FT_FS_FD(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 DEST = (Code >> 21) & 0x0000000F;
 	EMU_U32 FT = (Code >> 16) & 0x0000001F;
@@ -670,7 +668,7 @@ char* EmuDis_VU_DEST_FT_FS_FD(EMU_U32, EMU_U32 Code)
 	return Local_dis_str;
 }
 
-char* EmuDis_VU_DEST_FT_FS_BC(EMU_U32, EMU_U32 Code)
+const char* EmuDis_VU_DEST_FT_FS_BC(EMU_U32, EMU_U32 Code)
 {
 	EMU_U32 DEST = (Code >> 21) & 0x0000000F;
 	EMU_U32 FT = (Code >> 16) & 0x0000001F;
@@ -684,4 +682,3 @@ char* EmuDis_VU_DEST_FT_FS_BC(EMU_U32, EMU_U32 Code)
 
 	return Local_dis_str;
 }
-

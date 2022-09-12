@@ -16,7 +16,7 @@ EMU_U32 deci2handler;
 EMUBIOSFUNCTIONS Emu_Bios_Function[256];
 
 // Names of the 256 Bios calls
-char* Emu_Bios_Calls_Names[256] =
+const char* Emu_Bios_Calls_Names[256] =
 {
 	//0x00
 	"RFU000_FullReset",         "ResetEE",              "SetGsCrt",                 "RFU003",

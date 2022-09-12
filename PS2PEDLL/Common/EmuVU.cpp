@@ -19,12 +19,12 @@ EMU_VU_Regs VU1Regs;
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_Vu_Init(void)
+void Emu_Vu_Init()
 {
 	Emu_Vu_Reset();
 }
 
-void Emu_Vu_Reset(void)
+void Emu_Vu_Reset()
 {
 	memset(&VU0Regs, 0, sizeof(EMU_VU_Regs));
 	memset(&VU1Regs, 0, sizeof(EMU_VU_Regs));

@@ -20,7 +20,7 @@ stEmu_Vif_Control_Regs* Emu_Vif_Control_Reg1;
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_Vif_Init(void)
+void Emu_Vif_Init()
 {
 	//    Emu_Vif_Control_Reg0 = (stEmu_Vif_Control_Regs *) EMemory.GetRealPointer( EMU_VIF0 );
 	//    Emu_Vif_Control_Reg1 = (stEmu_Vif_Control_Regs *) EMemory.GetRealPointer( EMU_VIF1 );
@@ -30,7 +30,7 @@ void Emu_Vif_Init(void)
 	Emu_Vif_Reset();
 }
 
-void Emu_Vif_Reset(void)
+void Emu_Vif_Reset()
 {
 	memset(Emu_Vif_Control_Reg0, 0, sizeof(stEmu_Vif_Control_Regs));
 	memset(Emu_Vif_Control_Reg1, 0, sizeof(stEmu_Vif_Control_Regs));
