@@ -1,3 +1,4 @@
+
 #include "EmuExecute.h"
 
 EMU_U32 EmuFloatStatus;
@@ -22,10 +23,10 @@ const EMU_U16 MaxU16 = 0xFFFF;
 const EMU_U32 MaxU32 = 0xFFFFFFFF;
 const EMU_U64 MaxU64 = 0xFFFFFFFFFFFFFFFF;
 EMU_U32 JumpTo;
+bool enableStat = false;
+bool enableDebug = false;
 
 EMU_U64 CpuCycles = 0;
-
-bool DebugMode;
 
 EMU_U32 clamp(EMU_U32 X)
 {
@@ -33,7 +34,7 @@ EMU_U32 clamp(EMU_U32 X)
 	{
 		return 0x7FFF;
 	}
-	else  if (X < 0xFFFF8000)
+	else if (X < 0xFFFF8000)
 	{
 		return 0x8000;
 	}
@@ -45,21 +46,23 @@ EMU_U32 clamp(EMU_U32 X)
 
 EMU_U32 EmuInstructionIndex2(EMU_U32 tInst);
 
+void EmuRunLoop(EMU_U32 tAddress, bool InLoop);
+
 void EmuExecuteFast(EMU_U32 tAddress, bool InLoop)
 {
-	DebugMode = false;
-	EmuLoop(tAddress, InLoop);
+	enableStat = false;
+	enableDebug = false;
+	EmuRunLoop(tAddress, InLoop);
 }
 
 void EmuRunDebug(EMU_U32 tAddress, bool InLoop)
 {
-	DebugMode = true;
-	EmuLoop(tAddress, InLoop);
+	enableStat = true;
+	enableDebug = true;
+	EmuRunLoop(tAddress, InLoop);
 }
 
-void EmuCore(EMU_U32 Code);
-
-void EmuLoop(EMU_U32 tAddress, bool InLoop)
+void EmuRunLoop(EMU_U32 tAddress, bool InLoop)
 {
 	R5900Regs.PC = tAddress;
 
@@ -87,12 +90,20 @@ void EmuLoop(EMU_U32 tAddress, bool InLoop)
 		R5900Regs.PC += 4;
 		if (Code)
 		{
-			if (DebugMode)
+			if (enableStat)
 			{
 				EmuRunningStats[EmuInstructionIndex2(Code)].Total++;
 			}
 
+			/////////////////////////////////////////////////////////////////////////
+			// Main Loop
+			/////////////////////////////////////////////////////////////////////////
+
 			EmuCore(Code);
+
+			/////////////////////////////////////////////////////////////////////////
+			// End of Main Loop
+			/////////////////////////////////////////////////////////////////////////
 		}
 		COP0Regs.Count++;
 		CpuCycles++;
@@ -109,12 +120,9 @@ void EmuLoop(EMU_U32 tAddress, bool InLoop)
 			break;
 		}
 
-		if (DebugMode)
+		if (enableDebug && (InstrBreakPoints[EmuInstructionIndex2(EmuMemGetWord(R5900Regs.PC))]) || (EmuIsBreakPoint(R5900Regs.PC)))
 		{
-			if ((InstrBreakPoints[EmuInstructionIndex2(EmuMemGetWord(R5900Regs.PC))]) || (EmuIsBreakPoint(R5900Regs.PC)))
-			{
-				break;
-			}
+			break;
 		}
 	}
 }

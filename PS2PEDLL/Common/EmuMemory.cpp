@@ -11,6 +11,7 @@
 #include "EmuTimer.h"
 #include "EmuBios.h"
 
+
 EMU_U32        MemorySize;
 EMU_U32        MemoryMask;
 EMU_U32        PageSize;
@@ -28,9 +29,10 @@ EMM_ReadCallBackType	ReadCallBacks;
 
 EMU_U08* RaftMemory;
 
+
 void EmuMemReplace(EMU_U32 Address);
 inline void EmuMemCallCallBackWrite(EMU_U32 Address);
-//inline void EmuMemCallCallBackRead(EMU_U32 Address);
+inline void EmuMemCallCallBackRead(EMU_U32 Address);
 
 void EmuMemInit(EMU_U32 gMemorySize, EMU_U32 gPageSize)
 {
@@ -72,11 +74,11 @@ EMU_U08* EmuMemGetRealPointer(EMU_U32 Address)
 	{
 		Address -= 0x80000000;
 	}
-	else if ((Address >= 0xA0000000) && (Address < 0xC0000000))
-	{
-		Address -= 0xA0000000;
-	}
-
+	else
+		if ((Address >= 0xA0000000) && (Address < 0xC0000000))
+		{
+			Address -= 0xA0000000;
+		}
 	if ((Address >= EMU_TIMER_START_ADDR) &&
 		(Address <= EMU_GS_PRIV_END_ADDR))
 	{
@@ -84,61 +86,71 @@ EMU_U08* EmuMemGetRealPointer(EMU_U32 Address)
 		{
 			return Emu_Timer_GetPointer(Address);
 		}
-		else if (Address < EMU_GIF_START_ADDR)
+		else
+			if (Address < EMU_GIF_START_ADDR)
+			{
+				return Emu_Ipu_GetPointer(Address);
+			}
+			else
+				if (Address < EMU_VIF_START_ADDR)
+				{
+					return Emu_Gif_GetPointer(Address);
+				}
+				else
+					if (Address < EMU_FIFO_START_ADDR)
+					{
+						return Emu_Vif_GetPointer(Address);
+					}
+					else
+						if (Address < EMU_DMA_START_ADDR)
+						{
+							return Emu_Fifo_GetPointer(Address);
+						}
+						else
+							if (Address < EMU_INTC_START_ADDR)
+							{
+								return Emu_Dma_GetPointer(Address);
+							}
+							else
+								if (Address < EMU_SIF_START_ADDR)
+								{
+									return Emu_Intc_GetPointer(Address);
+								}
+								else
+									if (Address < EMU_DMA_ENAB_START_ADDR)
+									{
+										return Emu_Sif_GetPointer(Address);
+									}
+									else
+										if (Address < EMU_VU_START_ADDR)
+										{
+											return Emu_Dma_GetPointer(Address);
+										}
+										else
+											if (Address < EMU_GS_PRIV_START_ADDR)
+											{
+												return Emu_Vu_GetPointer(Address);
+											}
+											else
+											{
+												return Emu_GS_GetPointer(Address);
+											}
+	}
+	else
+		if ((Address >= EMU_BIOS_START_ADDR) && (Address <= EMU_BIOS_END_ADDR))
 		{
-			return Emu_Ipu_GetPointer(Address);
-		}
-		else if (Address < EMU_VIF_START_ADDR)
-		{
-			return Emu_Gif_GetPointer(Address);
-		}
-		else if (Address < EMU_FIFO_START_ADDR)
-		{
-			return Emu_Vif_GetPointer(Address);
-		}
-		else if (Address < EMU_DMA_START_ADDR)
-		{
-			return Emu_Fifo_GetPointer(Address);
-		}
-		else if (Address < EMU_INTC_START_ADDR)
-		{
-			return Emu_Dma_GetPointer(Address);
-		}
-		else if (Address < EMU_SIF_START_ADDR)
-		{
-			return Emu_Intc_GetPointer(Address);
-		}
-		else if (Address < EMU_DMA_ENAB_START_ADDR)
-		{
-			return Emu_Sif_GetPointer(Address);
-		}
-		else if (Address < EMU_VU_START_ADDR)
-		{
-			return Emu_Dma_GetPointer(Address);
-		}
-		else if (Address < EMU_GS_PRIV_START_ADDR)
-		{
-			return Emu_Vu_GetPointer(Address);
+			return Emu_Bios_GetPointer(Address);
 		}
 		else
 		{
-			return Emu_GS_GetPointer(Address);
-		}
-	}
-	else if ((Address >= EMU_BIOS_START_ADDR) && (Address <= EMU_BIOS_END_ADDR))
-	{
-		return Emu_Bios_GetPointer(Address);
-	}
-	else
-	{
-		EMM_MapType& Entry = Mapping[Address >> 16];
-		if (!Entry.InMemory)
-		{
-			EmuMemReplace(Address);
-		}
+			EMM_MapType& Entry = Mapping[Address >> 16];
+			if (!Entry.InMemory)
+			{
+				EmuMemReplace(Address);
+			}
 
-		return &MainMemory.Byte[Entry.Page | (Address & MemoryMask)];
-	}
+			return &MainMemory.Byte[Entry.Page | (Address & MemoryMask)];
+		}
 }
 
 void EmuMemSetByte(EMU_U32 Address, EMU_U08 Data)
@@ -238,18 +250,18 @@ void EmuMemLoad(EMU_U32 Address)
 	FILE* pPageFile = NULL;
 	char FileName[256];
 
-	sprintf_s(FileName, sizeof(FileName), "fPage%u.tmp", Address & PageMask);
+	sprintf(FileName, "fPage%u.tmp", Address & PageMask);
 
-	if (fopen_s(&pPageFile, FileName, "rb") == 0)
-	{
-		EMM_MapType& Entry = Mapping[Address >> 16];
+	pPageFile = fopen(FileName, "rb");
 
-		fread(&MainMemory.Byte[Entry.Page | (Address & MemoryMask)], PageSize, 1, pPageFile);
+	EMM_MapType& Entry = Mapping[Address >> 16];
 
-		fclose(pPageFile);
+	fread(&MainMemory.Byte[Entry.Page | (Address & MemoryMask)],
+		PageSize, 1, pPageFile);
 
-		Entry.Modified = 0;
-	}
+	fclose(pPageFile);
+
+	Entry.Modified = 0;
 }
 
 void EmuMemSave(EMU_U32 Address)
@@ -257,18 +269,18 @@ void EmuMemSave(EMU_U32 Address)
 	FILE* pPageFile = NULL;
 	char FileName[256];
 
-	sprintf_s(FileName, sizeof(FileName), "fPage%u.tmp", Address & PageMask);
+	sprintf(FileName, "fPage%u.tmp", Address & PageMask);
 
-	if (fopen_s(&pPageFile, FileName, "wb") == 0)
-	{
-		EMM_MapType& Entry = Mapping[Address >> 16];
+	pPageFile = fopen(FileName, "wb");
 
-		fwrite(&MainMemory.Byte[Entry.Page | (Address & MemoryMask)], PageSize, 1, pPageFile);
+	EMM_MapType& Entry = Mapping[Address >> 16];
 
-		fclose(pPageFile);
+	fwrite(&MainMemory.Byte[Entry.Page | (Address & MemoryMask)],
+		PageSize, 1, pPageFile);
 
-		Entry.Modified = 0;
-	}
+	fclose(pPageFile);
+
+	Entry.Modified = 0;
 }
 
 void EmuMemAddWriteCallBack(EMU_U32 StartAddress,
@@ -301,7 +313,8 @@ inline void EmuMemCallCallBackWrite(EMU_U32 Address)
 {
 	for (unsigned int i = 0; i < WriteCallBacks.size(); i++)
 	{
-		if ((Address >= WriteCallBacks[i].StartAddress) && (Address < WriteCallBacks[i].EndAddress))
+		if ((Address >= WriteCallBacks[i].StartAddress) &&
+			(Address < WriteCallBacks[i].EndAddress))
 		{
 			(*WriteCallBacks[i].CallBack)(Address);
 			return;
@@ -335,8 +348,8 @@ bool EmuMemAddFromFile(const char* FileName,
 	EMU_U32 EmuAddress,
 	EMU_U08 Permissions)
 {
-	FILE* pFile;
-	if (fopen_s(&pFile, FileName, "rb") != 0)
+	FILE* pFile = fopen(FileName, "rb");
+	if (!pFile)
 	{
 		return false;
 	}
@@ -382,6 +395,7 @@ bool EmuMemAddFromFile(const char* FileName,
 		}
 	}
 
+
 	fclose(pFile);
 
 	return true;
@@ -393,10 +407,11 @@ EMU_U08* EmuMemReadContinuosArea(EMU_U32 Address, EMU_U32 Size)
 	{
 		Address -= 0x80000000;
 	}
-	else if ((Address >= 0xA0000000) && (Address < 0xC0000000))
-	{
-		Address -= 0xA0000000;
-	}
+	else
+		if ((Address >= 0xA0000000) && (Address < 0xC0000000))
+		{
+			Address -= 0xA0000000;
+		}
 	if ((Address >= EMU_TIMER_START_ADDR) &&
 		(Address <= EMU_GS_PRIV_END_ADDR))
 	{
@@ -404,95 +419,105 @@ EMU_U08* EmuMemReadContinuosArea(EMU_U32 Address, EMU_U32 Size)
 		{
 			return Emu_Timer_GetPointer(Address);
 		}
-		else if (Address < EMU_GIF_START_ADDR)
-		{
-			return Emu_Ipu_GetPointer(Address);
-		}
-		else if (Address < EMU_VIF_START_ADDR)
-		{
-			return Emu_Gif_GetPointer(Address);
-		}
-		else if (Address < EMU_FIFO_START_ADDR)
-		{
-			return Emu_Vif_GetPointer(Address);
-		}
-		else if (Address < EMU_DMA_START_ADDR)
-		{
-			return Emu_Fifo_GetPointer(Address);
-		}
-		else if (Address < EMU_INTC_START_ADDR)
-		{
-			return Emu_Dma_GetPointer(Address);
-		}
-		else if (Address < EMU_SIF_START_ADDR)
-		{
-			return Emu_Intc_GetPointer(Address);
-		}
-		else if (Address < EMU_DMA_ENAB_START_ADDR)
-		{
-			return Emu_Sif_GetPointer(Address);
-		}
-		else if (Address < EMU_VU_START_ADDR)
-		{
-			return Emu_Dma_GetPointer(Address);
-		}
-		else if (Address < EMU_GS_PRIV_START_ADDR)
-		{
-			return Emu_Vu_GetPointer(Address);
-		}
 		else
-		{
-			return Emu_GS_GetPointer(Address);
-		}
-	}
-	else if ((Address >= EMU_BIOS_START_ADDR) && (Address <= EMU_BIOS_END_ADDR))
-	{
-		return Emu_Bios_GetPointer(Address);
+			if (Address < EMU_GIF_START_ADDR)
+			{
+				return Emu_Ipu_GetPointer(Address);
+			}
+			else
+				if (Address < EMU_VIF_START_ADDR)
+				{
+					return Emu_Gif_GetPointer(Address);
+				}
+				else
+					if (Address < EMU_FIFO_START_ADDR)
+					{
+						return Emu_Vif_GetPointer(Address);
+					}
+					else
+						if (Address < EMU_DMA_START_ADDR)
+						{
+							return Emu_Fifo_GetPointer(Address);
+						}
+						else
+							if (Address < EMU_INTC_START_ADDR)
+							{
+								return Emu_Dma_GetPointer(Address);
+							}
+							else
+								if (Address < EMU_SIF_START_ADDR)
+								{
+									return Emu_Intc_GetPointer(Address);
+								}
+								else
+									if (Address < EMU_DMA_ENAB_START_ADDR)
+									{
+										return Emu_Sif_GetPointer(Address);
+									}
+									else
+										if (Address < EMU_VU_START_ADDR)
+										{
+											return Emu_Dma_GetPointer(Address);
+										}
+										else
+											if (Address < EMU_GS_PRIV_START_ADDR)
+											{
+												return Emu_Vu_GetPointer(Address);
+											}
+											else
+											{
+												return Emu_GS_GetPointer(Address);
+											}
 	}
 	else
-	{
-		EMU_U32 StartPage = Address >> 16;
-		EMU_U32 EndPage = (Address + Size) >> 16;
-
-		EMM_MapType Entry = Mapping[StartPage];
-		if (!Entry.InMemory)
+		if ((Address >= EMU_BIOS_START_ADDR) && (Address <= EMU_BIOS_END_ADDR))
 		{
-			EmuMemReplace(Address);
-			Entry = Mapping[Address >> 16];
-		}
-
-		if (EndPage == StartPage)
-		{
-			return &MainMemory.Byte[Entry.Page | (Address & MemoryMask)];
+			return Emu_Bios_GetPointer(Address);
 		}
 		else
 		{
-			EMU_U32 RealEndAddr = Address + Size;
-			EMU_U32 BufferPos = 0;
-			EMU_U32 EndAddr = (Address & 0xFFFF0000) + PageSize;
-			while (BufferPos < Size)
+			EMU_U32 StartPage = Address >> 16;
+			EMU_U32 EndPage = (Address + Size) >> 16;
+
+			EMM_MapType Entry = Mapping[StartPage];
+			if (!Entry.InMemory)
 			{
-				memcpy(&RaftMemory[BufferPos],
-					&MainMemory.Byte[Entry.Page | (Address & MemoryMask)],
-					EndAddr - Address);
-				BufferPos += EndAddr - Address;
-				Address = EndAddr;
+				EmuMemReplace(Address);
 				Entry = Mapping[Address >> 16];
-				if (!Entry.InMemory)
-				{
-					EmuMemReplace(Address);
-					Entry = Mapping[Address >> 16];
-				}
-				EndAddr = (Address & 0xFFFF0000) + PageSize;
-				if (EndAddr > RealEndAddr)
-				{
-					EndAddr = RealEndAddr;
-				}
 			}
 
-			return RaftMemory;
+			if (EndPage == StartPage)
+			{
+				return &MainMemory.Byte[Entry.Page | (Address & MemoryMask)];
+			}
+			else
+			{
+				EMU_U32 RealEndAddr = Address + Size;
+				EMU_U32 BufferPos = 0;
+				EMU_U32 EndAddr = (Address & 0xFFFF0000) + PageSize;
+				while (BufferPos < Size)
+				{
+					memcpy(&RaftMemory[BufferPos],
+						&MainMemory.Byte[Entry.Page | (Address & MemoryMask)],
+						EndAddr - Address);
+					BufferPos += EndAddr - Address;
+					Address = EndAddr;
+					Entry = Mapping[Address >> 16];
+					if (!Entry.InMemory)
+					{
+						EmuMemReplace(Address);
+						Entry = Mapping[Address >> 16];
+					}
+					EndAddr = (Address & 0xFFFF0000) + PageSize;
+					if (EndAddr > RealEndAddr)
+					{
+						EndAddr = RealEndAddr;
+					}
+				}
+
+				return RaftMemory;
+			}
 		}
-	}
 }
 
 /*

@@ -59,27 +59,27 @@ protected:
 // Implementation
 protected:
 	void MemoryGo(unsigned int Address);
-	void GenerateLoadedStats(void);
-	void GenerateRunningStats(void);
-	void GenerateInstructionsStats(void);
-	void ShowStats(void);
+	void GenerateLoadedStats();
+	void GenerateRunningStats();
+	void GenerateInstructionsStats();
+	void ShowStats();
 	void DisassemblyGo(unsigned int Pos);
-	void LogInstructions(void);
+	void LogInstructions();
 	unsigned int MemoryPos{ 0 };
 	unsigned int DisassemblyPos{ 0 };
 	unsigned int DisassemblyNum{ 0 };
 	unsigned int MemoryNum{ 0 };
-	void FillMemoryInfo(void);
+	void FillMemoryInfo();
 	void ShowMemory();
 	void Disassembly();
 	void ShowDisassembly();
 	void ChangeTabDebug();
-	void ShowCOP1(void);
+	void ShowCOP1();
 	void ChangeTabRegs();
-	void ShowCOP0(void);
-	void ShowCOP2_FPR(void);
-	void ShowCOP2_IR(void);
-	void ShowGPR(void);
+	void ShowCOP0();
+	void ShowCOP2_FPR();
+	void ShowCOP2_IR();
+	void ShowGPR();
 	CToolBar TBFile;
 	CToolBar TBDebug;
 	HICON m_hIcon;

@@ -1,6 +1,7 @@
 #include "EmuMain.h"
 #include "EmuIntc.h"
 
+
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // Variables
@@ -20,7 +21,7 @@ stEMU_INTC_HANDLER Emu_Intc_Handler[32];
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_Intc_Init(void)
+void Emu_Intc_Init()
 {
 	//    Emu_Intc_Control_Reg = (stEmu_Intc_Control_Regs *) EMemory.GetRealPointer( EMU_INTC_START_ADDR );
 	Emu_Intc_Control_Reg = (stEmu_Intc_Control_Regs*)EmuIntcMemory;
@@ -28,7 +29,7 @@ void Emu_Intc_Init(void)
 	Emu_Intc_Reset();
 }
 
-void Emu_Intc_Reset(void)
+void Emu_Intc_Reset()
 {
 	memset(EmuIntcMemory, 0, sizeof(EmuIntcMemory));
 
@@ -165,7 +166,7 @@ void Emu_Intc_CallHandler(EMU_U32 HandlerIndex)
 	}
 }
 
-void Emu_Intc_ExitHandler(void)
+void Emu_Intc_ExitHandler()
 {
 	if (EmuInterruptIndex > 0)
 	{

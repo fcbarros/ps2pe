@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +5,7 @@
 #include "elf.h"
 
 // Creates and Elf struct to use
-Elf32_File* CreateElf(void)
+Elf32_File* CreateElf()
 {
 	Elf32_File* NewElf = (Elf32_File*)malloc(sizeof(Elf32_File));
 	memset(NewElf, 0, sizeof(Elf32_File));
@@ -48,9 +47,8 @@ void DestroyElf(Elf32_File* ElfFile)
 // Fill the Elf struct with info from File
 BOOL ReadElf(const char* FileName, Elf32_File* ElfFile)
 {
-	FILE* pElfFile;
-	
-	if (fopen_s(&pElfFile, FileName, "rb") != 0)
+	FILE* pElfFile = fopen(FileName, "rb");
+	if (!pElfFile)
 	{
 		return FALSE;
 	}
@@ -148,4 +146,3 @@ BOOL ReadElf(const char* FileName, Elf32_File* ElfFile)
 	fclose(pElfFile);
 	return TRUE;
 }
-

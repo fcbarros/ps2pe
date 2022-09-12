@@ -23,6 +23,7 @@ stEmuDMAChannel EmuDmaChannel[10];
 
 stEMU_INTC_HANDLER Emu_Dma_Handler[32];
 
+
 void Emu_Dma_Start(unsigned int Channel);
 void Emu_Dma_Stop(unsigned int Channel);
 
@@ -32,7 +33,7 @@ void Emu_Dma_Stop(unsigned int Channel);
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_Dma_Init(void)
+void Emu_Dma_Init()
 {
 	Emu_Dma_Channel_Reg[0] = (stEmu_Dma_Channel_Regs*)&EmuDmaMemory[EMU_DMA_0 - EMU_DMA_START_ADDR];
 	Emu_Dma_Channel_Reg[1] = (stEmu_Dma_Channel_Regs*)&EmuDmaMemory[EMU_DMA_1 - EMU_DMA_START_ADDR];
@@ -51,7 +52,7 @@ void Emu_Dma_Init(void)
 	Emu_Dma_Reset();
 }
 
-void Emu_Dma_Reset(void)
+void Emu_Dma_Reset()
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -95,89 +96,99 @@ void Emu_Dma_callback(EMU_U32 Address)
 		Register = Address - EMU_DMA_0;
 		ChannelIndex = 0;
 	}
-	else if (Address < EMU_DMA_2)
-	{
-		// DMA Channel 1
-		Register = Address - EMU_DMA_1;
-		ChannelIndex = 1;
-	}
-	else if (Address < EMU_DMA_3)
-	{
-		// DMA Channel 2
-		Register = Address - EMU_DMA_2;
-		ChannelIndex = 2;
-	}
-	else if (Address < EMU_DMA_4)
-	{
-		// DMA Channel 3
-		Register = Address - EMU_DMA_3;
-		ChannelIndex = 3;
-	}
-	else if (Address < EMU_DMA_5)
-	{
-		// DMA Channel 4
-		Register = Address - EMU_DMA_4;
-		ChannelIndex = 4;
-	}
-	else if (Address < EMU_DMA_6)
-	{
-		// DMA Channel 5
-		Register = Address - EMU_DMA_5;
-		ChannelIndex = 5;
-	}
-	else if (Address < EMU_DMA_7)
-	{
-		// DMA Channel 6
-		Register = Address - EMU_DMA_6;
-		ChannelIndex = 6;
-	}
-	else if (Address < EMU_DMA_8)
-	{
-		// DMA Channel 7
-		Register = Address - EMU_DMA_7;
-		ChannelIndex = 7;
-	}
-	else if (Address < EMU_DMA_9)
-	{
-		// DMA Channel 8
-		Register = Address - EMU_DMA_8;
-		ChannelIndex = 8;
-	}
-	else if (Address < EMU_DMA_CONTROL1)
-	{
-		// DMA Channel 9
-		Register = Address - EMU_DMA_9;
-		ChannelIndex = 9;
-	}
-	else if (Address < EMU_DMA_CONTROL2)
-	{
-		// DMA Control1
-		Register = Address - EMU_DMA_CONTROL1;
-
-		switch (Register)
-		{
-		case EMU_DMA_REG_CTRL:   break;
-		case EMU_DMA_REG_STAT:   break;
-		case EMU_DMA_REG_PCR:    break;
-		case EMU_DMA_REG_SQWC:   break;
-		case EMU_DMA_REG_RBSR:   break;
-		case EMU_DMA_REG_RBOR:   break;
-		case EMU_DMA_REG_STADR:  break;
-		default:                 break;
-		}
-	}
 	else
-	{
-		// DMA Control2
-		Register = Address - EMU_DMA_CONTROL2;
-
-		switch (Register)
+		if (Address < EMU_DMA_2)
 		{
-		case EMU_DMA_REG_ENABLER:   break;
-		case EMU_DMA_REG_ENABLEW:   break;
-		default:                    break;
+			// DMA Channel 1
+			Register = Address - EMU_DMA_1;
+			ChannelIndex = 1;
 		}
-	}
+		else
+			if (Address < EMU_DMA_3)
+			{
+				// DMA Channel 2
+				Register = Address - EMU_DMA_2;
+				ChannelIndex = 2;
+			}
+			else
+				if (Address < EMU_DMA_4)
+				{
+					// DMA Channel 3
+					Register = Address - EMU_DMA_3;
+					ChannelIndex = 3;
+				}
+				else
+					if (Address < EMU_DMA_5)
+					{
+						// DMA Channel 4
+						Register = Address - EMU_DMA_4;
+						ChannelIndex = 4;
+					}
+					else
+						if (Address < EMU_DMA_6)
+						{
+							// DMA Channel 5
+							Register = Address - EMU_DMA_5;
+							ChannelIndex = 5;
+						}
+						else
+							if (Address < EMU_DMA_7)
+							{
+								// DMA Channel 6
+								Register = Address - EMU_DMA_6;
+								ChannelIndex = 6;
+							}
+							else
+								if (Address < EMU_DMA_8)
+								{
+									// DMA Channel 7
+									Register = Address - EMU_DMA_7;
+									ChannelIndex = 7;
+								}
+								else
+									if (Address < EMU_DMA_9)
+									{
+										// DMA Channel 8
+										Register = Address - EMU_DMA_8;
+										ChannelIndex = 8;
+									}
+									else
+										if (Address < EMU_DMA_CONTROL1)
+										{
+											// DMA Channel 9
+											Register = Address - EMU_DMA_9;
+											ChannelIndex = 9;
+										}
+										else
+											if (Address < EMU_DMA_CONTROL2)
+											{
+												// DMA Control1
+												Register = Address - EMU_DMA_CONTROL1;
+
+												switch (Register)
+												{
+												case EMU_DMA_REG_CTRL:   break;
+												case EMU_DMA_REG_STAT:   break;
+												case EMU_DMA_REG_PCR:    break;
+												case EMU_DMA_REG_SQWC:   break;
+												case EMU_DMA_REG_RBSR:   break;
+												case EMU_DMA_REG_RBOR:   break;
+												case EMU_DMA_REG_STADR:  break;
+												default:                 break;
+												}
+											}
+											else
+											{
+												// DMA Control2
+												Register = Address - EMU_DMA_CONTROL2;
+
+												switch (Register)
+												{
+												case EMU_DMA_REG_ENABLER:   break;
+												case EMU_DMA_REG_ENABLEW:   break;
+												default:                    break;
+												}
+											}
 
 	if (ChannelIndex >= 0)
 	{
@@ -350,7 +361,7 @@ void Emu_Dma_Set(EMU_U32 Address, EMU_U64 ChannelIndex)
 	t_sif_dma_transfer* RealAddress = (t_sif_dma_transfer*)EmuMemGetRealPointer(Address);
 }
 
-void Emu_Dma_Bios_AddHandler(void)
+void Emu_Dma_Bios_AddHandler()
 { // 0x12
 #ifdef EMU_LOG
 	EmuLog("  Handler: %u, Address: %.8X\n", R5900Regs.A0.u32_00_31, R5900Regs.A1.u32_00_31);
@@ -359,7 +370,7 @@ void Emu_Dma_Bios_AddHandler(void)
 	R5900Regs.V0.u64_00_63 = 1;
 }
 
-void Emu_Dma_Bios_RemoveHandler(void)
+void Emu_Dma_Bios_RemoveHandler()
 { // 0x13
 #ifdef EMU_LOG
 	EmuLog("  Handler: %u\n", R5900Regs.A0.u32_00_31);
@@ -368,7 +379,7 @@ void Emu_Dma_Bios_RemoveHandler(void)
 	R5900Regs.V0.u64_00_63 = 1;
 }
 
-void Emu_Dma_Bios_EnableHandler(void)
+void Emu_Dma_Bios_EnableHandler()
 { // 0x16
 #ifdef EMU_LOG
 	EmuLog("  Handler: %u\n", R5900Regs.A0.u32_00_31);
@@ -433,7 +444,7 @@ void Emu_Dma_CallHandler(EMU_U32 HandlerIndex)
 	}
 }
 
-void Emu_Dma_ExitHandler(void)
+void Emu_Dma_ExitHandler()
 {
 	if (EmuInterruptIndex > 0)
 	{
@@ -455,3 +466,4 @@ EMU_U08* Emu_Dma_GetPointer(EMU_U32 Address)
 		return &EmuDmaEnablerMemory[Address - EMU_DMA_ENAB_START_ADDR];
 	}
 }
+

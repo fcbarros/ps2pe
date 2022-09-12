@@ -63,7 +63,7 @@ EMU_U32 StartAddress;
 EMU_U32 EndAddress;
 
 // Initializes Registers and anythings else needed
-DLLEXPORT void CALLBACK EmuInitialize(void)
+DLLEXPORT void CALLBACK EmuInitialize()
 {
 	EmuMemInit(32 * 1024 * 1024, 64 * 1024);
 
@@ -92,6 +92,7 @@ DLLEXPORT void CALLBACK EmuInitialize(void)
 	EmuRunningStats.clear();
 
 	int i = 0;
+
 	while (strcmp(EmuInstructions[i].Name, "UNKNOW"))
 	{
 		i++;
@@ -137,10 +138,11 @@ DLLEXPORT void CALLBACK EmuInitialize(void)
 
 	//    EmuMemAddWriteCallBack( 0x11000000, 0x11007FFF, Emu_Vu0_callback );
 	//    EmuMemAddWriteCallBack( 0x11008000, 0x11FFFFFF, Emu_Vu1_callback );
+
 	//    EmuMemAddReadCallBack( 0x12000000, 0x13FFFFFF, Emu_GS_ReadCallback );
 }
 
-DLLEXPORT void CALLBACK EmuReset(void)
+DLLEXPORT void CALLBACK EmuReset()
 {
 #ifdef EMU_LOG
 	EmuLog("Reseting emulator\n");
@@ -191,11 +193,11 @@ DLLEXPORT void CALLBACK EmuSetBiosFile(const char* FileName)
 #ifdef EMU_LOG
 	EmuLog("Setting Bios File: %s\n", FileName);
 #endif
-	strcpy_s(BiosFileName, FileName);
+	strcpy(BiosFileName, FileName);
 }
 
 // Releases memory assossiated with file
-DLLEXPORT void CALLBACK EmuRelease(void)
+DLLEXPORT void CALLBACK EmuRelease()
 {
 #ifdef EMU_LOG
 	EmuLog("Exiting emulator\n");
@@ -292,7 +294,8 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 					ElfFile->Program[i].p_filesz,
 					ElfFile->Program[i].p_vaddr,
 					EMMP_READ | EMMP_WRITE | EMMP_EXEC);
-				EmuGenStats(ElfFile->Program[i].p_vaddr, ElfFile->Program[i].p_vaddr + ElfFile->Program[i].p_filesz);
+				EmuGenStats(ElfFile->Program[i].p_vaddr,
+					ElfFile->Program[i].p_vaddr + ElfFile->Program[i].p_filesz);
 				if (StartAddress > ElfFile->Program[i].p_vaddr)
 				{
 					StartAddress = ElfFile->Program[i].p_vaddr;
@@ -316,7 +319,7 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 	return 32768;
 }
 
-void EmuClearStats(void)
+void EmuClearStats()
 {
 	for (EMU_U32 i = 0; i <= TotalInstructions; i++)
 	{
@@ -388,13 +391,14 @@ DLLEXPORT void CALLBACK EmuStepInto(EMU_U32 Address)
 {
 	EmuStopRun = false;
 	EmuInBranchDelay = false;
-	EmuRunDebug(Address, true);
+	EmuRunDebug(Address, false);
 }
 
 DLLEXPORT void CALLBACK EmuRun(unsigned int Address)
 {
 	EmuStopRun = false;
 	EmuRunDebug(Address, true);
+	//EmuExecuteFast(Address, true);
 	Emu_GS_CloseWindow();
 }
 
@@ -433,9 +437,9 @@ DLLEXPORT BOOL CALLBACK EmuIsInstructionBreakpoint(EMU_U32 InstIndex)
 	return InstrBreakPoints[InstIndex];
 }
 
-DLLEXPORT void CALLBACK EmuGetRunningStats(sEmutStats** stats)
+DLLEXPORT void CALLBACK EmuGetRunningStats(stEmuInstructionCount** stats)
 {
-	*stats = &EmuRunningStats;
+	std::copy(EmuRunningStats.begin(), EmuRunningStats.end(), *stats);
 
 	for (EMU_U32 i = 0; i < EmuRunningStats.size(); i++)
 	{
@@ -448,15 +452,12 @@ DLLEXPORT void CALLBACK EmuGetRunningStats(sEmutStats** stats)
 	}
 }
 
-DLLEXPORT void CALLBACK EmuGetLoadedStats(sEmutStats** stats)
+DLLEXPORT void CALLBACK EmuGetLoadedStats(stEmuInstructionCount** stats)
 {
-	*stats = &EmuInstructionsStats;
+	std::copy(EmuInstructionsStats.begin(), EmuInstructionsStats.end(), *stats);
 }
 
-DLLEXPORT void CALLBACK EmuGetInstructionInfo(EMU_U32 InstIndex,
-	char** Name,
-	BOOL* IsDisassembled,
-	BOOL* IsImplemented)
+DLLEXPORT void CALLBACK EmuGetInstructionInfo(EMU_U32 InstIndex, char** Name, BOOL* IsDisassembled, BOOL* IsImplemented)
 {
 	*Name = EmuInstructions[InstIndex].Name;
 	*IsDisassembled = (EmuInstructions[InstIndex].Disassembly && EmuInstructions[InstIndex].Disassembly != EmuDis_REGISTERED);
@@ -489,13 +490,13 @@ DLLEXPORT void CALLBACK EmuConsole(char* Format, ...)
 		va_list vaParams;
 
 		va_start(vaParams, Format);
-		vsprintf_s(Text, sizeof(Text), Format, vaParams);
+		vsprintf(Text, Format, vaParams);
 		va_end(vaParams);
 		EmuConsoleCallback(Text);
 	}
 }
 
-DLLEXPORT EMU_U32 CALLBACK EmuGetTotalInstructions(void)
+DLLEXPORT EMU_U32 CALLBACK EmuGetTotalInstructions()
 {
 	return TotalInstructions;
 }
@@ -540,9 +541,7 @@ DLLEXPORT EMU_U64 CALLBACK EmuGetDWord(EMU_U32 Address)
 	return EmuMemGetDWord(Address);
 }
 
-DLLEXPORT void CALLBACK EmuGetInstructionsStats(EMU_U32* TotalSupportedInstructions,
-	EMU_U32* TotalDisassembledInstructions,
-	EMU_U32* TotalImplementedInstructions)
+DLLEXPORT void CALLBACK EmuGetInstructionsStats(EMU_U32* TotalSupportedInstructions, EMU_U32* TotalDisassembledInstructions, EMU_U32* TotalImplementedInstructions)
 {
 	*TotalSupportedInstructions = 0;
 	*TotalDisassembledInstructions = 0;
@@ -587,25 +586,26 @@ DLLEXPORT void CALLBACK EmuPADConfig()
 
 DLLEXPORT void CALLBACK EmuGetCOP0RegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize)
 {
-	strcpy_s(Buffer, BufferSize, EmuDis_GetCOP0RegName(Reg));
+	strncpy(Buffer, EmuDis_GetCOP0RegName(Reg), BufferSize);
 }
 
 DLLEXPORT void CALLBACK EmuGetCOP1RegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize)
 {
-	strcpy_s(Buffer, BufferSize, EmuDis_GetCOP1RegName(Reg));
+	strncpy(Buffer, EmuDis_GetCOP1RegName(Reg), BufferSize);
 }
 
 DLLEXPORT void CALLBACK EmuGetCOP2FPRegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize)
 {
-	strcpy_s(Buffer, BufferSize, EmuDis_GetCOP2FPRegName(Reg));
+	strncpy(Buffer, EmuDis_GetCOP2FPRegName(Reg), BufferSize);
 }
 
 DLLEXPORT void CALLBACK EmuGetCOP2IPRegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize)
 {
-	strcpy_s(Buffer, BufferSize, EmuDis_GetCOP2IPRegName(Reg));
+	strncpy(Buffer, EmuDis_GetCOP2IPRegName(Reg), BufferSize);
 }
 
 DLLEXPORT void CALLBACK EmuGetR5900RegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize)
 {
-	strcpy_s(Buffer, BufferSize, EmuDis_GetRegName(Reg));
+	strncpy(Buffer, EmuDis_GetRegName(Reg), BufferSize);
 }
+

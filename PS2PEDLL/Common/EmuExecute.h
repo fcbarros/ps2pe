@@ -38,6 +38,7 @@ extern bool DebugMode;
 
 EMU_U32 clamp(EMU_U32 X);
 
+void EmuCore(EMU_U32 Code);
 void EmuCop0(EMU_U32 Code);
 void EmuCop1(EMU_U32 Code);
 void EmuCop2(EMU_U32 Code);

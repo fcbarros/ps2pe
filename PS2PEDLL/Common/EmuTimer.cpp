@@ -1,6 +1,7 @@
 #include "EmuMain.h"
 #include "EmuTimer.h"
 
+
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // Variables
@@ -48,18 +49,20 @@ void Emu_Timer_callback(EMU_U32 Address)
 	{
 		Register -= EMU_TIMER0;
 	}
-	else  if (Address < EMU_TIMER2)
-	{
-		Register -= EMU_TIMER1;
-	}
-	else if (Address < EMU_TIMER3)
-	{
-		Register -= EMU_TIMER2;
-	}
 	else
-	{
-		Register -= EMU_TIMER3;
-	}
+		if (Address < EMU_TIMER2)
+		{
+			Register -= EMU_TIMER1;
+		}
+		else
+			if (Address < EMU_TIMER3)
+			{
+				Register -= EMU_TIMER2;
+			}
+			else
+			{
+				Register -= EMU_TIMER3;
+			}
 
 	switch (Register)
 	{

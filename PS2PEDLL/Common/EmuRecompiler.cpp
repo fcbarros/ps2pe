@@ -16,15 +16,20 @@ BOOL EmuStopCompile = FALSE;
 
 typedef void (*RECFUNCTION)();
 
+void EmuRec_SetPageProtection(void* address, size_t size);
+
 void EmuRec_RecompileExecute(EMU_U32 EntryPoint, EMU_U32 EndAddress, BOOL Loop)
 {
-	static EMU_U08 TempExec[1024];
-	static stEmuRecMemory TempMemory;
+	//EMU_U08 TempExec[ 1024 ];
+	EMU_U08* TempExec = new EMU_U08[1024];
+	EmuRec_SetPageProtection(TempExec, 1024);
+
+	stEmuRecMemory TempMemory;
 	EMU_U32 CallAddress;
 
 	memcpy(&TempMemory, &RecMemory, sizeof(stEmuRecMemory));
 
-	RECFUNCTION RecFunction = (RECFUNCTION)&TempExec;
+	RECFUNCTION RecFunction = (RECFUNCTION)TempExec;
 	RecMemory.Memory = TempExec;
 	RecMemory.Position = 0;
 
@@ -62,6 +67,7 @@ void EmuRec_RecompileExecute(EMU_U32 EntryPoint, EMU_U32 EndAddress, BOOL Loop)
 
 	// Execute the code
 	RecFunction();
+	delete[] TempExec;
 }
 
 void EmuRec_RecompileInstruction(EMU_U32 Address, BOOL InBrachDelay)

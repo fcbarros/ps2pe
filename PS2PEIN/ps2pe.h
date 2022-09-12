@@ -540,19 +540,13 @@ typedef void (CALLBACK* EMUINITIALIZE)();
 typedef void (CALLBACK* EMURELEASE)();
 typedef EMU_U32(CALLBACK* EMUGETTOTALINSTRUCTIONS)();
 typedef void (CALLBACK* EMUSETBIOSFILE)(const char* FileName);
-typedef void (CALLBACK* EMUGETINSTRUCTIONSSTATS)(EMU_U32* TotalSupportedInstructions,
-	EMU_U32* TotalDisassembledInstructions,
-	EMU_U32* TotalImplementedInstructions);
+typedef void (CALLBACK* EMUGETINSTRUCTIONSSTATS)(EMU_U32* TotalSupportedInstructions, EMU_U32* TotalDisassembledInstructions, EMU_U32* TotalImplementedInstructions);
 typedef void (CALLBACK* EMUGETR5900REGNAME)(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 typedef void (CALLBACK* EMUGETCOP0REGNAME)(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 typedef void (CALLBACK* EMUGETCOP1REGNAME)(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 typedef void (CALLBACK* EMUGETCOP2FPREGNAME)(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
 typedef void (CALLBACK* EMUGETCOP2IPREGNAME)(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize);
-typedef void (CALLBACK* EMUGETREGS)(Emu_R5900_Regs** r5900regs,
-	Emu_COP0_Regs** cop0regs,
-	Emu_COP1_Regs** cop1regs,
-	EMU_VU_Regs** vu0regs,
-	EMU_VU_Regs** vu1regs);
+typedef void (CALLBACK* EMUGETREGS)(Emu_R5900_Regs** r5900regs, Emu_COP0_Regs** cop0regs, Emu_COP1_Regs** cop1regs, EMU_VU_Regs** vu0regs, EMU_VU_Regs** vu1regs);
 typedef BOOL(CALLBACK* EMUISBREAKPOINT)(EMU_U32 Address);
 typedef void (CALLBACK* EMUSETBYTE)(EMU_U32 Address, EMU_U08 Data);
 typedef void (CALLBACK* EMUSETSHORT)(EMU_U32 Address, EMU_U16 Data);
@@ -577,12 +571,9 @@ typedef void (CALLBACK* EMUGSCLOSEWINDOW)();
 typedef void (CALLBACK* EMUADDINSTRUCTIONBREAKPOINT)(EMU_U32 InstIndex);
 typedef void (CALLBACK* EMUREMOVEINSTRUCTIONBREAKPOINT)(EMU_U32 InstIndex);
 typedef BOOL(CALLBACK* EMUISINSTRUCTIONBREAKPOINT)(EMU_U32 InstIndex);
-typedef void (CALLBACK* EMUGETINSTRUCTIONINFO)(EMU_U32 InstIndex,
-	char** Name,
-	BOOL* IsDisassembled,
-	BOOL* IsImplemented);
-typedef void (CALLBACK* EMUGETRUNNINGSTATS)(sEmutStats**);
-typedef void (CALLBACK* EMUGETLOADEDSTATS)(sEmutStats**);
+typedef void (CALLBACK* EMUGETINSTRUCTIONINFO)(EMU_U32 InstIndex, char** Name, BOOL* IsDisassembled, BOOL* IsImplemented);
+typedef void (CALLBACK* EMUGETRUNNINGSTATS)(stEmuInstructionCount** stats);
+typedef void (CALLBACK* EMUGETLOADEDSTATS)(stEmuInstructionCount** stats);
 typedef void (CALLBACK* EMURESET)();
 typedef BOOL(CALLBACK* EMUFINDLABEL)(char* Label, EMU_U32* LabelIndex);
 typedef void (CALLBACK* EMUPADCONFIG)();

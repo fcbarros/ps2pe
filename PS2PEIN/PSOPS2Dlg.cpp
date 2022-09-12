@@ -258,7 +258,7 @@ BOOL CPSOPS2Dlg::OnInitDialog()
 	//  SetIcon(m_hIcon, TRUE);         // Set big icon
 	SetIcon(m_hIcon, FALSE);        // Set small icon
 
-	EmuDll = LoadLibrary("ps2pe.dll");
+	EmuDll = LoadLibrary("ps2pelib.dll");
 	EmuGetRegs = (EMUGETREGS)GetProcAddress(EmuDll, "EmuGetRegs");
 	EmuSetConsoleCallback = (EMUSETCONSOLECALLBACK)GetProcAddress(EmuDll, "EmuSetConsoleCallback");
 	EmuGetClock = (EMUGETCLOCK)GetProcAddress(EmuDll, "EmuGetClock");
@@ -538,7 +538,7 @@ BOOL CPSOPS2Dlg::OnInitDialog()
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-void CPSOPS2Dlg::LogInstructions(void)
+void CPSOPS2Dlg::LogInstructions()
 {
 	unsigned int TotalSupportedInstructions = 0;
 	unsigned int TotalDisassembledInstructions = 0;
@@ -703,7 +703,7 @@ void CPSOPS2Dlg::ShowGPR()
 	m_List_GPRS_2.SetItemText(17, 1, strText);
 }
 
-void CPSOPS2Dlg::ShowCOP0(void)
+void CPSOPS2Dlg::ShowCOP0()
 {
 	m_List_COP0_1.BringWindowToTop();
 	m_List_COP0_2.BringWindowToTop();
@@ -735,7 +735,7 @@ void CPSOPS2Dlg::ShowCOP0(void)
 	}
 }
 
-void CPSOPS2Dlg::ShowCOP2_FPR(void)
+void CPSOPS2Dlg::ShowCOP2_FPR()
 {
 	m_List_COP2_1.BringWindowToTop();
 	m_List_COP2_2.BringWindowToTop();
@@ -789,7 +789,7 @@ void CPSOPS2Dlg::ShowCOP2_FPR(void)
 	m_List_COP2_2.SetItemText(16, 4, strText);
 }
 
-void CPSOPS2Dlg::ShowCOP2_IR(void)
+void CPSOPS2Dlg::ShowCOP2_IR()
 {
 	m_List_COP2_3.BringWindowToTop();
 	m_List_COP2_4.BringWindowToTop();
@@ -1282,12 +1282,16 @@ void CPSOPS2Dlg::GenerateRunningStats()
 	BOOL IsDisassembled,
 		IsImplemented;
 	CString strTemp;
-	sEmutStats* pTempStats;
-	EmuGetRunningStats(&pTempStats);
-	sEmutStats TempStats = *pTempStats;
-	TempStats.pop_back();
-	unsigned int i;
-	for (i = 0; i < TotalInstructions; i++)
+
+	EMU_U32 size = TotalInstructions + 1;
+	stEmuInstructionCount* stats = new stEmuInstructionCount[size];
+	EmuGetRunningStats(&stats);
+
+	std::vector<stEmuInstructionCount> TempStats(size);
+	memcpy(&TempStats[0], stats, size * sizeof(stEmuInstructionCount));
+
+	unsigned int i{0};
+	for (; i < TotalInstructions; i++)
 	{
 		unsigned int MaxValue = 0;
 		unsigned int MaxIndex = 0;
@@ -1305,9 +1309,9 @@ void CPSOPS2Dlg::GenerateRunningStats()
 		m_List_Running.SetItemText(i, 1, strTemp);
 		TempStats.erase(TempStats.begin() + MaxIndex);
 	}
-	EmuGetInstructionInfo((*pTempStats)[TotalInstructions].Index, &Name, &IsDisassembled, &IsImplemented);
+	EmuGetInstructionInfo(stats[TotalInstructions].Index, &Name, &IsDisassembled, &IsImplemented);
 	m_List_Running.SetItemText(i, 0, Name);
-	strTemp.Format("%u", (*pTempStats)[TotalInstructions].Total);
+	strTemp.Format("%u", stats[TotalInstructions].Total);
 	m_List_Running.SetItemText(i, 1, strTemp);
 }
 
@@ -1317,12 +1321,16 @@ void CPSOPS2Dlg::GenerateLoadedStats()
 	BOOL IsDisassembled,
 		IsImplemented;
 	CString strTemp;
-	sEmutStats* pTempStats;
-	EmuGetLoadedStats(&pTempStats);
-	sEmutStats TempStats = *pTempStats;
-	TempStats.pop_back();
-	unsigned int i;
-	for (i = 0; i < TotalInstructions; i++)
+
+	EMU_U32 size = TotalInstructions + 1;
+	stEmuInstructionCount * stats = new stEmuInstructionCount[size];
+	EmuGetLoadedStats(&stats);
+
+	std::vector<stEmuInstructionCount> TempStats(size);
+	memcpy(&TempStats[0], stats, size * sizeof(stEmuInstructionCount));
+
+	unsigned int i{0};
+	for (; i < TotalInstructions; i++)
 	{
 		unsigned int MaxValue = 0;
 		unsigned int MaxIndex = 0;
@@ -1340,10 +1348,12 @@ void CPSOPS2Dlg::GenerateLoadedStats()
 		m_List_Loaded.SetItemText(i, 1, strTemp);
 		TempStats.erase(TempStats.begin() + MaxIndex);
 	}
-	EmuGetInstructionInfo((*pTempStats)[TotalInstructions].Index, &Name, &IsDisassembled, &IsImplemented);
+	EmuGetInstructionInfo(stats[TotalInstructions].Index, &Name, &IsDisassembled, &IsImplemented);
 	m_List_Loaded.SetItemText(i, 0, Name);
-	strTemp.Format("%u", (*pTempStats)[TotalInstructions].Total);
+	strTemp.Format("%u", stats[TotalInstructions].Total);
 	m_List_Loaded.SetItemText(i, 1, strTemp);
+
+	delete[] stats;
 }
 
 void CPSOPS2Dlg::OnClickListInstructions(NMHDR* pNMHDR, LRESULT* pResult)

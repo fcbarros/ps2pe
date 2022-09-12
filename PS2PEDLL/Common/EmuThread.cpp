@@ -1,4 +1,3 @@
-
 #include "EmuMain.h"
 #include "EmuThread.h"
 
@@ -18,8 +17,8 @@ typedef struct
 	EMU_I32 wakeupCount;
 } EmuThread;
 
-EMU_U32 Emu_Thread_CurrentId = 1;
-EMU_U32 Emu_Thread_NumThreads = 0;
+EMU_I32 Emu_Thread_CurrentId = 1;
+EMU_I32 Emu_Thread_NumThreads = 0;
 
 typedef struct
 {
@@ -32,12 +31,12 @@ typedef struct
 Emu_Thread_Struct EmuThreads[100];
 
 
-void Emu_Thread_Init()
+void Emu_Thread_Init(void)
 {
 	Emu_Thread_Reset();
 }
 
-void Emu_Thread_Reset()
+void Emu_Thread_Reset(void)
 {
 	memset(EmuThreads, 0, sizeof(EmuThreads));
 
@@ -45,22 +44,22 @@ void Emu_Thread_Reset()
 	Emu_Thread_NumThreads = 0;
 }
 
-void Emu_Thread_Bios_Create()
+void Emu_Thread_Bios_Create(void)
 { // 0x20
 	R5900Regs.V0.u64_00_63 = Emu_Thread_Create(R5900Regs.A0.u32_00_31);
 }
 
-void Emu_Thread_Bios_Start()
+void Emu_Thread_Bios_Start(void)
 { // 0x22
 	Emu_Thread_Start(R5900Regs.A0.u32_00_31);
 }
 
-void Emu_Thread_Bios_GetId()
+void Emu_Thread_Bios_GetId(void)
 { // 0x2f
 	R5900Regs.V0.u64_00_63 = Emu_Thread_GetId();
 }
 
-void Emu_Thread_Bios_ReferStatus()
+void Emu_Thread_Bios_ReferStatus(void)
 { // 0x30
 	R5900Regs.V0.u64_00_63 = Emu_Thread_ReferStatus(R5900Regs.A1.u32_00_31);
 }
@@ -81,7 +80,7 @@ EMU_U64 Emu_Thread_Create(EMU_U32 Address)
 
 	Emu_Thread_NumThreads++;
 
-	return (EMU_U64)Emu_Thread_NumThreads - 1;
+	return Emu_Thread_NumThreads - 1;
 }
 
 //
@@ -95,7 +94,7 @@ void Emu_Thread_Start(EMU_U32 Address)
 }
 
 //
-//  int GetThreadId(void);
+//  int GetThreadId();
 //
 EMU_U64 Emu_Thread_GetId(void)
 { // 0x2f

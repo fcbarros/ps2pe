@@ -71,7 +71,7 @@ void Emu_Sif_Bios_isceDmaStat(void)
 void Emu_Sif_Bios_Call_Module(void)
 {
 	char* fdesc;
-	char fserv[256],
+	char    fserv[256],
 		fname[256];
 	char    file[256];
 	EMU_I32 i;
@@ -102,7 +102,7 @@ void Emu_Sif_Bios_Call_Module(void)
 		if (strcmp(fserv, "host") == 0)
 		{
 #ifdef __WIN32__
-			sprintf_s(file, sizeof(file), "host\\%s", fname);
+			sprintf(file, "host\\%s", fname);
 #else
 			sprintf(file, "host/%s", fname);
 #endif
@@ -113,7 +113,7 @@ void Emu_Sif_Bios_Call_Module(void)
 		break;
 
 	case 0xFF: // init? returns version
-		strcpy_s((char*)bout, 4, "2000");
+		strncpy((char*)bout, "2000", 4);
 		break;
 
 	default:
@@ -286,7 +286,7 @@ void Emu_Sif_Bios_Call_FileIO()
 				fileio[i].mode = O_BINARY;
 #endif
 				if (bin[0] & PS_RDONLY) fileio[i].mode |= O_RDONLY;
-				strcpy_s(fileio[i].serv, fserv);
+				strcpy(fileio[i].serv, fserv);
 				break;
 			}
 		}
@@ -299,13 +299,13 @@ void Emu_Sif_Bios_Call_FileIO()
 		if (strcmp(fileio[i].serv, "host") == 0)
 		{
 #ifdef __WIN32__
-			sprintf_s(fileio[i].name, sizeof(fileio[i].name), "host\\%s", fname);
+			sprintf(fileio[i].name, "host\\%s", fname);
 #else
 			sprintf(fileio[i].name, "host/%s", fname);
 #endif
 			EmuConsole("opening %s\n", fileio[i].name);
 
-			fileio[i].fd = _open(fileio[i].name, fileio[i].mode);
+			fileio[i].fd = open(fileio[i].name, fileio[i].mode);
 			if (fileio[i].fd == -1)
 			{
 				bout[0] = -1;
@@ -315,14 +315,14 @@ void Emu_Sif_Bios_Call_FileIO()
 
 	case 1: // close
 		i = bin[0] - 1;
-		bout[0] = _close(fileio[i].fd);
+		bout[0] = close(fileio[i].fd);
 		fileio[i].fd = 0;
 		break;
 
 	case 2: // read
 		i = bin[0] - 1;
 		ptr = (char*)EmuMemGetRealPointer(bin[1]);
-		bout[0] = _read(fileio[i].fd, ptr, bin[2]);
+		bout[0] = read(fileio[i].fd, ptr, bin[2]);
 		EmuConsole("read(%d) %x, args=%x,%x\n", fileio[i].fd, *bout, bin[1], bin[2]);
 		break;
 
@@ -331,7 +331,7 @@ void Emu_Sif_Bios_Call_FileIO()
 
 	case 4: // lseek
 		i = bin[0] - 1;
-		bout[0] = _lseek(fileio[i].fd, bin[1], bin[2]);
+		bout[0] = lseek(fileio[i].fd, bin[1], bin[2]);
 		EmuConsole("seek(%d) %x, args=%x,%x\n", fileio[i].fd, *bout, bin[1], bin[2]);
 		break;
 	}
@@ -507,7 +507,7 @@ void Emu_Sif_Bios_isceSetDma(void)
 }
 
 //
-//  void isceSifSetDChain(void);
+//  void isceSifSetDChain();
 //
 void Emu_Sif_Bios_isceSetDChain(void)
 { // 0x78

@@ -6,33 +6,32 @@
 
 extern HINSTANCE hInst;
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved)
 {
-    static char CurrentDir[ 256 ] = { "\0" };
+	static char CurrentDir[256] = { "\0" };
 
-    hInst = (HINSTANCE)hModule;
+	hInst = (HINSTANCE)hModule;
 
-    if ( strlen( CurrentDir ) <= 0 )
-    {
-       GetCurrentDirectory( sizeof( CurrentDir ), CurrentDir );
-       EmuSetDir( CurrentDir );
-    }
+	if (strlen(CurrentDir) <= 0)
+	{
+		GetCurrentDirectory(sizeof(CurrentDir), CurrentDir);
+		EmuSetDir(CurrentDir);
+	}
 
-    switch ( ul_reason_for_call )
-    {
-    case DLL_PROCESS_ATTACH:
-    case DLL_THREAD_ATTACH:
-        break;
+	switch (ul_reason_for_call)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+		break;
 
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
-    }
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
 
 
-    return TRUE;
+	return TRUE;
 }
 

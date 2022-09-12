@@ -20,6 +20,7 @@
 
 #define EMU_LOG
 
+#include "../StdAfx.h"
 #include <vector>
 
 #include "EmuPS2Core.h"

@@ -1,7 +1,13 @@
+#ifdef __WIN32__
+#include <windows.h>
+#else
+#endif
+
 #include "EmuMain.h"
 #include "EmuGS.h"
 #include "EmuPad.h"
 #include "EmuIntc.h"
+
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -30,12 +36,12 @@ _GSabout        GSabout;
 _GSwritePReg    GSwritePReg;
 _GSpreg         GSpreg;
 
-stEmu_GS_Privileg_Regs * Emu_GS_Privileg_Reg;
+stEmu_GS_Privileg_Regs* Emu_GS_Privileg_Reg;
 
 #ifdef __WIN32__
-   HWND hWnd_GS = 0;
+HWND hWnd_GS = 0;
 #else
-   int hWnd_GS = 0;
+int hWnd_GS = 0;
 #endif
 
 EMU_U64 TicksMinV;
@@ -47,7 +53,7 @@ EMU_U64 GSTargetHSync;
 
 keyEvent GSKey;
 
-EMU_U08 EmuGsMemory[ EMU_GS_PRIV_END_ADDR - EMU_GS_PRIV_START_ADDR ];
+EMU_U08 EmuGsMemory[EMU_GS_PRIV_END_ADDR - EMU_GS_PRIV_START_ADDR];
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -55,182 +61,182 @@ EMU_U08 EmuGsMemory[ EMU_GS_PRIV_END_ADDR - EMU_GS_PRIV_START_ADDR ];
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-void Emu_GS_Init( void )
+void Emu_GS_Init()
 {
-    Emu_GS_Privileg_Reg = (stEmu_GS_Privileg_Regs *) EmuGsMemory;
+	Emu_GS_Privileg_Reg = (stEmu_GS_Privileg_Regs*)EmuGsMemory;
 
-    GSTargetVSync = 60;
-    GSTargetHSync = 15734;
+	GSTargetVSync = 60;
+	GSTargetHSync = 15734;
 
-    TicksMinV = (EMU_U64)CPUClock / GSTargetVSync;
-    TicksMinH = (EMU_U64)CPUClock / GSTargetHSync;
-    TicksMinVCK = TicksMinH / 10;
+	TicksMinV = CPUClock / GSTargetVSync;
+	TicksMinH = CPUClock / GSTargetHSync;
+	TicksMinVCK = TicksMinH / 10;
 
-    if ( GSpreg )
-    {
-//        GSpreg( EmuGsMemory );
-    }
-    GSinit( );
+	if (GSpreg)
+	{
+		//        GSpreg( EmuGsMemory );
+	}
+	GSinit();
 
-    Emu_GS_Reset( );
+	Emu_GS_Reset();
 }
 
-void Emu_GS_Reset( void )
+void Emu_GS_Reset()
 {
-    memset( Emu_GS_Privileg_Reg, 0, sizeof( stEmu_GS_Privileg_Regs ) );
+	memset(Emu_GS_Privileg_Reg, 0, sizeof(stEmu_GS_Privileg_Regs));
 
-    Emu_GS_Privileg_Reg->PMODE =        0x00000040;
-    Emu_GS_Privileg_Reg->SMODE1 =       0x00000000;
-    Emu_GS_Privileg_Reg->SMODE2 =       0x00000000;
-    Emu_GS_Privileg_Reg->SRFSH =        0x00000000;
-    Emu_GS_Privileg_Reg->SYNCH1 =       0x00000000;
-    Emu_GS_Privileg_Reg->SYNCH2 =       0x00000000;
-    Emu_GS_Privileg_Reg->SYNCV =        0x00000000;
-    Emu_GS_Privileg_Reg->DISPFB1 =      0x00000000;
-    Emu_GS_Privileg_Reg->DISPLAY1 =     0x00000000;
-    Emu_GS_Privileg_Reg->DISPFB2 =      0x00000000;
-    Emu_GS_Privileg_Reg->DISPLAY2 =     0x00000000;
-    Emu_GS_Privileg_Reg->EXTBUF =       0x00000000;
-    Emu_GS_Privileg_Reg->EXTDATA =      0x00000000;
-    Emu_GS_Privileg_Reg->EXTWRITE =     0x00000000;
-    Emu_GS_Privileg_Reg->BGCOLOR =      0x00000000;
-    Emu_GS_Privileg_Reg->CSR =          0x00000000; // 0x0000000000000200
-    Emu_GS_Privileg_Reg->IMR =          0x00000000; // 0x000000000000ff00
-    Emu_GS_Privileg_Reg->BUSDIR =       0x00000000;
-    Emu_GS_Privileg_Reg->SIGBLID =      0x00000000;
+	Emu_GS_Privileg_Reg->PMODE = 0x00000040;
+	Emu_GS_Privileg_Reg->SMODE1 = 0x00000000;
+	Emu_GS_Privileg_Reg->SMODE2 = 0x00000000;
+	Emu_GS_Privileg_Reg->SRFSH = 0x00000000;
+	Emu_GS_Privileg_Reg->SYNCH1 = 0x00000000;
+	Emu_GS_Privileg_Reg->SYNCH2 = 0x00000000;
+	Emu_GS_Privileg_Reg->SYNCV = 0x00000000;
+	Emu_GS_Privileg_Reg->DISPFB1 = 0x00000000;
+	Emu_GS_Privileg_Reg->DISPLAY1 = 0x00000000;
+	Emu_GS_Privileg_Reg->DISPFB2 = 0x00000000;
+	Emu_GS_Privileg_Reg->DISPLAY2 = 0x00000000;
+	Emu_GS_Privileg_Reg->EXTBUF = 0x00000000;
+	Emu_GS_Privileg_Reg->EXTDATA = 0x00000000;
+	Emu_GS_Privileg_Reg->EXTWRITE = 0x00000000;
+	Emu_GS_Privileg_Reg->BGCOLOR = 0x00000000;
+	Emu_GS_Privileg_Reg->CSR = 0x00000000; // 0x0000000000000200
+	Emu_GS_Privileg_Reg->IMR = 0x00000000; // 0x000000000000ff00
+	Emu_GS_Privileg_Reg->BUSDIR = 0x00000000;
+	Emu_GS_Privileg_Reg->SIGBLID = 0x00000000;
 
-    Emu_GS_CloseWindow( );
+	Emu_GS_CloseWindow();
 }
 
-void Emu_GS_InitWindow( void )
+void Emu_GS_InitWindow()
 {
-    if ( hWnd_GS == 0 )
-    {
-        GSopen( &hWnd_GS, "PS2 Personal Emulator" );
-        PAD1init( 3 );
-        PAD1open( &hWnd_GS );
-    }
+	if (hWnd_GS == 0)
+	{
+		GSopen(&hWnd_GS, "PS2 Personal Emulator");
+		PAD1init(3);
+		PAD1open(&hWnd_GS);
+	}
 }
 
-void Emu_GS_Configure( void )
+void Emu_GS_Configure()
 {
-    GSconfigure( );
+	GSconfigure();
 }
 
-void Emu_GS_CloseWindow( void )
+void Emu_GS_CloseWindow()
 {
-    if ( hWnd_GS )
-    {
-        GSclose( );
-        PAD1close( );
-        PAD1shutdown( );
-        hWnd_GS = 0;
-    }
+	if (hWnd_GS)
+	{
+		GSclose();
+		PAD1close();
+		PAD1shutdown();
+		hWnd_GS = 0;
+	}
 }
 
-void Emu_GS_Shutdown( void )
+void Emu_GS_Shutdown()
 {
-    Emu_GS_CloseWindow( );
-    GSshutdown( );
+	Emu_GS_CloseWindow();
+	GSshutdown();
 }
 
-void Emu_GS_Flush( void )
+void Emu_GS_Flush()
 {
 }
 
-void Emu_GS_ProcessMessages( void )
+void Emu_GS_ProcessMessages()
 {
-    if ( hWnd_GS )
-    {
-        static unsigned __int64  StartV = 0,
-                        StartH = 0,
-                        End = 0;
-        static keyEvent * PADKeyPressed;
+	if (hWnd_GS)
+	{
+		static __int64  StartV = 0,
+			StartH = 0,
+			End = 0;
+		static keyEvent* PADKeyPressed;
 
-        RDTSC( End );
+		RDTSC(End);
 
-        if ( ( End - StartV ) > TicksMinV )
-        {
-            Emu_GS_Privileg_Reg->CSR |= 0x0000000C;
-            Emu_Intc_Control_Reg->STAT_GS = 1;
-            Emu_Intc_CallHandler( 2 );
-            GSvsync();
-//            Emu_Intc_CallHandler( 3 );
+		if ((End - StartV) > TicksMinV)
+		{
+			Emu_GS_Privileg_Reg->CSR |= 0x0000000C;
+			Emu_Intc_Control_Reg->STAT_GS = 1;
+			Emu_Intc_CallHandler(2);
+			GSvsync();
+			//            Emu_Intc_CallHandler( 3 );
 
-            RDTSC( StartV );
-            StartH = StartV;
-            Emu_PAD_Bios_ReadStatus( 1 );
-            Emu_PAD_Bios_ReadStatus( 2 );
-            if ( ( PADKeyPressed = PAD1keyEvent( ) ) )
-            {
-                if ( PADKeyPressed->key == VK_ESCAPE )
-                {
-                    Emu_GS_CloseWindow( );
-                    EmuStopRun = true;
-                }
-                else
-                {
-                    GSkeyEvent( PADKeyPressed );
-                }
-            }
-        }
-        else
-        if ( ( End - StartH ) > TicksMinH )
-        {
-//            Emu_GS_Privileg_Reg->CSR &= 0xFFFFFFF3;
-            Emu_GS_Privileg_Reg->CSR |= 0x00000004;
-            Emu_Intc_Control_Reg->STAT_GS = 1;
+			RDTSC(StartV);
+			StartH = StartV;
+			Emu_PAD_Bios_ReadStatus(1);
+			Emu_PAD_Bios_ReadStatus(2);
+			if ((PADKeyPressed = PAD1keyEvent()))
+			{
+				if (PADKeyPressed->key == VK_ESCAPE)
+				{
+					Emu_GS_CloseWindow();
+					EmuStopRun = true;
+				}
+				else
+				{
+					GSkeyEvent(PADKeyPressed);
+				}
+			}
+		}
+		else
+			if ((End - StartH) > TicksMinH)
+			{
+				//            Emu_GS_Privileg_Reg->CSR &= 0xFFFFFFF3;
+				Emu_GS_Privileg_Reg->CSR |= 0x00000004;
+				Emu_Intc_Control_Reg->STAT_GS = 1;
 
-            RDTSC( StartH );
-        }
-        else
-        {
-            Emu_GS_Privileg_Reg->CSR &= 0xFFFFFFF3;
-            Emu_Intc_Control_Reg->STAT_GS = 0;
-        }
-    }
+				RDTSC(StartH);
+			}
+			else
+			{
+				Emu_GS_Privileg_Reg->CSR &= 0xFFFFFFF3;
+				Emu_Intc_Control_Reg->STAT_GS = 0;
+			}
+	}
 }
 
-void Emu_GS_WriteCallback( EMU_U32 Address )
+void Emu_GS_WriteCallback(EMU_U32 Address)
 {
 #ifdef EMU_LOG
-   EmuLog( "GS: %.8X = %.16X\n", Address, EmuMemGetDWord( Address ) );
+	EmuLog("GS: %.8X = %.16X\n", Address, EmuMemGetDWord(Address));
 #endif
-//    if ( GSwritePReg )
-    {
-//        GSwritePReg( Address );
-    }
-//    else
-    {
-        GSwrite64( Address, EmuMemGetDWord( Address ) );
-    }
+	//    if ( GSwritePReg )
+	{
+		//        GSwritePReg( Address );
+	}
+	//    else
+	{
+		GSwrite64(Address, EmuMemGetDWord(Address));
+	}
 }
 
-void Emu_GS_ReadCallback( EMU_U32 Address, EMU_U08 * RealAddress )
+void Emu_GS_ReadCallback(EMU_U32 Address, EMU_U08* RealAddress)
 {
 }
 
 //
 //  iGsGetIMR();
 //
-void Emu_GS_Bios_GetIMR( void ) 
+void Emu_GS_Bios_GetIMR()
 { // 0x70
-    R5900Regs.V0.u64_00_63 = EmuMemGetDWord( 0x12001010 );
+	R5900Regs.V0.u64_00_63 = EmuMemGetDWord(0x12001010);
 }
 
 //
 //  void iGsPetIMR(u64 IMR);
 //
-void Emu_GS_Bios_PutIMR( void ) 
+void Emu_GS_Bios_PutIMR()
 { // 0x71
-    EmuMemSetDWord( 0x12001010, R5900Regs.A0.u64_00_63 );
+	EmuMemSetDWord(0x12001010, R5900Regs.A0.u64_00_63);
 }
 
-void Emu_GS_Bios_SetGsCrt( void ) 
+void Emu_GS_Bios_SetGsCrt()
 { // 0x02
 }
 
-EMU_U08 * Emu_GS_GetPointer( EMU_U32 Address )
+EMU_U08* Emu_GS_GetPointer(EMU_U32 Address)
 {
-    return &EmuGsMemory[ Address - EMU_GS_PRIV_START_ADDR ];
+	return &EmuGsMemory[Address - EMU_GS_PRIV_START_ADDR];
 }

@@ -47,9 +47,9 @@ BOOL CPSOPS2App::InitInstance()
     //  of your final executable, you should remove from the following
     //  the specific initialization routines you do not need.
 
-#ifdef _AFXDLL
-    Enable3dControls();         // Call this when using MFC in a shared DLL
-#endif
+//#ifdef _AFXDLL
+//    Enable3dControls();         // Call this when using MFC in a shared DLL
+//#endif
 
     CPSOPS2Dlg dlg;
     m_pMainWnd = &dlg;

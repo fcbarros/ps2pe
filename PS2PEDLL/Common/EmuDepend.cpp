@@ -1,4 +1,3 @@
-
 #include "EmuMain.h"
 #include "EmuGS.h"
 #include "EmuPAD.h"
@@ -11,9 +10,9 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-typedef EMU_U32(CALLBACK* LIBTYPE)(void);
-typedef EMU_U32(CALLBACK* LIBVERSION)(void);
-typedef char* (CALLBACK* LIBNAME)(void);
+typedef EMU_U32(CALLBACK* LIBTYPE)();
+typedef EMU_U32(CALLBACK* LIBVERSION)();
+typedef char* (CALLBACK* LIBNAME)();
 
 // PS2EgetLibType returns 
 #define PS2E_LT_GS   0x1
@@ -22,12 +21,11 @@ typedef char* (CALLBACK* LIBNAME)(void);
 
 char EmuDLLDir[256];
 
-
 void EmuSetDir(char* Dir)
 {
 	memset(EmuDLLDir, 0, sizeof(EmuDLLDir));
 
-	strncpy_s(EmuDLLDir, sizeof(EmuDLLDir), Dir, sizeof(EmuDLLDir) - 1);
+	strncpy(EmuDLLDir, Dir, sizeof(EmuDLLDir) - 1);
 }
 
 #ifdef __WIN32__
@@ -51,7 +49,7 @@ HMODULE PADdll = 0;
 
 #pragma optimize( "", off )
 // Calculates the frequency of the processor clock
-DLLEXPORT double CALLBACK EmuGetClock(void)
+DLLEXPORT double CALLBACK EmuGetClock()
 {
 	__int64 i64_perf_start, i64_perf_freq, i64_perf_end;
 	__int64 i64_clock_start, i64_clock_end;
@@ -129,7 +127,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Version = (LibVersion() >> 16);
 						Revision = (LibVersion() >> 8) & 0xFF;
 						Build = (LibVersion()) & 0xFF;
-						sprintf_s(Buffer, sizeof(Buffer), "%s v%u.%u.%u", LibName(), Version, Revision, Build);
+						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCGS, Buffer);
 						if (!strcmp(fileinfo.name, GSFileName))
 						{
@@ -142,7 +140,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Version = (LibVersion() >> 16);
 						Revision = (LibVersion() >> 8) & 0xFF;
 						Build = (LibVersion()) & 0xFF;
-						sprintf_s(Buffer, sizeof(Buffer), "%s v%u.%u.%u", LibName(), Version, Revision, Build);
+						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCPAD, Buffer);
 						if (!strcmp(fileinfo.name, PADFileName))
 						{
@@ -155,7 +153,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Version = (LibVersion() >> 16);
 						Revision = (LibVersion() >> 8) & 0xFF;
 						Build = (LibVersion()) & 0xFF;
-						sprintf_s(Buffer, sizeof(Buffer), "%s v%u.%u.%u", LibName(), Version, Revision, Build);
+						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCSPU, Buffer);
 						if (!strcmp(fileinfo.name, SPUFileName))
 						{
@@ -189,9 +187,9 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 			hWCGS = GetDlgItem(hW, IDC_COMBO_GS);
 			hWCPAD = GetDlgItem(hW, IDC_COMBO_PAD);
 			hWCSPU = GetDlgItem(hW, IDC_COMBO_SPU);
-			strcpy_s(GSFileName, gsPlugins[ComboBox_GetCurSel(hWCGS)].c_str());
-			strcpy_s(PADFileName, padPlugins[ComboBox_GetCurSel(hWCPAD)].c_str());
-			strcpy_s(SPUFileName, spuPlugins[ComboBox_GetCurSel(hWCSPU)].c_str());
+			strcpy(GSFileName, gsPlugins[ComboBox_GetCurSel(hWCGS)].c_str());
+			strcpy(PADFileName, padPlugins[ComboBox_GetCurSel(hWCPAD)].c_str());
+			strcpy(SPUFileName, spuPlugins[ComboBox_GetCurSel(hWCSPU)].c_str());
 
 			EmuSaveConfig();
 			EmuLoadConfig();
@@ -204,7 +202,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 	return FALSE;
 }
 
-DLLEXPORT void CALLBACK EmuConfig(void)
+DLLEXPORT void CALLBACK EmuConfig()
 {
 	DialogBox(hInst,
 		MAKEINTRESOURCE(IDD_CONFIG),
@@ -225,7 +223,7 @@ DLLEXPORT void CALLBACK EmuConfig(void)
 #define SetKeyVdw( name, var ) \
 	        SetKeyV( name, var, 4, REG_DWORD );
 
-void EmuSaveConfig(void)
+void EmuSaveConfig()
 {
 	HKEY myKey;
 	DWORD myDisp;
@@ -240,7 +238,7 @@ void EmuSaveConfig(void)
 	RegCloseKey(myKey);
 }
 
-void EmuLoadConfig(void)
+void EmuLoadConfig()
 {
 	HKEY myKey;
 	DWORD type, size;
@@ -260,17 +258,17 @@ void EmuLoadConfig(void)
 	}
 
 	GetKeyV("GSplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcpy_s(GSFileName, Buffer);
+	strcpy(GSFileName, Buffer);
 	GetKeyV("PADplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcpy_s(PADFileName, Buffer);
+	strcpy(PADFileName, Buffer);
 	GetKeyV("SPUplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcpy_s(SPUFileName, Buffer);
+	strcpy(SPUFileName, Buffer);
 	GetKeyV("BIOSfile", BiosFileName, sizeof(BiosFileName), REG_SZ);
 
 	RegCloseKey(myKey);
 }
 
-void EmuReleasePlugins(void)
+void EmuReleasePlugins()
 {
 	if (GSdll)
 	{
@@ -284,15 +282,15 @@ void EmuReleasePlugins(void)
 	}
 }
 
-void EmuLoadPlugins(void)
+void EmuLoadPlugins()
 {
 	char LibraryPath[1024];
 
 	SetCurrentDirectory(EmuDLLDir);
 	if (!GSdll)
 	{
-		strcpy_s(LibraryPath, "plugins\\");
-		strcat_s(LibraryPath, GSFileName);
+		strcpy(LibraryPath, "plugins\\");
+		strcat(LibraryPath, GSFileName);
 		GSdll = LoadLibrary(LibraryPath);
 
 		GSinit = (_GSinit)GetProcAddress(GSdll, "GSinit");
@@ -316,8 +314,8 @@ void EmuLoadPlugins(void)
 
 	if (!PADdll)
 	{
-		strcpy_s(LibraryPath, "plugins\\");
-		strcat_s(LibraryPath, PADFileName);
+		strcpy(LibraryPath, "plugins\\");
+		strcat(LibraryPath, PADFileName);
 		PADdll = LoadLibrary(LibraryPath);
 
 		PAD1init = (_PADinit)GetProcAddress(PADdll, "PADinit");
@@ -342,27 +340,27 @@ void EmuLoadPlugins(void)
 
 
 // Calculates the frequency of the processor clock
-DLLEXPORT double CALLBACK EmuGetClock(void)
+DLLEXPORT double CALLBACK EmuGetClock()
 {
 	return 0.0;
 }
 
 // Loads the Config File
-void EmuLoadConfig(void)
+void EmuLoadConfig()
 {
 }
 
 // Saves the Config File
-void EmuSaveConfig(void)
+void EmuSaveConfig()
 {
 }
 
 // Opens a dialog for the Emu configuration
-DLLEXPORT void CALLBACK EmuConfig(void)
+DLLEXPORT void CALLBACK EmuConfig()
 {
 }
 
-void EmuLoadPlugins(void)
+void EmuLoadPlugins()
 {
 }
 

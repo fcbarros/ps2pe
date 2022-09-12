@@ -1,4 +1,3 @@
-
 #include "EmuMain.h"
 #include "EmuDma.h"
 #include "EmuGS.h"
@@ -17,7 +16,7 @@ EMU_U32 deci2handler;
 EMUBIOSFUNCTIONS Emu_Bios_Function[256];
 
 // Names of the 256 Bios calls
-const char* Emu_Bios_Calls_Names[256] =
+char* Emu_Bios_Calls_Names[256] =
 {
 	//0x00
 	"RFU000_FullReset",         "ResetEE",              "SetGsCrt",                 "RFU003",
@@ -73,8 +72,8 @@ const char* Emu_Bios_Calls_Names[256] =
 // Load a file into Bios memory area
 void Emu_Bios_Load(char* FileName)
 {
-	FILE* pFile;
-	if (fopen_s(&pFile, FileName, "rb") != 0)
+	FILE* pFile = fopen(FileName, "rb");
+	if (!pFile)
 	{
 		return;
 	}
@@ -89,9 +88,11 @@ EMU_U08* Emu_Bios_GetPointer(EMU_U32 Address)
 	return &EmuBiosMemory[Address - EMU_BIOS_START_ADDR];
 }
 
-void Emu_Bios_Init(void)
+void Emu_Bios_Init()
 {
-	for (int i = 0; i < 256; i++)
+	int i;
+
+	for (i = 0; i < 256; i++)
 	{
 		Emu_Bios_Function[i] = Emu_Bios_Dummy;
 	}
@@ -129,7 +130,7 @@ void Emu_Bios_Init(void)
 	Emu_Bios_Function[0x7c] = Emu_Bios_Deci2Call;
 }
 
-void Emu_Bios_Syscall(void)
+void Emu_Bios_Syscall()
 {
 #ifdef EMU_LOG
 	EmuLog("BIOS_%s\n", Emu_Bios_Calls_Names[R5900Regs.V1.u08_00_07]);
@@ -149,25 +150,25 @@ void Emu_Bios_Syscall(void)
 
 
 //
-//  EMU_U32 RFU060(void);
+//  EMU_U32 RFU060();
 //
-void Emu_Bios_RFU060(void)
+void Emu_Bios_RFU060()
 { // 0x3c
 	R5900Regs.V0.u64_00_63 = 0xFFFFFFFF81F00000;
 }
 
 //
-//  EMU_U32 RFU060(void);
+//  EMU_U32 RFU060();
 //
-void Emu_Bios_RFU061(void)
+void Emu_Bios_RFU061()
 { // 0x3d
 	R5900Regs.V0.u64_00_63 = R5900Regs.A0.u32_00_31 + R5900Regs.A1.u32_00_31;
 }
 
 //
-//  EMU_U32 k_EndOfHeap(void);
+//  EMU_U32 k_EndOfHeap();
 //
-void Emu_Bios_EndOfHeap(void)
+void Emu_Bios_EndOfHeap()
 { // 0x3e
 	R5900Regs.V0.u64_00_63 = 0xFFFFFFFF80000000;
 }
@@ -175,11 +176,11 @@ void Emu_Bios_EndOfHeap(void)
 //
 //  void k_FlushCache(int);
 //
-void Emu_Bios_FlushCache(void)
+void Emu_Bios_FlushCache()
 { // 0x64
 }
 
-void Emu_Bios_Exit(void)
+void Emu_Bios_Exit()
 { // 0x64
 	EmuStopRun = true;
 }
@@ -187,19 +188,19 @@ void Emu_Bios_Exit(void)
 //
 //  int ExecPS2(void *, void *, int, char **);
 //
-void Emu_Bios_ExecPS2(void)
+void Emu_Bios_ExecPS2()
 { // 0x07
 //  cpuRegs.pc = a0.UL[0];
 }
 
-void Emu_Bios_Dummy(void)
+void Emu_Bios_Dummy()
 {
 }
 
 //
 //  int Deci2Call(int, u_int *);
 //
-void Emu_Bios_Deci2Call(void)
+void Emu_Bios_Deci2Call()
 { // 0x7c
 #ifdef EMU_LOG
 	EmuLog("  %d %x\n",
