@@ -8,11 +8,11 @@ void EmuCop0(EMU_U32 Code)
 	switch (Code & 0x03E00000)
 	{
 	case 0x00000000: // "mfc0"
-		R5900Regs.Reg[R_RT].u64_00_63 = (EMU_I32)COP0Regs.Reg[R_RD];
+		PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 = (EMU_I32)PS2Regs.COP0Regs.Reg[R_RD];
 		break;
 
 	case 0x00800000: // "mtc0"
-		COP0Regs.Reg[R_RD] = R5900Regs.Reg[R_RT].u32_00_31;
+		PS2Regs.COP0Regs.Reg[R_RD] = PS2Regs.R5900Regs.Reg[R_RT].u32_00_31;
 		break;
 
 	case 0x01000000: // "BC0"
@@ -24,7 +24,7 @@ void EmuCop0(EMU_U32 Code)
 		case 0x00000000: // "bc0f"
 			// Branch if there is no DMA running, always for now
 		{
-			EXECUTE_BRANCH(R5900Regs.PC);
+			EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
 		}
 		break;
 
@@ -34,12 +34,12 @@ void EmuCop0(EMU_U32 Code)
 		case 0x00020000: // "bc0fl"
 			// Branch if there is no DMA running, always for now
 		{
-			EXECUTE_BRANCH(R5900Regs.PC);
+			EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
 		}
 		break;
 
 		case 0x00030000: // "bc0tl"
-			R5900Regs.PC += 4;
+			PS2Regs.R5900Regs.PC += 4;
 			break;
 		}
 		///////////////////////////////////
@@ -60,35 +60,35 @@ void EmuCop0(EMU_U32 Code)
 			break;
 
 		case 0x00000018: // "eret"
-			if (COP0Regs.Status_ERL == 1)
+			if (PS2Regs.COP0Regs.Status_ERL == 1)
 			{
-				COP0Regs.Status_ERL = 0;
-				R5900Regs.PC = COP0Regs.Error_EPC;
+				PS2Regs.COP0Regs.Status_ERL = 0;
+				PS2Regs.R5900Regs.PC = PS2Regs.COP0Regs.Error_EPC;
 			}
 			else
 			{
-				COP0Regs.Status_ERL = 1;
-				R5900Regs.PC = COP0Regs.EPC;
+				PS2Regs.COP0Regs.Status_ERL = 1;
+				PS2Regs.R5900Regs.PC = PS2Regs.COP0Regs.EPC;
 			}
 			break;
 
 		case 0x00000038: // "ei"
-			if ((COP0Regs.Status_EDI == 1) ||
-				(COP0Regs.Status_EXL == 1) ||
-				(COP0Regs.Status_ERL == 1) ||
-				(COP0Regs.Status_KSU == 0))
+			if ((PS2Regs.COP0Regs.Status_EDI == 1) ||
+				(PS2Regs.COP0Regs.Status_EXL == 1) ||
+				(PS2Regs.COP0Regs.Status_ERL == 1) ||
+				(PS2Regs.COP0Regs.Status_KSU == 0))
 			{
-				COP0Regs.Status_EIE = 1;
+				PS2Regs.COP0Regs.Status_EIE = 1;
 			}
 			break;
 
 		case 0x00000039: // "di"
-			if ((COP0Regs.Status_EDI == 1) ||
-				(COP0Regs.Status_EXL == 1) ||
-				(COP0Regs.Status_ERL == 1) ||
-				(COP0Regs.Status_KSU == 0))
+			if ((PS2Regs.COP0Regs.Status_EDI == 1) ||
+				(PS2Regs.COP0Regs.Status_EXL == 1) ||
+				(PS2Regs.COP0Regs.Status_ERL == 1) ||
+				(PS2Regs.COP0Regs.Status_KSU == 0))
 			{
-				COP0Regs.Status_EIE = 0;
+				PS2Regs.COP0Regs.Status_EIE = 0;
 			}
 			break;
 		}

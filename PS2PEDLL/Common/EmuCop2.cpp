@@ -2095,7 +2095,7 @@ void EmuCop2(EMU_U32 Code)
 			case 0x00000000: // "bc2f"
 				// Branch if COP2 is not running, always for now
 			{
-				EXECUTE_BRANCH(R5900Regs.PC);
+				EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
 			}
 			break;
 
@@ -2105,12 +2105,12 @@ void EmuCop2(EMU_U32 Code)
 			case 0x00020000: // "bc2fl"
 				// Branch if COP2 is not running, always for now
 			{
-				EXECUTE_BRANCH(R5900Regs.PC);
+				EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
 			}
 			break;
 
 			case 0x00030000: // "bc2tl"
-				R5900Regs.PC += 4;
+				PS2Regs.R5900Regs.PC += 4;
 				break;
 			}
 		}
@@ -2120,28 +2120,28 @@ void EmuCop2(EMU_U32 Code)
 			{
 			case 0x00200000: // "qmfc2.ni"
 			case 0x00200001: // "qmfc2.i"
-				R5900Regs.Reg[R_RT].u32_00_31 = VU0Regs.CPR[VU_FS].X.u;
-				R5900Regs.Reg[R_RT].u32_32_63 = VU0Regs.CPR[VU_FS].Y.u;
-				R5900Regs.Reg[R_RT].u32_64_95 = VU0Regs.CPR[VU_FS].Z.u;
-				R5900Regs.Reg[R_RT].u32_96_127 = VU0Regs.CPR[VU_FS].W.u;
+				PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 = VU0Regs.CPR[VU_FS].X.u;
+				PS2Regs.R5900Regs.Reg[R_RT].u32_32_63 = VU0Regs.CPR[VU_FS].Y.u;
+				PS2Regs.R5900Regs.Reg[R_RT].u32_64_95 = VU0Regs.CPR[VU_FS].Z.u;
+				PS2Regs.R5900Regs.Reg[R_RT].u32_96_127 = VU0Regs.CPR[VU_FS].W.u;
 				break;
 
 			case 0x00400000: // "cfc2.ni"
 			case 0x00400001: // "cfc2.i"
-				R5900Regs.Reg[R_RT].u32_00_31 = VU0Regs.CCR[VU_ID].u32;
+				PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 = VU0Regs.CCR[VU_ID].u32;
 				break;
 
 			case 0x00A00000: // "qmtc2.ni"
 			case 0x00A00001: // "qmtc2.i"
-				VU0Regs.CPR[VU_FS].X.u = R5900Regs.Reg[R_RT].u32_00_31;
-				VU0Regs.CPR[VU_FS].Y.u = R5900Regs.Reg[R_RT].u32_32_63;
-				VU0Regs.CPR[VU_FS].Z.u = R5900Regs.Reg[R_RT].u32_64_95;
-				VU0Regs.CPR[VU_FS].W.u = R5900Regs.Reg[R_RT].u32_96_127;
+				VU0Regs.CPR[VU_FS].X.u = PS2Regs.R5900Regs.Reg[R_RT].u32_00_31;
+				VU0Regs.CPR[VU_FS].Y.u = PS2Regs.R5900Regs.Reg[R_RT].u32_32_63;
+				VU0Regs.CPR[VU_FS].Z.u = PS2Regs.R5900Regs.Reg[R_RT].u32_64_95;
+				VU0Regs.CPR[VU_FS].W.u = PS2Regs.R5900Regs.Reg[R_RT].u32_96_127;
 				break;
 
 			case 0x00C00000: // "ctc2.ni"
 			case 0x00C00001: // "ctc2.i"
-				VU0Regs.CCR[VU_ID].u32 = R5900Regs.Reg[R_RT].u32_00_31;
+				VU0Regs.CCR[VU_ID].u32 = PS2Regs.R5900Regs.Reg[R_RT].u32_00_31;
 				break;
 			}
 		}

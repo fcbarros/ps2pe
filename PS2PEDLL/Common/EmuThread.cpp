@@ -46,22 +46,22 @@ void Emu_Thread_Reset()
 
 void Emu_Thread_Bios_Create()
 { // 0x20
-	R5900Regs.V0.u64_00_63 = Emu_Thread_Create(R5900Regs.A0.u32_00_31);
+	PS2Regs.R5900Regs.V0.u64_00_63 = Emu_Thread_Create(PS2Regs.R5900Regs.A0.u32_00_31);
 }
 
 void Emu_Thread_Bios_Start()
 { // 0x22
-	Emu_Thread_Start(R5900Regs.A0.u32_00_31);
+	Emu_Thread_Start(PS2Regs.R5900Regs.A0.u32_00_31);
 }
 
 void Emu_Thread_Bios_GetId()
 { // 0x2f
-	R5900Regs.V0.u64_00_63 = Emu_Thread_GetId();
+	PS2Regs.R5900Regs.V0.u64_00_63 = Emu_Thread_GetId();
 }
 
 void Emu_Thread_Bios_ReferStatus()
 { // 0x30
-	R5900Regs.V0.u64_00_63 = Emu_Thread_ReferStatus(R5900Regs.A1.u32_00_31);
+	PS2Regs.R5900Regs.V0.u64_00_63 = Emu_Thread_ReferStatus(PS2Regs.R5900Regs.A1.u32_00_31);
 }
 
 //

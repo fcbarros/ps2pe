@@ -97,7 +97,7 @@ void EmuRec_FlushReg(EMU_U32 Index)
 	EMU_U32 RegIndex = RecRegularRegisters[Index].MainIndex;
 	EMU_U32 U32Index = RecRegularRegisters[Index].SecIndex;
 	EMU_U32 Register = RecRegularRegisters[Index].Code;
-	MOV32RtoM((EMU_U32)&R5900Regs.Reg[RegIndex].u32[U32Index], Register);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[RegIndex].u32[U32Index], Register);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ void EmuRec_SetReg(EMU_U32 Index)
 	EMU_U32 RegIndex = RecRegularRegisters[Index].MainIndex;
 	EMU_U32 U32Index = RecRegularRegisters[Index].SecIndex;
 	EMU_U32 Register = RecRegularRegisters[Index].Code;
-	MOV32MtoR(Register, (EMU_U32)&R5900Regs.Reg[RegIndex].u32[U32Index]);
+	MOV32MtoR(Register, (EMU_U32)&PS2Regs.R5900Regs.Reg[RegIndex].u32[U32Index]);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -281,7 +281,7 @@ void EmuRec_FreeAll()
 	{
 		EmuRec_FreeIntReg(Index);
 	}
-	MOV32RtoM((EMU_U32)&COP0Regs.Count, EBP);
+	MOV32RtoM((EMU_U32)&PS2Regs.COP0Regs.Count, EBP);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -295,7 +295,7 @@ void EmuRec_FlushAll()
 			EmuRec_FlushReg(Index);
 		}
 	}
-	MOV32RtoM((EMU_U32)&COP0Regs.Count, EBP);
+	MOV32RtoM((EMU_U32)&PS2Regs.COP0Regs.Count, EBP);
 }
 
 ///////////////////////////////////////////////////////////////////////

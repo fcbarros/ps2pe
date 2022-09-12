@@ -60,38 +60,38 @@ void Emu_Intc_callback(EMU_U32 Address)
 void Emu_Intc_Bios_AddHandler()
 { // BiosCall 0x10
 #ifdef EMU_LOG
-	EmuLog("  Handler: %u, Address: %.8X\n", R5900Regs.A0.u32_00_31, R5900Regs.A1.u32_00_31);
+	EmuLog("  Handler: %u, Address: %.8X\n", PS2Regs.R5900Regs.A0.u32_00_31, PS2Regs.R5900Regs.A1.u32_00_31);
 #endif
-	Emu_Intc_AddHandler(R5900Regs.A0.u32_00_31, R5900Regs.A1.u32_00_31);
+	Emu_Intc_AddHandler(PS2Regs.R5900Regs.A0.u32_00_31, PS2Regs.R5900Regs.A1.u32_00_31);
 
-	R5900Regs.V0.u64_00_63 = R5900Regs.A0.u32_00_31;
+	PS2Regs.R5900Regs.V0.u64_00_63 = PS2Regs.R5900Regs.A0.u32_00_31;
 }
 
 void Emu_Intc_Bios_RemoveHandler()
 { // 0x11
 #ifdef EMU_LOG
-	EmuLog("  Handler: %u\n", R5900Regs.A0.u32_00_31);
+	EmuLog("  Handler: %u\n", PS2Regs.R5900Regs.A0.u32_00_31);
 #endif
-	Emu_Intc_RemoveHandler(R5900Regs.A0.u32_00_31);
-	R5900Regs.V0.u64_00_63 = 1;
+	Emu_Intc_RemoveHandler(PS2Regs.R5900Regs.A0.u32_00_31);
+	PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 }
 
 void Emu_Intc_Bios_EnableHandler()
 { // 0x14
 #ifdef EMU_LOG
-	EmuLog("  Handler: %u\n", R5900Regs.A0.u32_00_31);
+	EmuLog("  Handler: %u\n", PS2Regs.R5900Regs.A0.u32_00_31);
 #endif
-	Emu_Intc_EnableHandler(R5900Regs.A0.u32_00_31);
-	R5900Regs.V0.u64_00_63 = 0;
+	Emu_Intc_EnableHandler(PS2Regs.R5900Regs.A0.u32_00_31);
+	PS2Regs.R5900Regs.V0.u64_00_63 = 0;
 }
 
 void Emu_Intc_Bios_DisableHandler()
 { // 0x15
 #ifdef EMU_LOG
-	EmuLog("  Handler: %u\n", R5900Regs.A0.u32_00_31);
+	EmuLog("  Handler: %u\n", PS2Regs.R5900Regs.A0.u32_00_31);
 #endif
-	Emu_Intc_DisableHandler(R5900Regs.A0.u32_00_31);
-	R5900Regs.V0.u64_00_63 = 1;
+	Emu_Intc_DisableHandler(PS2Regs.R5900Regs.A0.u32_00_31);
+	PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 }
 
 void Emu_Intc_AddHandler(EMU_U32 HandlerIndex, EMU_U32 FuncAddress)
@@ -123,19 +123,19 @@ void Emu_Intc_DisableHandler(EMU_U32 HandlerIndex)
 
 void Emu_Intc_Level1(EMU_U32 ExecCode)
 {
-	COP0Regs.Cause_ExcCode = ExecCode;
+	PS2Regs.COP0Regs.Cause_ExcCode = ExecCode;
 
 	if (EmuInBranchDelay)
 	{
-		COP0Regs.EPC = R5900Regs.PC - 4;
-		COP0Regs.Cause_BD = 1;
+		PS2Regs.COP0Regs.EPC = PS2Regs.R5900Regs.PC - 4;
+		PS2Regs.COP0Regs.Cause_BD = 1;
 	}
 	else
 	{
-		COP0Regs.EPC = R5900Regs.PC;
-		COP0Regs.Cause_BD = 0;
+		PS2Regs.COP0Regs.EPC = PS2Regs.R5900Regs.PC;
+		PS2Regs.COP0Regs.Cause_BD = 0;
 	}
-	COP0Regs.Status_EXL = 1;
+	PS2Regs.COP0Regs.Status_EXL = 1;
 }
 
 void Emu_Intc_CallHandler(EMU_U32 HandlerIndex)
@@ -146,7 +146,7 @@ void Emu_Intc_CallHandler(EMU_U32 HandlerIndex)
 		//        return;
 	}
 	if ((Emu_Intc_Handler[HandlerIndex].active) &&
-		(COP0Regs.Status_EIE))
+		(PS2Regs.COP0Regs.Status_EIE))
 	{
 		switch (HandlerIndex)
 		{
@@ -154,12 +154,12 @@ void Emu_Intc_CallHandler(EMU_U32 HandlerIndex)
 		case 3:
 			if (Emu_Intc_Control_Reg->STAT_GS & ~Emu_Intc_Control_Reg->MASK)
 			{
-				memcpy(&R5900RegsBackup[EmuInterruptIndex], &R5900Regs, sizeof(R5900Regs));
+				memcpy(&PS2Regs.R5900RegsBackup[EmuInterruptIndex], &PS2Regs.R5900Regs, sizeof(PS2Regs.R5900Regs));
 				//                memcpy( &COP0RegsBackup, &COP0Regs, sizeof( COP0Regs ) );
 				//                memcpy( &COP1RegsBackup, &COP1Regs, sizeof( COP1Regs ) );
 
-				R5900Regs.Reg[31].u64_00_63 = (EMU_I32)0xFFFFFFFF;
-				R5900Regs.PC = Emu_Intc_Handler[HandlerIndex].func;
+				PS2Regs.R5900Regs.Reg[31].u64_00_63 = (EMU_I32)0xFFFFFFFF;
+				PS2Regs.R5900Regs.PC = Emu_Intc_Handler[HandlerIndex].func;
 				EmuInterruptIndex++;
 			}
 		}
@@ -171,7 +171,7 @@ void Emu_Intc_ExitHandler()
 	if (EmuInterruptIndex > 0)
 	{
 		EmuInterruptIndex--;
-		memcpy(&R5900Regs, &R5900RegsBackup[EmuInterruptIndex], sizeof(R5900Regs));
+		memcpy(&PS2Regs.R5900Regs, &PS2Regs.R5900RegsBackup[EmuInterruptIndex], sizeof(PS2Regs.R5900Regs));
 		//        memcpy( &COP0Regs, &COP0RegsBackup, sizeof( COP0Regs ) );
 		//        memcpy( &COP1Regs, &COP1RegsBackup, sizeof( COP1Regs ) );
 	}

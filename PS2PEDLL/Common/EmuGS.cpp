@@ -223,7 +223,7 @@ void Emu_GS_ReadCallback(EMU_U32 Address, EMU_U08* RealAddress)
 //
 void Emu_GS_Bios_GetIMR()
 { // 0x70
-	R5900Regs.V0.u64_00_63 = EmuMemGetDWord(0x12001010);
+	PS2Regs.R5900Regs.V0.u64_00_63 = EmuMemGetDWord(0x12001010);
 }
 
 //
@@ -231,7 +231,7 @@ void Emu_GS_Bios_GetIMR()
 //
 void Emu_GS_Bios_PutIMR()
 { // 0x71
-	EmuMemSetDWord(0x12001010, R5900Regs.A0.u64_00_63);
+	EmuMemSetDWord(0x12001010, PS2Regs.R5900Regs.A0.u64_00_63);
 }
 
 void Emu_GS_Bios_SetGsCrt()

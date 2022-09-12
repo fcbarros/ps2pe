@@ -5,22 +5,22 @@
 
 void EmuRec_bltz(EMU_U32 Code)
 {
-	EMU_U32 BranchTo = R5900Regs.PC + (((EMU_I16)R_BRANCH) << 2);
+	EMU_U32 BranchTo = PS2Regs.R5900Regs.PC + (((EMU_I16)R_BRANCH) << 2);
 
-	CMP32ItoM((EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63, 0);
+	CMP32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63, 0);
 	EMU_U08* LinkG = JG8(0);
 	EMU_U08* LinkL = JL8(0);
 	//  Equal
-	CMP32ItoM((EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31, 0);
+	CMP32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31, 0);
 	EMU_U08* LinkGE = JGE8(0);
 	//  Less or Equal
 	EMUREC_ALIGN_BRANCH;
 	*LinkL = EmuRec_CurrentAddress() - LinkL - 1;
 
 	// Do BRANCH
-	EMU_U32 TempPC = R5900Regs.PC;                              // Save Current PC
-	EmuRec_RecompileInstruction(R5900Regs.PC, TRUE);          // Insert Branch Delay Slot code
-	R5900Regs.PC = TempPC;                                      // Restore PC
+	EMU_U32 TempPC = PS2Regs.R5900Regs.PC;                              // Save Current PC
+	EmuRec_RecompileInstruction(PS2Regs.R5900Regs.PC, TRUE);          // Insert Branch Delay Slot code
+	PS2Regs.R5900Regs.PC = TempPC;                                      // Restore PC
 
 	ADD32ItoR(EBP, 1);
 	EMU_U08* BranchPointer = EmuRec_CheckAddress(BranchTo);

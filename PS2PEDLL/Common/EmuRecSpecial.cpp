@@ -14,27 +14,27 @@ void EmuRec_sll(EMU_U32 Code)
 		{
 			if (Shift)
 			{
-				MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+				MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 				SHL32ItoR(EDX, Shift);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
 				SAR32ItoR(EDX, 31);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 			}
 			else
 			{
-				MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+				MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 				if (R_RT != R_RD)
 				{
-					MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
+					MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
 				}
 				SAR32ItoR(EDX, 31);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 			}
 		}
 		else
 		{
-			MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
-			MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+			MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+			MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 		}
 	}
 }
@@ -48,26 +48,26 @@ void EmuRec_srl(EMU_U32 Code)
 		{
 			if (Shift)
 			{
-				MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+				MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 				SHR32ItoR(EDX, Shift);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
-				MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
+				MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 			}
 			else
 			{
-				MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+				MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 				if (R_RT != R_RD)
 				{
-					MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
+					MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
 				}
 				SAR32ItoR(EDX, 31);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 			}
 		}
 		else
 		{
-			MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
-			MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+			MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+			MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 		}
 	}
 }
@@ -104,10 +104,10 @@ void EmuRec_srav(EMU_U32 Code)
 
 void EmuRec_jr(EMU_U32 Code)
 {
-	EmuRec_RecompileInstruction(R5900Regs.PC, TRUE);          // Insert Branch Delay Slot code
+	EmuRec_RecompileInstruction(PS2Regs.R5900Regs.PC, TRUE);          // Insert Branch Delay Slot code
 
 	ADD32ItoR(EBP, 1);
-	PUSH32M((EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
+	PUSH32M((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
 
 	CALLFunc((EMU_U32)EmuRec_CheckAddress, (EMU_U32)EmuRec_CurrentAddress());
 	ADD32ItoR(ESP, 4);
@@ -166,38 +166,38 @@ void EmuRec_mfhi(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.HI.u32_00_31);
-		MOV32MtoR(EAX, (EMU_U32)&R5900Regs.HI.u32_32_63);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EAX);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.HI.u32_00_31);
+		MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.HI.u32_32_63);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EAX);
 	}
 }
 
 void EmuRec_mthi(EMU_U32 Code)
 {
-	MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31);
-	MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63);
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_00_31, EDX);
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_32_63, EAX);
+	MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31);
+	MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_00_31, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_32_63, EAX);
 }
 
 void EmuRec_mflo(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.LO.u32_00_31);
-		MOV32MtoR(EAX, (EMU_U32)&R5900Regs.LO.u32_32_63);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EAX);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.LO.u32_00_31);
+		MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.LO.u32_32_63);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EAX);
 	}
 }
 
 void EmuRec_mtlo(EMU_U32 Code)
 {
-	MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31);
-	MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63);
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_00_31, EDX);
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_32_63, EAX);
+	MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31);
+	MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_00_31, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_32_63, EAX);
 }
 
 void EmuRec_dsllv(EMU_U32 Code)
@@ -228,58 +228,58 @@ void EmuRec_mult(EMU_U32 Code)
 {
 	if (R_RS && R_RT)
 	{
-		MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-		IMUL32M((EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+		MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+		IMUL32M((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 	}
 	else
 	{
 		XOR32RtoR(EAX, EAX);
 		XOR32RtoR(EDX, EDX);
 	}
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_00_31, EAX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_00_31, EAX);
 	if (R_RD)
 	{
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
 	}
 	SAR32ItoR(EAX, 31);
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_32_63, EAX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_32_63, EAX);
 	if (R_RD)
 	{
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EAX);
 	}
 
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_00_31, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_00_31, EDX);
 	SAR32ItoR(EDX, 31);
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_32_63, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_32_63, EDX);
 }
 
 void EmuRec_multu(EMU_U32 Code)
 {
 	if (R_RS && R_RT)
 	{
-		MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-		MUL32M((EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+		MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+		MUL32M((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 	}
 	else
 	{
 		XOR32RtoR(EAX, EAX);
 		XOR32RtoR(EDX, EDX);
 	}
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_00_31, EAX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_00_31, EAX);
 	if (R_RD)
 	{
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
 	}
 	SAR32ItoR(EAX, 31);
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_32_63, EAX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_32_63, EAX);
 	if (R_RD)
 	{
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EAX);
 	}
 
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_00_31, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_00_31, EDX);
 	SAR32ItoR(EDX, 31);
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_32_63, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_32_63, EDX);
 }
 
 void EmuRec_div(EMU_U32 Code)
@@ -297,21 +297,21 @@ void EmuRec_div(EMU_U32 Code)
 // 201580
 void EmuRec_divu(EMU_U32 Code)
 {
-	CMP32ItoM((EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31, 0);
+	CMP32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31, 0);
 	EMU_U08* LinkE0 = JE8(0);
 
-	MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
+	MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
 
 	XOR32RtoR(EDX, EDX);
-	DIV32M((EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+	DIV32M((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_00_31, EAX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_00_31, EAX);
 	SAR32ItoR(EAX, 31);
-	MOV32RtoM((EMU_U32)&R5900Regs.LO.u32_32_63, EAX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.LO.u32_32_63, EAX);
 
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_00_31, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_00_31, EDX);
 	SAR32ItoR(EDX, 31);
-	MOV32RtoM((EMU_U32)&R5900Regs.HI.u32_32_63, EDX);
+	MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.HI.u32_32_63, EDX);
 
 	*LinkE0 = EmuRec_CurrentAddress() - LinkE0 - 1;
 }
@@ -325,28 +325,28 @@ void EmuRec_add(EMU_U32 Code)
 	{
 		if (R_RS)
 		{
-			MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
+			MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
 			if (R_RT)
 			{
-				ADD32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+				ADD32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 			}
-			MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
+			MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
 			SAR32ItoR(EDX, 31);
-			MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+			MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 		}
 		else
 		{
 			if (R_RT)
 			{
-				MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
+				MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
 				SAR32ItoR(EDX, 31);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 			}
 			else
 			{
-				MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
-				MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+				MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+				MOV32ItoM((EMU_U32)PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 			}
 		}
 	}
@@ -358,28 +358,28 @@ void EmuRec_addu(EMU_U32 Code)
 	{
 		if (R_RS)
 		{
-			MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
+			MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
 			if (R_RT)
 			{
-				ADD32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+				ADD32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 			}
-			MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
+			MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
 			SAR32ItoR(EDX, 31);
-			MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+			MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 		}
 		else
 		{
 			if (R_RT)
 			{
-				MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EDX);
+				MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EDX);
 				SAR32ItoR(EDX, 31);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 			}
 			else
 			{
-				MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
-				MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+				MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+				MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 			}
 		}
 	}
@@ -412,25 +412,25 @@ void EmuRec_and(EMU_U32 Code)
 		{
 			if (R_RS)
 			{
-				MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-				MOV32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
+				MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+				MOV32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
 
-				AND32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-				AND32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
+				AND32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+				AND32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
 
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
-				MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EBX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
+				MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EBX);
 			}
 			else
 			{
-				MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
-				MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+				MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+				MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 			}
 		}
 		else
 		{
-			MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
-			MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+			MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+			MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 		}
 	}
 }
@@ -441,21 +441,21 @@ void EmuRec_or(EMU_U32 Code)
 	{
 		if (R_RT)
 		{
-			MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-			MOV32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
+			MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+			MOV32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
 			if (R_RS)
 			{
-				OR32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-				OR32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
+				OR32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+				OR32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
 			}
 		}
 		else
 		{
-			MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-			MOV32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
+			MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+			MOV32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
 		}
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EBX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EBX);
 	}
 }
 
@@ -465,21 +465,21 @@ void EmuRec_xor(EMU_U32 Code)
 	{
 		if (R_RT)
 		{
-			MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-			MOV32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
+			MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+			MOV32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
 			if (R_RS)
 			{
-				XOR32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-				XOR32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
+				XOR32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+				XOR32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
 			}
 		}
 		else
 		{
-			MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-			MOV32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
+			MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+			MOV32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
 		}
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EBX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EBX);
 	}
 }
 
@@ -489,24 +489,24 @@ void EmuRec_nor(EMU_U32 Code)
 	{
 		if (R_RT)
 		{
-			MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-			MOV32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
+			MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+			MOV32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
 			if (R_RS)
 			{
-				OR32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-				OR32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
+				OR32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+				OR32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
 			}
 		}
 		else
 		{
-			MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-			MOV32MtoR(EBX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
+			MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+			MOV32MtoR(EBX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
 		}
 		NOT32R(EAX);
 		NOT32R(EBX);
 
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EBX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EBX);
 	}
 }
 
@@ -528,26 +528,26 @@ void EmuRec_slt(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
-		CMP32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
+		CMP32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
 		EMU_U08* LinkA = JG8(0);
 		EMU_U08* LinkB = JL8(0);
 		//  Equal
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-		CMP32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+		CMP32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 		// Less than
 		EMU_U08* LinkAE = JGE8(0);
 		EMUREC_ALIGN_BRANCH;
 		*LinkB = EmuRec_CurrentAddress() - LinkB - 1;
-		MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x1);
+		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x1);
 		EMU_U08* LinkEnd = JMP8(0);
 		// Above or Equal
 		EMUREC_ALIGN_BRANCH;
 		*LinkA = EmuRec_CurrentAddress() - LinkA - 1;
 		*LinkAE = EmuRec_CurrentAddress() - LinkAE - 1;
-		MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
 		EMUREC_ALIGN_BRANCH;
 		*LinkEnd = EmuRec_CurrentAddress() - LinkEnd - 1;
 	}
@@ -557,26 +557,26 @@ void EmuRec_sltu(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, 0x0);
+		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, 0x0);
 
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
-		CMP32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
+		CMP32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
 		EMU_U08* LinkA = JA8(0);
 		EMU_U08* LinkB = JB8(0);
 		//  Equal
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-		CMP32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+		CMP32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
 		// Less than
 		EMU_U08* LinkAE = JAE8(0);
 		EMUREC_ALIGN_BRANCH;
 		*LinkB = EmuRec_CurrentAddress() - LinkB - 1;
-		MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x1);
+		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x1);
 		EMU_U08* LinkEnd = JMP8(0);
 		// Above or Equal
 		EMUREC_ALIGN_BRANCH;
 		*LinkA = EmuRec_CurrentAddress() - LinkA - 1;
 		*LinkAE = EmuRec_CurrentAddress() - LinkAE - 1;
-		MOV32ItoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, 0x0);
+		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, 0x0);
 		EMUREC_ALIGN_BRANCH;
 		*LinkEnd = EmuRec_CurrentAddress() - LinkEnd - 1;
 	}
@@ -589,12 +589,12 @@ void EmuRec_dadd(EMU_U32 Code)
 		// ******************************************
 		// Not doing the OVERFLOW TRAP
 		// ******************************************
-		MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
-		ADD32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-		ADC32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+		MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
+		ADD32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+		ADC32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 	}
 }
 
@@ -602,12 +602,12 @@ void EmuRec_daddu(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOV32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_00_31);
-		MOV32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RS].u32_32_63);
-		ADD32MtoR(EAX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_00_31);
-		ADC32MtoR(EDX, (EMU_U32)&R5900Regs.Reg[R_RT].u32_32_63);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_00_31, EAX);
-		MOV32RtoM((EMU_U32)&R5900Regs.Reg[R_RD].u32_32_63, EDX);
+		MOV32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_00_31);
+		MOV32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RS].u32_32_63);
+		ADD32MtoR(EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31);
+		ADC32MtoR(EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_32_63);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_00_31, EAX);
+		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD].u32_32_63, EDX);
 	}
 }
 
@@ -658,25 +658,25 @@ void EmuRec_dsll(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOVQMtoR(MM0, (EMU_U32)&R5900Regs.Reg[R_RT]);
+		MOVQMtoR(MM0, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT]);
 		PSLLQItoR(MM0, R_SA);
-		MOVQRtoM((EMU_U32)&R5900Regs.Reg[R_RD], MM0);
+		MOVQRtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD], MM0);
 		EMMS();
 
 		/*        EMU_U32 Shift = R_SA;
 				if ( R_RT )
 				{
-					MOV32MtoR( EAX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_00_31 );
-					MOV32MtoR( EDX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_32_63 );
+					MOV32MtoR( EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_00_31 );
+					MOV32MtoR( EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_32_63 );
 					SHLD32ItoR( EDX, EAX, Shift );
 					SHL32ItoR( EAX, Shift );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
 				}
 				else
 				{
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
 				}*/
 	}
 }
@@ -685,25 +685,25 @@ void EmuRec_dsrl(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOVQMtoR(MM0, (EMU_U32)&R5900Regs.Reg[R_RT]);
+		MOVQMtoR(MM0, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT]);
 		PSRLQItoR(MM0, R_SA);
-		MOVQRtoM((EMU_U32)&R5900Regs.Reg[R_RD], MM0);
+		MOVQRtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD], MM0);
 		EMMS();
 		/*
 				EMU_U32 Shift = R_SA;
 				if ( R_RT )
 				{
-					MOV32MtoR( EAX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_00_31 );
-					MOV32MtoR( EDX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_32_63 );
+					MOV32MtoR( EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_00_31 );
+					MOV32MtoR( EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_32_63 );
 					SHRD32ItoR( EAX, EDX, Shift );
 					SHR32ItoR( EDX, Shift );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
 				}
 				else
 				{
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
 				}*/
 	}
 }
@@ -719,26 +719,26 @@ void EmuRec_dsll32(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOVQMtoR(MM0, (EMU_U32)&R5900Regs.Reg[R_RT]);
+		MOVQMtoR(MM0, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT]);
 		PSLLQItoR(MM0, R_SA + 32);
-		MOVQRtoM((EMU_U32)&R5900Regs.Reg[R_RD], MM0);
+		MOVQRtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD], MM0);
 		EMMS();
 
 		/*        EMU_U32 Shift = R_SA;
 				if ( R_RT )
 				{
-					MOV32MtoR( EAX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_00_31 );
-					MOV32MtoR( EDX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_32_63 );
+					MOV32MtoR( EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_00_31 );
+					MOV32MtoR( EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_32_63 );
 					MOV32RtoR( EDX, EAX );
 					SHL32ItoR( EDX, Shift );
 					XOR32RtoR( EAX, EAX );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
 				}
 				else
 				{
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
 				}*/
 	}
 }
@@ -747,26 +747,26 @@ void EmuRec_dsrl32(EMU_U32 Code)
 {
 	if (R_RD)
 	{
-		MOVQMtoR(MM0, (EMU_U32)&R5900Regs.Reg[R_RT]);
+		MOVQMtoR(MM0, (EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT]);
 		PSRLQItoR(MM0, R_SA + 32);
-		MOVQRtoM((EMU_U32)&R5900Regs.Reg[R_RD], MM0);
+		MOVQRtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RD], MM0);
 		EMMS();
 		/*
 				EMU_U32 Shift = R_SA;
 				if ( R_RT )
 				{
-					MOV32MtoR( EAX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_00_31 );
-					MOV32MtoR( EDX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_32_63 );
+					MOV32MtoR( EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_00_31 );
+					MOV32MtoR( EDX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_32_63 );
 					MOV32RtoR( EAX, EDX );
 					SHL32ItoR( EAX, Shift );
 					XOR32RtoR( EDX, EDX );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
-					MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, EAX );
+					MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, EDX );
 				}
 				else
 				{
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
-					MOV32ItoM( (EMU_U32)&R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_00_31, 0x0 );
+					MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RD ].u32_32_63, 0x0 );
 				} */
 	}
 }

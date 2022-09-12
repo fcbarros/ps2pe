@@ -29,13 +29,7 @@ Elf32_File* ElfFile;
 
 EMU_U08 EMemScratchPad[16 * 1024];
 
-Emu_R5900_Regs R5900Regs;
-Emu_COP0_Regs COP0Regs;
-Emu_COP1_Regs COP1Regs;
-
-Emu_R5900_Regs R5900RegsBackup[10];
-Emu_COP0_Regs COP0RegsBackup[10];
-Emu_COP1_Regs COP1RegsBackup[10];
+EMU_PS2_Regs PS2Regs;
 
 bool EmuRunning = false;
 bool EmuStopRun = false;
@@ -150,21 +144,21 @@ DLLEXPORT void CALLBACK EmuReset()
 
 	EmuClearStats();
 
-	memset(&R5900Regs, 0, sizeof(R5900Regs));
-	memset(&COP0Regs, 0, sizeof(COP0Regs));
-	memset(&COP1Regs, 0, sizeof(COP1Regs));
+	memset(&PS2Regs.R5900Regs, 0, sizeof(PS2Regs.R5900Regs));
+	memset(&PS2Regs.COP0Regs, 0, sizeof(PS2Regs.COP0Regs));
+	memset(&PS2Regs.COP1Regs, 0, sizeof(PS2Regs.COP1Regs));
 
-	R5900Regs.SP.u64_00_63 = (EMU_I32)0x81F00000;
-	R5900Regs.GP.u64_00_63 = (EMU_I32)0x81F80000;
+	PS2Regs.R5900Regs.SP.u64_00_63 = (EMU_I32)0x81F00000;
+	PS2Regs.R5900Regs.GP.u64_00_63 = (EMU_I32)0x81F80000;
 
-	COP0Regs.Status = 0x10900000;
-	COP0Regs.PRId_REV = 0x20;
-	COP0Regs.PRId_IMP = 0x2E;
+	PS2Regs.COP0Regs.Status = 0x10900000;
+	PS2Regs.COP0Regs.PRId_REV = 0x20;
+	PS2Regs.COP0Regs.PRId_IMP = 0x2E;
 
-	COP1Regs.FCR0_REV = 0x00;
-	COP1Regs.FCR0_IMP = 0x2E;
-	COP1Regs.FCR31_00 = 1;
-	COP1Regs.FCR31_24 = 1;
+	PS2Regs.COP1Regs.FCR0_REV = 0x00;
+	PS2Regs.COP1Regs.FCR0_IMP = 0x2E;
+	PS2Regs.COP1Regs.FCR31_00 = 1;
+	PS2Regs.COP1Regs.FCR31_24 = 1;
 
 	Emu_Dma_Reset();
 	Emu_Gif_Reset();
@@ -183,7 +177,7 @@ DLLEXPORT void CALLBACK EmuReset()
 
 	EmuInterruptIndex = 0;
 
-	R5900Regs.PC = ElfFile->Header.e_entry;
+	PS2Regs.R5900Regs.PC = ElfFile->Header.e_entry;
 
 	EmuRec_Reset();
 }
@@ -308,12 +302,12 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 			break;
 		}
 	}
-	R5900Regs.PC = ElfFile->Header.e_entry;
-	EmuRec_Recompile(R5900Regs.PC, EndAddress);
-	R5900Regs.PC = ElfFile->Header.e_entry;
+	PS2Regs.R5900Regs.PC = ElfFile->Header.e_entry;
+	EmuRec_Recompile(PS2Regs.R5900Regs.PC, EndAddress);
+	PS2Regs.R5900Regs.PC = ElfFile->Header.e_entry;
 
 #ifdef EMU_LOG
-	EmuLog("Entry point at %.8X\n", R5900Regs.PC);
+	EmuLog("Entry point at %.8X\n", PS2Regs.R5900Regs.PC);
 #endif
 
 	return 32768;
@@ -379,10 +373,10 @@ DLLEXPORT void CALLBACK EmuStepOver(EMU_U32 tAddress)
 	EmuStopRun = false;
 	EmuInBranchDelay = false;
 	EmuExecuteFast(tAddress, false);
-	if (R5900Regs.PC != (tAddress + 4))
+	if (PS2Regs.R5900Regs.PC != (tAddress + 4))
 	{
 		EmuAddBreakPoint(tAddress + 8);
-		EmuRun(R5900Regs.PC);
+		EmuRun(PS2Regs.R5900Regs.PC);
 		EmuRemoveBreakPoint(tAddress + 8);
 	}
 }
@@ -397,8 +391,8 @@ DLLEXPORT void CALLBACK EmuStepInto(EMU_U32 Address)
 DLLEXPORT void CALLBACK EmuRun(unsigned int Address)
 {
 	EmuStopRun = false;
-	EmuRunDebug(Address, true);
-	//EmuExecuteFast(Address, true);
+	//EmuRunDebug(Address, true);
+	EmuExecuteFast(Address, true);
 	Emu_GS_CloseWindow();
 }
 
@@ -475,9 +469,9 @@ DLLEXPORT void CALLBACK EmuGetRegs(Emu_R5900_Regs** r5900regs,
 	EMU_VU_Regs** vu0regs,
 	EMU_VU_Regs** vu1regs)
 {
-	*r5900regs = &R5900Regs;
-	*cop0regs = &COP0Regs;
-	*cop1regs = &COP1Regs;
+	*r5900regs = &PS2Regs.R5900Regs;
+	*cop0regs = &PS2Regs.COP0Regs;
+	*cop1regs = &PS2Regs.COP1Regs;
 	*vu0regs = &VU0Regs;
 	*vu1regs = &VU1Regs;
 }

@@ -133,18 +133,18 @@ void Emu_Bios_Init()
 void Emu_Bios_Syscall()
 {
 #ifdef EMU_LOG
-	EmuLog("BIOS_%s\n", Emu_Bios_Calls_Names[R5900Regs.V1.u08_00_07]);
+	EmuLog("BIOS_%s\n", Emu_Bios_Calls_Names[PS2Regs.R5900Regs.V1.u08_00_07]);
 #endif
 
 	//    COP0Regs.Reg[14] = R5900Regs.PC;
 
-	if (R5900Regs.V1.i32_00_31 >= 0)
+	if (PS2Regs.R5900Regs.V1.i32_00_31 >= 0)
 	{
-		Emu_Bios_Function[R5900Regs.V1.u08_00_07]();
+		Emu_Bios_Function[PS2Regs.R5900Regs.V1.u08_00_07]();
 	}
 	else
 	{
-		Emu_Bios_Function[-(R5900Regs.V1.i32_00_31) & 0xFF]();
+		Emu_Bios_Function[-(PS2Regs.R5900Regs.V1.i32_00_31) & 0xFF]();
 	}
 }
 
@@ -154,7 +154,7 @@ void Emu_Bios_Syscall()
 //
 void Emu_Bios_RFU060()
 { // 0x3c
-	R5900Regs.V0.u64_00_63 = 0xFFFFFFFF81F00000;
+	PS2Regs.R5900Regs.V0.u64_00_63 = 0xFFFFFFFF81F00000;
 }
 
 //
@@ -162,7 +162,7 @@ void Emu_Bios_RFU060()
 //
 void Emu_Bios_RFU061()
 { // 0x3d
-	R5900Regs.V0.u64_00_63 = R5900Regs.A0.u32_00_31 + R5900Regs.A1.u32_00_31;
+	PS2Regs.R5900Regs.V0.u64_00_63 = PS2Regs.R5900Regs.A0.u32_00_31 + PS2Regs.R5900Regs.A1.u32_00_31;
 }
 
 //
@@ -170,7 +170,7 @@ void Emu_Bios_RFU061()
 //
 void Emu_Bios_EndOfHeap()
 { // 0x3e
-	R5900Regs.V0.u64_00_63 = 0xFFFFFFFF80000000;
+	PS2Regs.R5900Regs.V0.u64_00_63 = 0xFFFFFFFF80000000;
 }
 
 //
@@ -203,13 +203,12 @@ void Emu_Bios_Dummy()
 void Emu_Bios_Deci2Call()
 { // 0x7c
 #ifdef EMU_LOG
-	EmuLog("  %d %x\n",
-		R5900Regs.A0.u32_00_31, R5900Regs.A1.u32_00_31);
+	EmuLog("  %d %x\n", PS2Regs.R5900Regs.A0.u32_00_31, PS2Regs.R5900Regs.A1.u32_00_31);
 #endif
 
-	EMU_U32* addr = (EMU_U32*)EmuMemGetRealPointer(R5900Regs.A1.u32_00_31);
+	EMU_U32* addr = (EMU_U32*)EmuMemGetRealPointer(PS2Regs.R5900Regs.A1.u32_00_31);
 
-	switch (R5900Regs.A0.i32_00_31)
+	switch (PS2Regs.R5900Regs.A0.i32_00_31)
 	{
 	case 1: // open
 		deci2addr = (EMU_U32*)EmuMemGetRealPointer(addr[1]);
@@ -219,11 +218,11 @@ void Emu_Bios_Deci2Call()
 #endif
 		deci2handler = addr[2];
 
-		R5900Regs.V0.u64_00_63 = 1;
+		PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 		break;
 
 	case 2: // close
-		R5900Regs.V0.u64_00_63 = 1;
+		PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 		break;
 
 	case 3: // reqsend
@@ -236,7 +235,7 @@ void Emu_Bios_Deci2Call()
 		//          cpuRegs.pc = deci2handler;
 		EmuConsole("deci2msg: %s", (char*)EmuMemGetRealPointer(deci2addr[4] + 0xc));
 		deci2addr[3] = 0;
-		R5900Regs.V0.u64_00_63 = 1;
+		PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 		break;
 
 	case 4: // poll
@@ -244,14 +243,14 @@ void Emu_Bios_Deci2Call()
 		EmuLog("  deci2poll: %x,%x,%x,%x\n",
 			addr[3], addr[2], addr[1], addr[0]);
 #endif
-		R5900Regs.V0.u64_00_63 = 1;
+		PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 		break;
 
 	case -5: // exrecv
 		break;
 
 	case -6: // exsend
-		R5900Regs.V0.u64_00_63 = 1;
+		PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 		break;
 	}
 }
@@ -263,7 +262,7 @@ void biosException( void )
 	{
 		softCall--;
 
-		memcpy( &R5900Regs, saver, sizeof( R5900Regs ) );
+		memcpy( &PS2Regs.R5900Regs, saver, sizeof( R5900Regs ) );
 		return;
 	}
 
@@ -278,7 +277,7 @@ void biosException( void )
 
 		if ( ( Emu_Intc_Handler[ 2 ].active ) )//&& ( Emu_GS_Privileg_Reg->CSR & 0x00000008 ) )
 		{ // vblank start
-			memcpy( saver, &R5900Regs, sizeof( R5900Regs ) );
+			memcpy( saver, &PS2Regs.R5900Regs, sizeof( R5900Regs ) );
 
 			R5900Regs.Reg[31].u64_00_63 = 0x80000180;
 			R5900Regs.PC = Emu_Intc_Handler[2].func;
@@ -288,7 +287,7 @@ void biosException( void )
 		}
 		if ( Emu_Intc_Handler[3].active )
 		{ // vblank end
-			memcpy( saver, &R5900Regs, sizeof( R5900Regs ) );
+			memcpy( saver, &PS2Regs.R5900Regs, sizeof( R5900Regs ) );
 
 			R5900Regs.Reg[31].u64_00_63 = 0x80000180;
 			R5900Regs.PC = Emu_Intc_Handler[3].func;
@@ -304,7 +303,7 @@ void biosException( void )
 		Emu_Dma_Control1_Reg->STAT &= ~0x2;
 		if ( intch[10].active )
 		{ // tim1
-			memcpy( saver, &R5900Regs, sizeof( R5900Regs ) );
+			memcpy( saver, &PS2Regs.R5900Regs, sizeof( R5900Regs ) );
 
 			R5900Regs.Reg[31].u64_00_63 = 0x80000180;
 			R5900Regs.PC = intch[10].func;
@@ -323,7 +322,7 @@ void biosException( void )
 
 		if ( dmach[5].active )
 		{ // sif1?
-			memcpy( saver, &R5900Regs, sizeof( R5900Regs ) );
+			memcpy( saver, &PS2Regs.R5900Regs, sizeof( R5900Regs ) );
 
 			R5900Regs.Reg[31].u64_00_63 = 0x80000180;
 			R5900Regs.PC = dmach[5].func;

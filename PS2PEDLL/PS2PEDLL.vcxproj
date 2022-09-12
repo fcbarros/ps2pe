@@ -177,7 +177,7 @@
     <ClInclude Include="Common\EmuTimer.h" />
     <ClInclude Include="Common\EmuVif.h" />
     <ClInclude Include="Common\EmuVU.h" />
-    <ClInclude Include="Common\UnitPS2.h" />
+    <ClInclude Include="Common\Interpreter.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
@@ -219,6 +219,7 @@
     <ClCompile Include="Common\EmuTimer.cpp" />
     <ClCompile Include="Common\EmuVif.cpp" />
     <ClCompile Include="Common\EmuVU.cpp" />
+    <ClCompile Include="Common\Interpreter.cpp" />
     <ClCompile Include="PS2PEDLL.cpp" />
     <ClCompile Include="StdAfx.cpp" />
   </ItemGroup>

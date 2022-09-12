@@ -48,12 +48,12 @@ void EmuRegimm(EMU_U32 Code)
         break;
 
     case 0x00180000: // "mtsab"
-        R5900Regs.SA = ((R5900Regs.Reg[R_RS].u08_00_07 & 0xF) ^
+        PS2Regs.R5900Regs.SA = ((PS2Regs.R5900Regs.Reg[R_RS].u08_00_07 & 0xF) ^
             (Code & 0x0000000F)) * 8;
         break;
 
     case 0x00190000: // "mtsah"
-        R5900Regs.SA = ((R5900Regs.Reg[R_RS].u08_00_07 & 0x7) ^
+        PS2Regs.R5900Regs.SA = ((PS2Regs.R5900Regs.Reg[R_RS].u08_00_07 & 0x7) ^
             (Code & 0x00000007)) * 16;
         break;
     }

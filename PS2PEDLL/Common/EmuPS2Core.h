@@ -13,8 +13,7 @@
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-#ifndef __EMU_PS2_CORE_H__
-#define __EMU_PS2_CORE_H__
+#pragma once
 
 #ifdef __WIN32__
     #include <windows.h>
@@ -178,7 +177,7 @@ typedef struct
 {
     union
     {
-        EMU_128    Reg[ 32 ];
+        EMU_128 Reg[ 32 ];
         struct
         {
             EMU_128 R0; // 0
@@ -216,12 +215,11 @@ typedef struct
         };
     };
 
-    EMU_128     HI;
-    EMU_128     LO;
+    EMU_128 HI;
+    EMU_128 LO;
 
-    EMU_U64     SA;
-    EMU_U32     PC;
-
+    EMU_U64 SA;
+    EMU_U32 PC;
 } Emu_R5900_Regs;
 
 
@@ -360,4 +358,13 @@ typedef struct
     EMU_UF32        Accumulator;
 } Emu_COP1_Regs;
 
-#endif // __EMU_PS2_CORE_H__
+typedef struct 
+{
+    Emu_R5900_Regs R5900Regs;
+    Emu_COP0_Regs COP0Regs;
+    Emu_COP1_Regs COP1Regs;
+
+    Emu_R5900_Regs R5900RegsBackup[10];
+    Emu_COP0_Regs COP0RegsBackup[10];
+    Emu_COP1_Regs COP1RegsBackup[10];
+} EMU_PS2_Regs;

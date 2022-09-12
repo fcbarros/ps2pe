@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Interpreter">
+      <UniqueIdentifier>{faf72ad7-2a82-49fe-9871-f937acf3887a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Elf.h">
@@ -78,9 +81,6 @@
     <ClInclude Include="Common\EmuVU.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\UnitPS2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -89,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="Common\EmuExecute.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Interpreter.h">
+      <Filter>Interpreter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="Common\EmuSpecial.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Interpreter.cpp">
+      <Filter>Interpreter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

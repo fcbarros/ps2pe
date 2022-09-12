@@ -65,7 +65,7 @@ EMU_U08* Emu_Sif_GetPointer(EMU_U32 Address)
 
 void Emu_Sif_Bios_isceDmaStat()
 { // 0x76
-	R5900Regs.V0.u64_00_63 = 1;
+	PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 }
 
 void Emu_Sif_Bios_Call_Module()
@@ -350,13 +350,13 @@ void Emu_Sif_Bios_isceSetDma()
 	EMU_I32 n_transfer;
 	EMU_U32 addr;
 
-	n_transfer = R5900Regs.A1.u32_00_31 - 1;
+	n_transfer = PS2Regs.R5900Regs.A1.u32_00_31 - 1;
 	if (n_transfer < 0)
 	{
 		return;
 	}
 
-	addr = R5900Regs.A0.u32_00_31 + n_transfer * sizeof(struct t_sif_dma_transfer);
+	addr = PS2Regs.R5900Regs.A0.u32_00_31 + n_transfer * sizeof(struct t_sif_dma_transfer);
 	dmat = (struct t_sif_dma_transfer*)EmuMemGetRealPointer(addr);
 
 #ifdef EMU_LOG
@@ -373,7 +373,7 @@ void Emu_Sif_Bios_isceSetDma()
 	if ((dmat->dest == NULL) ||
 		(dmat->src == NULL))
 	{
-		R5900Regs.A0.u64_00_63 = 1;
+		PS2Regs.R5900Regs.A0.u64_00_63 = 1;
 		return;
 	}
 
@@ -450,7 +450,7 @@ void Emu_Sif_Bios_isceSetDma()
 		call = (struct t_sif_rpc_call*)dmat->src;
 		bout = (EMU_U32*)EmuMemGetRealPointer((EMU_U32)call->receive);
 		n_transfer--;
-		addr = R5900Regs.A0.u32_00_31 + n_transfer * sizeof(struct t_sif_dma_transfer);
+		addr = PS2Regs.R5900Regs.A0.u32_00_31 + n_transfer * sizeof(struct t_sif_dma_transfer);
 		dmat = (struct t_sif_dma_transfer*)EmuMemGetRealPointer(addr);
 		bin = (EMU_U32*)EmuMemGetRealPointer((EMU_U32)dmat->src);
 
@@ -503,7 +503,7 @@ void Emu_Sif_Bios_isceSetDma()
 		break;
 	}
 
-	R5900Regs.V0.u64_00_63 = 1;
+	PS2Regs.R5900Regs.V0.u64_00_63 = 1;
 }
 
 //
@@ -514,12 +514,12 @@ void Emu_Sif_Bios_isceSetDChain()
 	EmuMemSetWord(0xb000c000, 0);
 	EmuMemSetWord(0xb000c020, 0);
 
-	R5900Regs.SP.u64_00_63 -= 0x10;
+	PS2Regs.R5900Regs.SP.u64_00_63 -= 0x10;
 
 	EmuMemSetWord(0xb000c000, 0x184);
-	EmuMemSetWord(R5900Regs.SP.u32_00_31, EmuMemGetWord(0xb000c000));
+	EmuMemSetWord(PS2Regs.R5900Regs.SP.u32_00_31, EmuMemGetWord(0xb000c000));
 
-	R5900Regs.SP.u64_00_63 += 0x10;
+	PS2Regs.R5900Regs.SP.u64_00_63 += 0x10;
 }
 
 //
@@ -527,10 +527,10 @@ void Emu_Sif_Bios_isceSetDChain()
 //
 void Emu_Sif_Bios_sceSetReg()
 { // 0x79
-	switch (R5900Regs.A0.u32_00_31)
+	switch (PS2Regs.R5900Regs.A0.u32_00_31)
 	{
 	case 0x4:
-		reg4 = R5900Regs.A1.u32_00_31;
+		reg4 = PS2Regs.R5900Regs.A1.u32_00_31;
 		break;
 
 	default:
@@ -544,17 +544,17 @@ void Emu_Sif_Bios_sceSetReg()
 void Emu_Sif_Bios_sceGetReg()
 { // 0x7a
 #ifdef EMU_LOG
-	EmuLog("   a0=%x\n", R5900Regs.A0.u32_00_31);
+	EmuLog("   a0=%x\n", PS2Regs.R5900Regs.A0.u32_00_31);
 #endif
 
-	switch (R5900Regs.A0.u32_00_31)
+	switch (PS2Regs.R5900Regs.A0.u32_00_31)
 	{
 	case 0x4:
-		R5900Regs.V0.u64_00_63 = reg4 | 0x40000;
+		PS2Regs.R5900Regs.V0.u64_00_63 = reg4 | 0x40000;
 		break;
 
 	default:
-		R5900Regs.V0.u64_00_63 = 0x60000;
+		PS2Regs.R5900Regs.V0.u64_00_63 = 0x60000;
 		break;
 	}
 }

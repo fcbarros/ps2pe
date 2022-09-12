@@ -71,12 +71,15 @@ extern sEmutStats EmuInstructionsStats;
 extern sEmutStats EmuRunningStats;
 // Pointer to the Elf structure current loaded
 extern Elf32_File* ElfFile;
-// Core registers
-extern Emu_R5900_Regs R5900Regs;
-// COP0 registers
-extern Emu_COP0_Regs COP0Regs;
-// COP1 registers
-extern Emu_COP1_Regs COP1Regs;
+
+extern EMU_PS2_Regs PS2Regs;
+//// Core registers
+//extern Emu_R5900_Regs R5900Regs;
+//// COP0 registers
+//extern Emu_COP0_Regs COP0Regs;
+//// COP1 registers
+//extern Emu_COP1_Regs COP1Regs;
+// 
 // Registers - Backup for handlers
 extern Emu_R5900_Regs R5900RegsBackup[10];
 extern Emu_COP0_Regs COP0RegsBackup[10];

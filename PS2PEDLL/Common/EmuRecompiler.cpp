@@ -37,7 +37,7 @@ void EmuRec_RecompileExecute(EMU_U32 EntryPoint, EMU_U32 EndAddress, BOOL Loop)
 	// Prepare for being called
 	// Save all registers
 	PUSHA32();
-	MOV32MtoR(EBP, (EMU_U32)&COP0Regs.Count);
+	MOV32MtoR(EBP, (EMU_U32)&PS2Regs.COP0Regs.Count);
 
 	EMU_U08* CurrentAddress = EmuRec_CheckAddress(EntryPoint);
 
@@ -48,7 +48,7 @@ void EmuRec_RecompileExecute(EMU_U32 EntryPoint, EMU_U32 EndAddress, BOOL Loop)
 	}
 
 	EMU_U32* Link = CALLNearRel32(0);
-	MOV32RtoM((EMU_U32)&COP0Regs.Count, EBP);
+	MOV32RtoM((EMU_U32)&PS2Regs.COP0Regs.Count, EBP);
 	POPA32();
 	RET();
 
@@ -72,17 +72,17 @@ void EmuRec_RecompileExecute(EMU_U32 EntryPoint, EMU_U32 EndAddress, BOOL Loop)
 
 void EmuRec_RecompileInstruction(EMU_U32 Address, BOOL InBrachDelay)
 {
-	R5900Regs.PC = Address;
+	PS2Regs.R5900Regs.PC = Address;
 	CurrentPCAddress = Address;
 
 	// 0 - Insert the current IP address in the Address Translation Table
-	EmuRec_InsertAddress(R5900Regs.PC, &RecMemory.Memory[RecMemory.Position]);
+	EmuRec_InsertAddress(PS2Regs.R5900Regs.PC, &RecMemory.Memory[RecMemory.Position]);
 
 	// 1 - Get the Instruction
 	// Current Instruction Code
-	EMU_U32 Code = EmuMemGetWord(R5900Regs.PC);
+	EMU_U32 Code = EmuMemGetWord(PS2Regs.R5900Regs.PC);
 	// 1.1 - Updates the PC to the next instruction
-	R5900Regs.PC += 4;
+	PS2Regs.R5900Regs.PC += 4;
 	// 1.2 - If the instruction is not NOP procede
 	if (Code)
 	{
@@ -98,21 +98,21 @@ void EmuRec_RecompileInstruction(EMU_U32 Address, BOOL InBrachDelay)
 		// This block is just for debug
 /*        CMP32ItoM( (EMU_U32)&EmuStopRun, TRUE );
 		EMU_U08 * LinkNE3 = JNE8( 0 );
-		MOV32ItoM( (EMU_U32)&R5900Regs.PC, R5900Regs.PC );
+		MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.PC, R5900Regs.PC );
 		RET( );
 		*LinkNE3 = EmuRec_CurrentAddress( ) - LinkNE3 - 1;
 		PUSH32I( R5900Regs.PC );
 		CALLFunc( (EMU_U32)EmuIsBreakPoint, (EMU_U32)EmuRec_CurrentAddress( ) );
 		CMP32ItoR( EAX, TRUE );
 		EMU_U08 * LinkNE4 = JNE8( 0 );
-		MOV32ItoM( (EMU_U32)&R5900Regs.PC, R5900Regs.PC );
+		MOV32ItoM( (EMU_U32)&PS2Regs.R5900Regs.PC, R5900Regs.PC );
 		RET( );
 		*LinkNE4 = EmuRec_CurrentAddress( ) - LinkNE4 - 1;
 */
 // Call the update function if needed or exits
 		TEST32ItoR(EBP, 0x1FF);
 		EMU_U08* LinkNE1 = JNE8(0);
-		MOV32ItoM((EMU_U32)&R5900Regs.PC, R5900Regs.PC);
+		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.PC, PS2Regs.R5900Regs.PC);
 		CALLFunc((EMU_U32)Emu_GS_ProcessMessages, (EMU_U32)EmuRec_CurrentAddress());
 		CMP32ItoM((EMU_U32)&EmuStopRun, TRUE);
 		EMU_U08* LinkNE2 = JNE8(0);
@@ -129,17 +129,17 @@ void EmuRec_Recompile(EMU_U32 StartAddress, EMU_U32 EndAddress)
 	// Pending jump table
 	stEmuRecPendingJump PendingJump;
 
-	R5900Regs.PC = StartAddress;
+	PS2Regs.R5900Regs.PC = StartAddress;
 
 	// Main compilation loop
-	while ((!EmuStopCompile) && (R5900Regs.PC < EndAddress))
+	while ((!EmuStopCompile) && (PS2Regs.R5900Regs.PC < EndAddress))
 	{
-		EmuRec_RecompileInstruction(R5900Regs.PC, FALSE);
+		EmuRec_RecompileInstruction(PS2Regs.R5900Regs.PC, FALSE);
 
 		// 3 - Check next adress
 		// 3.1 - Check to see if next address is already computed
 		// 3.1.2 - If no continue with the current address recompilation
-		if (EmuRec_CheckAddress(R5900Regs.PC) != NULL)
+		if (EmuRec_CheckAddress(PS2Regs.R5900Regs.PC) != NULL)
 		{
 			// 3.1.1 - If yes, exits the loop
 //            break;
@@ -180,8 +180,8 @@ void EmuRec_Recompile(EMU_U32 StartAddress, EMU_U32 EndAddress)
 
 void EmuRec_Invalid(EMU_U32 Code)
 {
-	EmuLog("Opcode %.8X invalid at address %.8X\n", Code, R5900Regs.PC);
-	EmuConsole("Opcode %.8X invalid at address %.8X\n", Code, R5900Regs.PC);
+	EmuLog("Opcode %.8X invalid at address %.8X\n", Code, PS2Regs.R5900Regs.PC);
+	EmuConsole("Opcode %.8X invalid at address %.8X\n", Code, PS2Regs.R5900Regs.PC);
 }
 
 void EmuRec_Special(EMU_U32 Code)

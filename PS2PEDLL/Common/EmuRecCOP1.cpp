@@ -10,10 +10,10 @@ void EmuRec_mfc1( EMU_U32 Code )
 {
     if ( R_RT )
     {
-        MOV32MtoR( EAX, (EMU_U32)&COP1Regs.Reg[ R_FS ].u );
+        MOV32MtoR( EAX, (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].u );
         EMUREC_SIGN_EXTEND( EDX, EAX );
-        MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_00_31, EAX );
-        MOV32RtoM( (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_32_63, EDX );
+        MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_00_31, EAX );
+        MOV32RtoM( (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_32_63, EDX );
     }
 }
 
@@ -28,12 +28,12 @@ void EmuRec_mtc1( EMU_U32 Code )
 {
     if ( R_RT )
     {
-        MOV32MtoR( EAX, (EMU_U32)&R5900Regs.Reg[ R_RT ].u32_00_31 );
-        MOV32RtoM( (EMU_U32)&COP1Regs.Reg[ R_FS ].u, EAX );
+        MOV32MtoR( EAX, (EMU_U32)&PS2Regs.R5900Regs.Reg[ R_RT ].u32_00_31 );
+        MOV32RtoM( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].u, EAX );
     }
     else
     {
-        MOV32ItoM( (EMU_U32)&COP1Regs.Reg[ R_FS ].u, 0 );
+        MOV32ItoM( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].u, 0 );
     }
 }
 
@@ -117,20 +117,20 @@ void EmuRec_sub_s( EMU_U32 Code )
 
 void EmuRec_mul_s( EMU_U32 Code )
 {
-	FLD32( (EMU_U32)&COP1Regs.Reg[ R_FS ].f );
-	FMUL32( (EMU_U32)&COP1Regs.Reg[ R_FT ].f );
-	FSTP32( (EMU_U32)&COP1Regs.Reg[ R_FD ].f );
+	FLD32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].f );
+	FMUL32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FT ].f );
+	FSTP32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FD ].f );
 //    SetFloatFlags( EmuFloatStatus );
 }
 
 void EmuRec_div_s( EMU_U32 Code )
 {
-    CMP32ItoM( (EMU_U32)&COP1Regs.Reg[ R_FT ].f, 0 );
+    CMP32ItoM( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FT ].f, 0 );
     EMU_U08 * LinkE0 = JE8( 0 );
 
-    FLD32( (EMU_U32)&COP1Regs.Reg[ R_FS ].f );
-	FDIV32( (EMU_U32)&COP1Regs.Reg[ R_FT ].f );
-	FSTP32( (EMU_U32)&COP1Regs.Reg[ R_FD ].f );
+    FLD32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].f );
+	FDIV32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FT ].f );
+	FSTP32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FD ].f );
 
     *LinkE0 = EmuRec_CurrentAddress( ) - LinkE0 - 1;
 //        SetFloatFlags( EmuFloatStatus );
@@ -166,8 +166,8 @@ void EmuRec_abs_s( EMU_U32 Code )
 void EmuRec_mov_s( EMU_U32 Code )
 {
 //    PUSH32R( EAX );
-    MOV32MtoR( EAX, (EMU_U32)&COP1Regs.Reg[ R_FS ].u );
-    MOV32RtoM( (EMU_U32)&COP1Regs.Reg[ R_FD ].u, EAX );
+    MOV32MtoR( EAX, (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].u );
+    MOV32RtoM( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FD ].u, EAX );
 //    POP32R( EAX );
 }
 
@@ -336,8 +336,8 @@ void EmuRec_msuba_s( EMU_U32 Code )
 
 void EmuRec_cvt_w_s( EMU_U32 Code )
 {
-	FLD32( (EMU_U32)&COP1Regs.Reg[ R_FS ].f );
-	FISTP32( (EMU_U32)&COP1Regs.Reg[ R_FD ].u );
+	FLD32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].f );
+	FISTP32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FD ].u );
 }
 
 void EmuRec_max_s( EMU_U32 Code )
@@ -390,6 +390,6 @@ void EmuRec_c_le_s( EMU_U32 Code )
 
 void EmuRec_cvt_s_w( EMU_U32 Code )
 {
-	FILD32( (EMU_U32)&COP1Regs.Reg[ R_FS ].u );
-	FSTP32( (EMU_U32)&COP1Regs.Reg[ R_FD ].f );
+	FILD32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FS ].u );
+	FSTP32( (EMU_U32)&PS2Regs.COP1Regs.Reg[ R_FD ].f );
 }

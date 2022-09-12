@@ -64,30 +64,30 @@ void EmuRunDebug(EMU_U32 tAddress, bool InLoop)
 
 void EmuRunLoop(EMU_U32 tAddress, bool InLoop)
 {
-	R5900Regs.PC = tAddress;
+	PS2Regs.R5900Regs.PC = tAddress;
 
 	EMU_U32 Code;
 
 	while (!EmuStopRun)
 	{
-		if ((R5900Regs.R0.u64_00_63 != 0) || (R5900Regs.R0.u64_64_127 != 0))
+		if ((PS2Regs.R5900Regs.R0.u64_00_63 != 0) || (PS2Regs.R5900Regs.R0.u64_64_127 != 0))
 		{
 			EmuConsole("Register R0 is not zero.");
 		}
 		// If the PC is FFFFFFFF then we are exiting from an interrupt handler
-		if (R5900Regs.PC == 0xFFFFFFFF)
+		if (PS2Regs.R5900Regs.PC == 0xFFFFFFFF)
 		{
 			Emu_Intc_ExitHandler();
 		}
-		else if (R5900Regs.PC == 0xFFFFFFFE)
+		else if (PS2Regs.R5900Regs.PC == 0xFFFFFFFE)
 		{
 			Emu_Dma_ExitHandler();
 		}
 
 		// Checking for nop, skipping if no operation
 
-		Code = EmuMemGetWord(R5900Regs.PC);
-		R5900Regs.PC += 4;
+		Code = EmuMemGetWord(PS2Regs.R5900Regs.PC);
+		PS2Regs.R5900Regs.PC += 4;
 		if (Code)
 		{
 			if (enableStat)
@@ -105,7 +105,7 @@ void EmuRunLoop(EMU_U32 tAddress, bool InLoop)
 			// End of Main Loop
 			/////////////////////////////////////////////////////////////////////////
 		}
-		COP0Regs.Count++;
+		PS2Regs.COP0Regs.Count++;
 		CpuCycles++;
 
 		// No reason for FF, just not to call the function always, this way
@@ -120,7 +120,7 @@ void EmuRunLoop(EMU_U32 tAddress, bool InLoop)
 			break;
 		}
 
-		if (enableDebug && (InstrBreakPoints[EmuInstructionIndex2(EmuMemGetWord(R5900Regs.PC))]) || (EmuIsBreakPoint(R5900Regs.PC)))
+		if (enableDebug && (InstrBreakPoints[EmuInstructionIndex2(EmuMemGetWord(PS2Regs.R5900Regs.PC))]) || (EmuIsBreakPoint(PS2Regs.R5900Regs.PC)))
 		{
 			break;
 		}

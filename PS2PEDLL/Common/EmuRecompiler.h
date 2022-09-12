@@ -11,8 +11,7 @@
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-#ifndef __EMU_RECOMPILER_H__
-#define __EMU_RECOMPILER_H__
+#pragma once
 
 #include <map>
 #include <vector>
@@ -25,7 +24,8 @@
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-#define EMUFUNCTION     EmuRunDebug
+//#define EMUFUNCTION     EmuRunDebug
+#define EMUFUNCTION     EmuExecuteFast
 
 #define R_RD            ( ( Code >> 11 ) & 0x1F )
 #define R_RT            ( ( Code >> 16 ) & 0x1F )
@@ -58,7 +58,7 @@
 #define VU_BASE         ( ( Code >> 21 ) & 0x1F )
 #define VU_OFFSET       (   Code & 0xFFFF )
 
-#define JUMP_ADDRESS    ( ( Code & 0x03FFFFFF ) << 2 ) | ( R5900Regs.PC & 0xF0000000 )
+#define JUMP_ADDRESS    ( ( Code & 0x03FFFFFF ) << 2 ) | ( PS2Regs.R5900Regs.PC & 0xF0000000 )
 
 
 #define EMU_FLOAT_LOAD_CONDITION_REGISTER( a )      __asm FSTSW a
@@ -75,79 +75,79 @@
         EmuInBranchDelay = false;
 
 #define EXECUTE_BRANCH( addr )                                                      \
-        JumpTo = R5900Regs.PC + (((EMU_I16)R_BRANCH) << 2);                         \
+        JumpTo = PS2Regs.R5900Regs.PC + (((EMU_I16)R_BRANCH) << 2);                         \
         EXECUTE_BRANCH_DELAY_SLOT( addr );                                          \
-        R5900Regs.PC = JumpTo;
+        PS2Regs.R5900Regs.PC = JumpTo;
 
 #define BRANCH_CONDITION_RS_RT( cond )                                              \
-        if ( R5900Regs.Reg[ R_RS ].i64_00_63 cond R5900Regs.Reg[ R_RT ].i64_00_63 ) \
+        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond PS2Regs.R5900Regs.Reg[ R_RT ].i64_00_63 ) \
         {                                                                           \
-            EXECUTE_BRANCH( R5900Regs.PC );                                         \
+            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
         }
 
 #define BRANCH_CONDITION_RS_RT_LIKELY( cond )                                       \
-        if ( R5900Regs.Reg[ R_RS ].i64_00_63 cond R5900Regs.Reg[ R_RT ].i64_00_63 ) \
+        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond PS2Regs.R5900Regs.Reg[ R_RT ].i64_00_63 ) \
         {                                                                           \
-            EXECUTE_BRANCH( R5900Regs.PC );                                         \
+            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
         }                                                                           \
         else                                                                        \
         {                                                                           \
-            R5900Regs.PC += 4;                                                      \
+            PS2Regs.R5900Regs.PC += 4;                                                      \
         }
 
 #define BRANCH_CONDITION_RS_ZERO( cond )                                            \
-        if ( R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
+        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
-            EXECUTE_BRANCH( R5900Regs.PC );                                         \
+            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
         }
 
 #define BRANCH_CONDITION_RS_ZERO_LIKELY( cond )                                     \
-        if ( R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
+        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
-            EXECUTE_BRANCH( R5900Regs.PC );                                         \
+            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
         }                                                                           \
         else                                                                        \
         {                                                                           \
-            R5900Regs.PC += 4;                                                      \
+            PS2Regs.R5900Regs.PC += 4;                                                      \
         }
 
 #define BRANCH_CONDITION_RS_ZERO_LINK( cond )                                       \
-        if ( R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
+        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
-            R5900Regs.RA.u64_00_63 = R5900Regs.PC + 4;                              \
-            EXECUTE_BRANCH( R5900Regs.PC );                                         \
+            PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;                              \
+            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
         }
 
 #define BRANCH_CONDITION_RS_ZERO_LINK_LIKELY( cond )                                \
-        if ( R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
+        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
-            R5900Regs.RA.u64_00_63 = R5900Regs.PC + 4;                              \
-            EXECUTE_BRANCH( R5900Regs.PC );                                         \
+            PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;                              \
+            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
         }                                                                           \
         else                                                                        \
         {                                                                           \
-            R5900Regs.PC += 4;                                                      \
+            PS2Regs.R5900Regs.PC += 4;                                                      \
         }
 
 #define SetFloatFlags( var )                        \
         EMU_FLOAT_LOAD_CONDITION_REGISTER( var );   \
         if ( EMU_FLOAT_CHECK_OVERFLOW( var ) )      \
         {                                           \
-            COP1Regs.FCR31_O = 1;                   \
-            COP1Regs.FCR31_SO = 1;                  \
-            COP1Regs.FCR31_U = 0;                   \
+            PS2Regs.COP1Regs.FCR31_O = 1;                   \
+            PS2Regs.COP1Regs.FCR31_SO = 1;                  \
+            PS2Regs.COP1Regs.FCR31_U = 0;                   \
         }                                           \
         else                                        \
         if ( EMU_FLOAT_CHECK_UNDERFLOW( var ) )     \
         {                                           \
-            COP1Regs.FCR31_O = 0;                   \
-            COP1Regs.FCR31_U = 1;                   \
-            COP1Regs.FCR31_SU = 1;                  \
+            PS2Regs.COP1Regs.FCR31_O = 0;                   \
+            PS2Regs.COP1Regs.FCR31_U = 1;                   \
+            PS2Regs.COP1Regs.FCR31_SU = 1;                  \
         }                                           \
         else                                        \
         {                                           \
-            COP1Regs.FCR31_O = 0;                   \
-            COP1Regs.FCR31_U = 0;                   \
+            PS2Regs.COP1Regs.FCR31_O = 0;                   \
+            PS2Regs.COP1Regs.FCR31_U = 0;                   \
         }
 
 
@@ -310,8 +310,6 @@ extern EMURECFUNCTION EmuRecCOP1_WFunction[64];
 // Functions Prototypes
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
-
-void EmuRecInterpret(EMU_U32 tAddress, bool InLoop);
 
 
 #define EMUREC_SIGN_EXTEND( dest, src )    \
@@ -601,6 +599,3 @@ void EmuRec_psraw(EMU_U32 Code);
 void EmuRec_Write8(EMU_U08 Data);
 void EmuRec_Write16(EMU_U16 Data);
 void EmuRec_Write32(EMU_U32 Data);
-
-
-#endif
