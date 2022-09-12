@@ -61,6 +61,8 @@ EMU_U08 EmuGsMemory[EMU_GS_PRIV_END_ADDR - EMU_GS_PRIV_START_ADDR];
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
+// Current CPUClock 2894559600.0000000
+
 void Emu_GS_Init()
 {
 	Emu_GS_Privileg_Reg = (stEmu_GS_Privileg_Regs*)EmuGsMemory;
@@ -68,8 +70,8 @@ void Emu_GS_Init()
 	GSTargetVSync = 60;
 	GSTargetHSync = 15734;
 
-	TicksMinV = CPUClock / GSTargetVSync;
-	TicksMinH = CPUClock / GSTargetHSync;
+	TicksMinV = (EMU_U64)CPUClock / GSTargetVSync;
+	TicksMinH = (EMU_U64)CPUClock / GSTargetHSync;
 	TicksMinVCK = TicksMinH / 10;
 
 	if (GSpreg)
@@ -148,7 +150,7 @@ void Emu_GS_ProcessMessages()
 {
 	if (hWnd_GS)
 	{
-		static __int64  StartV = 0,
+		static EMU_U64 StartV = 0,
 			StartH = 0,
 			End = 0;
 		static keyEvent* PADKeyPressed;

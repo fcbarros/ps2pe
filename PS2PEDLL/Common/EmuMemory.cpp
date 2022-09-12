@@ -337,7 +337,7 @@ inline void EmuMemCallCallBackRead(EMU_U32 Address, EMU_U08* RealAddress)
 
 EMU_U64 EmuMemGetTime()
 {
-	register EMU_U64 Ticks;
+	EMU_U64 Ticks;
 	RDTSC(Ticks);
 	return Ticks;
 }

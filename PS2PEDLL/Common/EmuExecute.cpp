@@ -66,7 +66,7 @@ void EmuRunLoop(EMU_U32 tAddress, bool InLoop)
 {
 	R5900Regs.PC = tAddress;
 
-	register EMU_U32 Code;
+	EMU_U32 Code;
 
 	while (!EmuStopRun)
 	{

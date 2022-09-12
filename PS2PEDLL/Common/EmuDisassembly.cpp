@@ -570,7 +570,7 @@ const char* EmuDis_RS_0_RD(EMU_U32, EMU_U32 Code)
 	EMU_U32 RS = (Code >> 21) & 0x0000001F;
 	EMU_U32 RD = (Code >> 11) & 0x0000001F;
 
-	sprintf(Local_dis_str, " %s, %s, %s",
+	sprintf(Local_dis_str, " %s, %s",
 		EmuDis_GetRegName(RD),
 		EmuDis_GetRegName(RS));
 

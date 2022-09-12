@@ -1297,19 +1297,19 @@ void EmuCop2(EMU_U32 Code)
 			case 0x0000013C: // "vitof0"
 				if (VU_DEST_X)
 				{
-					VU0Regs.CPR[VU_FT].X.f = *(EMU_I32*)&VU0Regs.CPR[VU_FS].X.f;
+					VU0Regs.CPR[VU_FT].X.f = * (EMU_I32*)&VU0Regs.CPR[VU_FS].X.i;
 				}
 				if (VU_DEST_Y)
 				{
-					VU0Regs.CPR[VU_FT].Y.f = *(EMU_I32*)&VU0Regs.CPR[VU_FS].Y.f;
+					VU0Regs.CPR[VU_FT].Y.f = * (EMU_I32*)&VU0Regs.CPR[VU_FS].Y.i;
 				}
 				if (VU_DEST_Z)
 				{
-					VU0Regs.CPR[VU_FT].Z.f = *(EMU_I32*)&VU0Regs.CPR[VU_FS].Z.f;
+					VU0Regs.CPR[VU_FT].Z.f = * (EMU_I32*)&VU0Regs.CPR[VU_FS].Z.i;
 				}
 				if (VU_DEST_W)
 				{
-					VU0Regs.CPR[VU_FT].W.f = *(EMU_I32*)&VU0Regs.CPR[VU_FS].W.f;
+					VU0Regs.CPR[VU_FT].W.f = * (EMU_I32*)&VU0Regs.CPR[VU_FS].W.i;
 				}
 				break;
 
