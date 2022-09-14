@@ -102,22 +102,22 @@ namespace Common
 	class Pad
 	{
 	public:
-		//		//
-		//	// Pad states
-		//	//
-		//#define PAD_STATE_DISCONN       0x00
-		//#define PAD_STATE_FINDPAD       0x01
-		//#define PAD_STATE_FINDCTP1      0x02
-		//#define PAD_STATE_EXECCMD       0x05
+		//
+		// Pad states
+		//
+		static const EMU_U08 PAD_STATE_DISCONN = 0x00;
+		static const EMU_U08 PAD_STATE_FINDPAD = 0x01;
+		static const EMU_U08 PAD_STATE_FINDCTP1 = 0x02;
+		static const EMU_U08 PAD_STATE_EXECCMD = 0x05;
 		static const EMU_U08 PAD_STATE_STABLE = 0x06;
-		//#define PAD_STATE_ERROR         0x07
+		static const EMU_U08 PAD_STATE_ERROR = 0x07;
 
 		//
 		// Pad request states
 		//
 		static const EMU_U08 PAD_RSTAT_COMPLETE = 0x00;
-		//#define PAD_RSTAT_FAILED        0x01
-		//#define PAD_RSTAT_BUSY          0x02
+		static const EMU_U08 PAD_RSTAT_FAILED = 0x01;
+		static const EMU_U08 PAD_RSTAT_BUSY = 0x02;
 
 		// rom0:padman
 		static const EMU_U32 PAD_BIND_RPC_ID1 = 0x8000010f;
@@ -169,13 +169,17 @@ namespace Common
 		pad_data*& GetPadArea(int i1, int i2);
 		xpad_data*& GetXPadArea(int i1, int i2);
 
-		_PADreadStatus  PAD1readStatus;
-
-		_PADinit        PAD1init;
-		_PADopen        PAD1open;
-		_PADclose       PAD1close;
-		_PADshutdown    PAD1shutdown;
-		_PADkeyEvent    PAD1keyEvent;
+		// PAD1
+		static _PADreadStatus  PAD1readStatus;
+		static _PADquery       PAD1query;
+		static _PADconfigure   PAD1configure;
+		static _PADtest        PAD1test;
+		static _PADabout       PAD1about;
+		static _PADinit        PAD1init;
+		static _PADopen        PAD1open;
+		static _PADclose       PAD1close;
+		static _PADshutdown    PAD1shutdown;
+		static _PADkeyEvent    PAD1keyEvent;
 
 		static Pad& GetInstance();
 
@@ -190,13 +194,6 @@ namespace Common
 		padButtonStatus* PadStat[2] = { NULL, NULL };
 		pad_data* PadArea[2][2];
 		xpad_data* XPadArea[2][2];
-
-		// PAD1
-		_PADquery       PAD1query;
-
-		_PADconfigure   PAD1configure;
-		_PADtest        PAD1test;
-		_PADabout       PAD1about;
 
 		// PAD2
 		_PADinit        PAD2init;

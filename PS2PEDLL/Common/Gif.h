@@ -53,7 +53,7 @@ namespace Common
 		// Resets Gif registers
 		void Reset(void);
 		// Callback for Gif access
-		void Callback(EMU_U32 Address);
+		static void Callback(EMU_U32 Address);
 		// Gif transfer to GS
 		void Transfer(stEmu_Dma_Channel_Regs* Channel);
 

@@ -44,13 +44,13 @@ namespace Interpreter
 
         inline void SetFloatFlags()
         {
-            if ((bool)std::fetestexcept(FE_OVERFLOW))
+            if (std::fetestexcept(FE_OVERFLOW))
             {
                 PS2Regs.COP1Regs.FCR31_O = 1;
                 PS2Regs.COP1Regs.FCR31_SO = 1;
                 PS2Regs.COP1Regs.FCR31_U = 0;
             }
-            else if ((bool)std::fetestexcept(FE_UNDERFLOW))
+            else if (std::fetestexcept(FE_UNDERFLOW))
             {
                 PS2Regs.COP1Regs.FCR31_O = 0;
                 PS2Regs.COP1Regs.FCR31_U = 1;
@@ -97,11 +97,6 @@ namespace Interpreter
 
 		EMU_U32 EmuIntegerStatus;
 
-		EMU_U32 RS;
-		EMU_U32 RD;
-		EMU_U32 RT;
-		EMU_U32 FS;
-		EMU_U32 FT;
 		EMU_U32 SA;
 		EMU_U32 Address;
 		EMU_I32 TempI32;
@@ -109,8 +104,6 @@ namespace Interpreter
 		EMU_I64 TempI64;
 		EMU_U64 TempU64;
 		EMU_128 Temp128;
-		EMU_U32 RegRTU32;
-		EMU_U64 RegRTU64;
 		EMU_F32 TempF32;
 		EMU_U32 JumpTo;
 		bool enableStat = false;
@@ -118,8 +111,8 @@ namespace Interpreter
 		EMU_U64 CpuCycles = 0;
 	};
 
-#define EMUFUNCTION     EmuRunDebug
-    //#define EMUFUNCTION     EmuExecuteFast
+//#define EMUFUNCTION     EmuRunDebug
+#define EMUFUNCTION     EmuExecuteFast
 
 #define R_RD            ( ( OpCode >> 11 ) & 0x1F )
 #define R_RT            ( ( OpCode >> 16 ) & 0x1F )

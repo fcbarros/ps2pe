@@ -43,6 +43,22 @@ namespace Common
 		RaftMemory = new EMU_U08[1024 * 1024]; // 1 Megabyte
 
 		Clear();
+
+		SetCallbacks();
+	}
+
+	void Memory::SetCallbacks()
+	{
+		AddWriteCallBack(0x12000000, 0x13FFFFFF, Gs::WriteCallback);
+		AddWriteCallBack(0x1000F520, 0x1000F5FF, Dma::Callback);
+		AddWriteCallBack(0x10003000, 0x100037FF, Gif::Callback);
+		AddWriteCallBack(0x10000000, 0x10001FFF, Timer::Callback);
+		AddWriteCallBack(0x10002000, 0x10002FFF, Ipu::Callback);
+		AddWriteCallBack(0x10003800, 0x10003FFF, Vif::Callback);
+		AddWriteCallBack(0x10004000, 0x10007FFF, Fifo::Callback);
+		AddWriteCallBack(0x1000F000, 0x1000F1FF, Intc::Callback);
+		AddWriteCallBack(0x1000F230, 0x1000F2FF, Sif::Callback);
+		AddWriteCallBack(0x10008000, 0x1000EFFF, Dma::Callback);
 	}
 
 	void Memory::Shutdown()

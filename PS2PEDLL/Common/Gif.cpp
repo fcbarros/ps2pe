@@ -46,9 +46,9 @@ namespace Common
 		switch (Register)
 		{
 		case EMU_GIF_CTRL:  // w
-			if (Emu_Gif_Control_Reg->CTRL & 0x1)
+			if (Gif::GetInstance().Emu_Gif_Control_Reg->CTRL & 0x1)
 			{
-				Reset();
+				Gif::GetInstance().Reset();
 			}
 
 			// Here: PSE field: transfer processing stop & restart

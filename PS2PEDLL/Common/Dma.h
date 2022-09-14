@@ -118,7 +118,7 @@ namespace Common
 		// Resets DMA registers
 		void Reset(void);
 		// Callback for DMA access
-		void Callback(EMU_U32 Address);
+		static void Callback(EMU_U32 Address);
 
 		void Start(unsigned int ChannelIndex);
 		// General set DMA access

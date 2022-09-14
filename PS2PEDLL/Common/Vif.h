@@ -94,7 +94,7 @@ namespace Common
 		// Resets Vif registers
 		void Reset(void);
 		// Callback for Vif access
-		void Callback(EMU_U32 Address);
+		static void Callback(EMU_U32 Address);
 
 		EMU_U08* GetPointer(EMU_U32 Address);
 

@@ -183,7 +183,7 @@ namespace Common
 
 		void Init(void);
 		void Reset(void);
-		void Callback(EMU_U32 Address);
+		static void Callback(EMU_U32 Address);
 
 		EMU_U08* GetPointer(EMU_U32 Address);
 

@@ -82,7 +82,7 @@ namespace Common
 		// Resets Interrupt registers
 		void Reset(void);
 		// Callback for Interrupt access
-		void Callback(EMU_U32 Address);
+		static void Callback(EMU_U32 Address);
 
 		void AddHandler(EMU_U32 HandlerInder, EMU_U32 FuncAddress);
 		void RemoveHandler(EMU_U32 HandlerIndex);

@@ -2,6 +2,23 @@
 #include <time.h>
 #include <float.h>
 
+#include "Interpreter.h"
+#include "Memory.h"
+#include "Bios.h"
+#include "Dma.h"
+#include "Gif.h"
+#include "Gs.h"
+#include "Pad.h"
+#include "Vif.h"
+#include "Timer.h"
+#include "Ipu.h"
+#include "Fifo.h"
+#include "Sif.h"
+#include "Intc.h"
+#include "Vu.h"
+#include "Thread.h"
+#include "Elf.h"
+
 #include "EmuDma.h"
 #include "EmuDisassembly.h"
 #include "EmuGS.h"
@@ -56,10 +73,13 @@ EMUCONSOLECALLBACK EmuConsoleCallback;
 EMU_U32 StartAddress;
 EMU_U32 EndAddress;
 
+Interpreter::Interpreter theInterpreter;
+
 // Initializes Registers and anythings else needed
 DLLEXPORT void CALLBACK EmuInitialize()
 {
 	EmuMemInit(32 * 1024 * 1024, 64 * 1024);
+	Common::Memory::GetInstance().Init(32 * 1024 * 1024, 64 * 1024);
 
 	CPUClock = EmuGetClock();
 
@@ -98,6 +118,7 @@ DLLEXPORT void CALLBACK EmuInitialize()
 	EmuClearStats();
 
 	EmuMemClear();
+	Common::Memory::GetInstance().Clear();
 
 	BreakPoints.clear();
 
@@ -114,6 +135,20 @@ DLLEXPORT void CALLBACK EmuInitialize()
 	Emu_Intc_Init();
 	Emu_Vu_Init();
 	Emu_Thread_Init();
+
+	Common::Bios::GetInstance().Init();
+	Common::Dma::GetInstance().Init();
+	Common::Gif::GetInstance().Init();
+	Common::Gs::GetInstance().Init();
+	Common::Pad::GetInstance().Init();
+	Common::Vif::GetInstance().Init();
+	Common::Timer::GetInstance().Init();
+	Common::Ipu::GetInstance().Init();
+	Common::Fifo::GetInstance().Init();
+	Common::Sif::GetInstance().Init();
+	Common::Intc::GetInstance().Init();
+	Common::Vu::GetInstance().Init();
+	Common::Thread::GetInstance().Init();
 
 	EmuRec_Init(16 * 1024 * 1024);
 
@@ -208,6 +243,7 @@ DLLEXPORT void CALLBACK EmuRelease()
 	EmuRec_Shutdown();
 
 	EmuMemShutdown();
+	Common::Memory::GetInstance().Shutdown();
 }
 
 EMU_U32 EmuInstructionIndex2(EMU_U32 tInst)
@@ -249,7 +285,9 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 #endif
 
 	EmuMemClear();
+	Common::Memory::GetInstance().Clear();
 
+	Emu_Bios_Init();
 	Emu_Dma_Init();
 	Emu_Gif_Init();
 	Emu_GS_Init();
@@ -262,6 +300,20 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 	Emu_Intc_Init();
 	Emu_Vu_Init();
 	Emu_Thread_Init();
+
+	Common::Bios::GetInstance().Init();
+	Common::Dma::GetInstance().Init();
+	Common::Gif::GetInstance().Init();
+	Common::Gs::GetInstance().Init();
+	Common::Pad::GetInstance().Init();
+	Common::Vif::GetInstance().Init();
+	Common::Timer::GetInstance().Init();
+	Common::Ipu::GetInstance().Init();
+	Common::Fifo::GetInstance().Init();
+	Common::Sif::GetInstance().Init();
+	Common::Intc::GetInstance().Init();
+	Common::Vu::GetInstance().Init();
+	Common::Thread::GetInstance().Init();
 
 	EmuReset();
 
@@ -283,6 +335,7 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 			if (ElfFile->Program[i].p_memsz > 0)
 			{
 				EmuMemAddFromFile(FileName, ElfFile->Program[i].p_offset, ElfFile->Program[i].p_filesz, ElfFile->Program[i].p_vaddr, EMMP_READ | EMMP_WRITE | EMMP_EXEC);
+				Common::Memory::GetInstance().AddFromFile(FileName, ElfFile->Program[i].p_offset, ElfFile->Program[i].p_filesz, ElfFile->Program[i].p_vaddr, EMMP_READ | EMMP_WRITE | EMMP_EXEC);
 				EmuGenStats(ElfFile->Program[i].p_vaddr, ElfFile->Program[i].p_vaddr + ElfFile->Program[i].p_filesz);
 				if (StartAddress > ElfFile->Program[i].p_vaddr)
 				{
@@ -385,8 +438,12 @@ DLLEXPORT void CALLBACK EmuStepInto(EMU_U32 Address)
 DLLEXPORT void CALLBACK EmuRun(unsigned int Address)
 {
 	EmuStopRun = false;
-	EmuRunDebug(Address, true);
+	//EmuRunDebug(Address, true);
 	//EmuExecuteFast(Address, true);
+
+	theInterpreter.EmuExecuteFast(Address, true);
+
+	Common::Gs::GetInstance().CloseWindow();
 	Emu_GS_CloseWindow();
 }
 
@@ -395,6 +452,8 @@ DLLEXPORT void CALLBACK EmuExecute(unsigned int Address)
 	EmuStopRun = false;
 	//    EmuExecuteFast( Address, true );
 	EmuRec_RecompileExecute(Address, EndAddress, TRUE);
+
+	Common::Gs::GetInstance().CloseWindow();
 	Emu_GS_CloseWindow();
 }
 
@@ -554,22 +613,26 @@ DLLEXPORT void CALLBACK EmuGetInstructionsStats(EMU_U32* TotalSupportedInstructi
 
 DLLEXPORT void CALLBACK EmuGSInitWindow()
 {
-	Emu_GS_InitWindow();
+	Common::Gs::GetInstance().InitWindow();
+	//Emu_GS_InitWindow();
 }
 
 DLLEXPORT void CALLBACK EmuGSConfigure()
 {
-	Emu_GS_Configure();
+	Common::Gs::GetInstance().Configure();
+	//Emu_GS_Configure();
 }
 
 DLLEXPORT void CALLBACK EmuGSCloseWindow()
 {
-	Emu_GS_CloseWindow();
+	Common::Gs::GetInstance().CloseWindow();
+	//Emu_GS_CloseWindow();
 }
 
 DLLEXPORT void CALLBACK EmuPADConfig()
 {
-	Emu_PAD_Config();
+	Common::Pad::GetInstance().Config();
+	//Emu_PAD_Config();
 }
 
 DLLEXPORT void CALLBACK EmuGetCOP0RegName(EMU_U32 Reg, char* Buffer, EMU_U32 BufferSize)

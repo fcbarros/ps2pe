@@ -106,34 +106,30 @@ namespace Interpreter
 				break;
 
 			case 0x00000003: // "div.s"
-				FT = R_FT;
-				FS = R_FS;
-				if ((PS2Regs.COP1Regs.Reg[FS].u == 0) && (PS2Regs.COP1Regs.Reg[FT].u == 0))
+				if ((PS2Regs.COP1Regs.Reg[R_FS].u == 0) && (PS2Regs.COP1Regs.Reg[R_FT].u == 0))
 				{
 					PS2Regs.COP1Regs.FCR31_I = 1;
 					PS2Regs.COP1Regs.FCR31_D = 0;
 					PS2Regs.COP1Regs.FCR31_SI = 1;
 					PS2Regs.COP1Regs.Reg[R_FD].u = 0;
 				}
+				else if ((PS2Regs.COP1Regs.Reg[R_FS].u != 0) && (PS2Regs.COP1Regs.Reg[R_FT].u == 0))
+				{
+					PS2Regs.COP1Regs.FCR31_I = 0;
+					PS2Regs.COP1Regs.FCR31_D = 1;
+					PS2Regs.COP1Regs.FCR31_SD = 1;
+				}
 				else
-					if ((PS2Regs.COP1Regs.Reg[FS].u != 0) && (PS2Regs.COP1Regs.Reg[FT].u == 0))
-					{
-						PS2Regs.COP1Regs.FCR31_I = 0;
-						PS2Regs.COP1Regs.FCR31_D = 1;
-						PS2Regs.COP1Regs.FCR31_SD = 1;
-					}
-					else
-					{
-						PS2Regs.COP1Regs.FCR31_I = 0;
-						PS2Regs.COP1Regs.FCR31_D = 0;
-						PS2Regs.COP1Regs.Reg[R_FD].f = PS2Regs.COP1Regs.Reg[FS].f / PS2Regs.COP1Regs.Reg[FT].f;
-						SetFloatFlags();
-					}
+				{
+					PS2Regs.COP1Regs.FCR31_I = 0;
+					PS2Regs.COP1Regs.FCR31_D = 0;
+					PS2Regs.COP1Regs.Reg[R_FD].f = PS2Regs.COP1Regs.Reg[R_FS].f / PS2Regs.COP1Regs.Reg[R_FT].f;
+					SetFloatFlags();
+				}
 				break;
 
 			case 0x00000004: // "sqrt.s"
-				FT = R_RT;
-				if (PS2Regs.COP1Regs.Reg[FT].f < 0.0f)
+				if (PS2Regs.COP1Regs.Reg[R_FT].f < 0.0f)
 				{
 					PS2Regs.COP1Regs.FCR31_I = 1;
 					PS2Regs.COP1Regs.FCR31_SI = 1;
@@ -141,7 +137,7 @@ namespace Interpreter
 				else
 				{
 					PS2Regs.COP1Regs.FCR31_I = 0;
-					PS2Regs.COP1Regs.Reg[R_FD].f = (float)sqrt((double)PS2Regs.COP1Regs.Reg[FT].f);
+					PS2Regs.COP1Regs.Reg[R_FD].f = (float)sqrt((double)PS2Regs.COP1Regs.Reg[R_FT].f);
 					SetFloatFlags();
 				}
 				PS2Regs.COP1Regs.FCR31_D = 0;
@@ -164,27 +160,25 @@ namespace Interpreter
 				break;
 
 			case 0x00000016: // "rsqrt.s"
-				FT = R_FT;
-				if (PS2Regs.COP1Regs.Reg[FT].f < 0.0f)
+				if (PS2Regs.COP1Regs.Reg[R_FT].f < 0.0f)
 				{
 					PS2Regs.COP1Regs.FCR31_I = 1;
 					PS2Regs.COP1Regs.FCR31_D = 0;
 					PS2Regs.COP1Regs.FCR31_SI = 1;
 				}
+				else if (PS2Regs.COP1Regs.Reg[R_FT].f == 0.0f)
+				{
+					PS2Regs.COP1Regs.FCR31_I = 0;
+					PS2Regs.COP1Regs.FCR31_D = 1;
+					PS2Regs.COP1Regs.FCR31_SD = 1;
+				}
 				else
-					if (PS2Regs.COP1Regs.Reg[FT].f == 0.0f)
-					{
-						PS2Regs.COP1Regs.FCR31_I = 0;
-						PS2Regs.COP1Regs.FCR31_D = 1;
-						PS2Regs.COP1Regs.FCR31_SD = 1;
-					}
-					else
-					{
-						PS2Regs.COP1Regs.FCR31_I = 0;
-						PS2Regs.COP1Regs.FCR31_D = 0;
-						PS2Regs.COP1Regs.Reg[R_FD].f = PS2Regs.COP1Regs.Reg[R_FS].f / (float)(sqrt(PS2Regs.COP1Regs.Reg[FT].f));
-						SetFloatFlags();
-					}
+				{
+					PS2Regs.COP1Regs.FCR31_I = 0;
+					PS2Regs.COP1Regs.FCR31_D = 0;
+					PS2Regs.COP1Regs.Reg[R_FD].f = PS2Regs.COP1Regs.Reg[R_FS].f / (float)(sqrt(PS2Regs.COP1Regs.Reg[R_FT].f));
+					SetFloatFlags();
+				}
 				break;
 
 			case 0x00000018: // "adda.s"

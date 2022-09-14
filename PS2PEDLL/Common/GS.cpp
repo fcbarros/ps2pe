@@ -12,6 +12,42 @@
 
 namespace Common
 {
+	EMU_I32 DLLCALL DummyGSInit() { return 0; }
+	EMU_I32 DLLCALL DummyGSopen(void* pDsp, const char* Title) { return 0;  }
+	void DLLCALL DummyGSclose() {}
+	void DLLCALL DummyGSshutdown() {}
+	void DLLCALL DummyGSvsync() {}
+	void DLLCALL DummyGSwrite32(EMU_U32 mem, EMU_U32 value) {}
+	void DLLCALL DummyGSwrite64(EMU_U32 mem, EMU_U64 value) {}
+	EMU_U32 DLLCALL DummyGSread32(EMU_U32 mem) { return 0;  }
+	EMU_U64 DLLCALL DummyGSread64(EMU_U32 mem) { return 0; }
+	void CALLBACK DummyGSwritePReg(EMU_U32 mem) {}
+	void CALLBACK DummyGSpreg(void* pPReg) {}
+	void DLLCALL DummyGSgifTransfer(EMU_U32* pMem, EMU_U32 size) {}
+	void DLLCALL DummyGSkeyEvent(keyEvent* ev) {}
+	void DLLCALL DummyGSmakeSnapshot() {}
+	void DLLCALL DummyGSconfigure() {}
+	EMU_I32 DLLCALL DummyGStest() { return 0; }
+	void DLLCALL DummyGSabout() {}
+
+	GS_GSinit Gs::GSinit = &DummyGSInit;
+	GS_GSopen Gs::GSopen = &DummyGSopen;
+	GS_GSclose Gs::GSclose = &DummyGSclose;
+	GS_GSshutdown Gs::GSshutdown = &DummyGSshutdown;
+	GS_GSvsync Gs::GSvsync = &DummyGSvsync;
+	GS_GSwrite32 Gs::GSwrite32 = &DummyGSwrite32;
+	GS_GSwrite64 Gs::GSwrite64 = &DummyGSwrite64;
+	GS_GSread32 Gs::GSread32 = &DummyGSread32;
+	GS_GSread64 Gs::GSread64 = &DummyGSread64;
+	GS_GSwritePReg Gs::GSwritePReg = &DummyGSwritePReg;
+	GS_GSpreg Gs::GSpreg = &DummyGSpreg;
+	GS_GSgifTransfer Gs::GSgifTransfer = &DummyGSgifTransfer;
+	GS_GSkeyEvent Gs::GSkeyEvent = &DummyGSkeyEvent;
+	GS_GSmakeSnapshot Gs::GSmakeSnapshot = &DummyGSmakeSnapshot;
+	GS_GSconfigure Gs::GSconfigure = &DummyGSconfigure;
+	GS_GStest Gs::GStest = &DummyGStest;
+	GS_GSabout Gs::GSabout = &DummyGSabout;
+
 	Gs::Gs()
 	{
 	}
@@ -171,7 +207,7 @@ namespace Common
 		}
 		//    else
 		{
-			GSwrite64(Address, Memory::GetInstance().GetDWord(Address));
+			Gs::GetInstance().GSwrite64(Address, Memory::GetInstance().GetDWord(Address));
 		}
 	}
 

@@ -48,32 +48,32 @@ namespace Common
 
 #define DLLCALL	__stdcall
 
-	typedef EMU_U32(DLLCALL* _PS2EgetLibType)();
-	typedef EMU_U32(DLLCALL* _PS2EgetLibVersion)();
-	typedef char* (DLLCALL* _PS2EgetLibName)();
+	typedef EMU_U32(DLLCALL* GS_PS2EgetLibType)();
+	typedef EMU_U32(DLLCALL* GS_PS2EgetLibVersion)();
+	typedef char* (DLLCALL* GS_PS2EgetLibName)();
 
 	// GS
-	typedef EMU_I32(DLLCALL* _GSinit)();
-	typedef EMU_I32(DLLCALL* _GSopen)(void* pDsp, const char* Title);
-	typedef void (DLLCALL* _GSclose)();
-	typedef void (DLLCALL* _GSshutdown)();
-	typedef void (DLLCALL* _GSvsync)();
+	typedef EMU_I32(DLLCALL* GS_GSinit)();
+	typedef EMU_I32(DLLCALL* GS_GSopen)(void* pDsp, const char* Title);
+	typedef void (DLLCALL* GS_GSclose)();
+	typedef void (DLLCALL* GS_GSshutdown)();
+	typedef void (DLLCALL* GS_GSvsync)();
 
-	typedef void (DLLCALL* _GSwrite32)(EMU_U32 mem, EMU_U32 value);
-	typedef void (DLLCALL* _GSwrite64)(EMU_U32 mem, EMU_U64 value);
-	typedef EMU_U32(DLLCALL* _GSread32)(EMU_U32 mem);
-	typedef EMU_U64(DLLCALL* _GSread64)(EMU_U32 mem);
+	typedef void (DLLCALL* GS_GSwrite32)(EMU_U32 mem, EMU_U32 value);
+	typedef void (DLLCALL* GS_GSwrite64)(EMU_U32 mem, EMU_U64 value);
+	typedef EMU_U32(DLLCALL* GS_GSread32)(EMU_U32 mem);
+	typedef EMU_U64(DLLCALL* GS_GSread64)(EMU_U32 mem);
 
-	typedef void (CALLBACK* _GSwritePReg)(EMU_U32 mem);
-	typedef void (CALLBACK* _GSpreg)(void* pPReg);
+	typedef void (CALLBACK* GS_GSwritePReg)(EMU_U32 mem);
+	typedef void (CALLBACK* GS_GSpreg)(void* pPReg);
 
-	typedef void (DLLCALL* _GSgifTransfer)(EMU_U32* pMem, EMU_U32 size);
-	typedef void (DLLCALL* _GSkeyEvent)(keyEvent* ev);
+	typedef void (DLLCALL* GS_GSgifTransfer)(EMU_U32* pMem, EMU_U32 size);
+	typedef void (DLLCALL* GS_GSkeyEvent)(keyEvent* ev);
 
-	typedef void (DLLCALL* _GSmakeSnapshot)();
-	typedef void (DLLCALL* _GSconfigure)();
-	typedef EMU_I32(DLLCALL* _GStest)();
-	typedef void (DLLCALL* _GSabout)();
+	typedef void (DLLCALL* GS_GSmakeSnapshot)();
+	typedef void (DLLCALL* GS_GSconfigure)();
+	typedef EMU_I32(DLLCALL* GS_GStest)();
+	typedef void (DLLCALL* GS_GSabout)();
 
 	// For Bios Call
 	void Emu_GS_Bios_GetIMR();
@@ -112,7 +112,7 @@ namespace Common
 		// Resets registers and GS plugin
 		void Reset();
 		// callback for write access
-		void WriteCallback(EMU_U32 Address);
+		static void WriteCallback(EMU_U32 Address);
 		// callback for read access
 		void ReadCallback(EMU_U32 Address, EMU_U08* RealAddress);
 		// Inits and creates the GS window
@@ -130,7 +130,25 @@ namespace Common
 
 		EMU_U08* GetPointer(EMU_U32 Address);
 
-		_GSgifTransfer   GSgifTransfer;
+		static GS_GSgifTransfer  GSgifTransfer;
+		static GS_GSinit         GSinit;
+		static GS_GSopen         GSopen;
+		static GS_GSclose        GSclose;
+		static GS_GSshutdown     GSshutdown;
+		static GS_GSvsync        GSvsync;
+
+		static GS_GSwrite32      GSwrite32;
+		static GS_GSwrite64      GSwrite64;
+		static GS_GSread32       GSread32;
+		static GS_GSread64       GSread64;
+
+		static GS_GSkeyEvent     GSkeyEvent;
+		static GS_GSmakeSnapshot GSmakeSnapshot;
+		static GS_GSconfigure    GSconfigure;
+		static GS_GStest         GStest;
+		static GS_GSabout        GSabout;
+		static GS_GSwritePReg    GSwritePReg;
+		static GS_GSpreg         GSpreg;
 
 		static Gs& GetInstance();
 
@@ -141,25 +159,6 @@ namespace Common
 
 	private:
 		Gs();
-
-		_GSinit         GSinit;
-		_GSopen         GSopen;
-		_GSclose        GSclose;
-		_GSshutdown     GSshutdown;
-		_GSvsync        GSvsync;
-
-		_GSwrite32      GSwrite32;
-		_GSwrite64      GSwrite64;
-		_GSread32       GSread32;
-		_GSread64       GSread64;
-
-		_GSkeyEvent     GSkeyEvent;
-		_GSmakeSnapshot GSmakeSnapshot;
-		_GSconfigure    GSconfigure;
-		_GStest         GStest;
-		_GSabout        GSabout;
-		_GSwritePReg    GSwritePReg;
-		_GSpreg         GSpreg;
 
 		stEmu_GS_Privileg_Regs* Emu_GS_Privileg_Reg;
 

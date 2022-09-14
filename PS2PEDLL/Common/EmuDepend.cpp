@@ -1,3 +1,5 @@
+#include "gs.h"
+
 #include "EmuMain.h"
 #include "EmuGS.h"
 #include "EmuPAD.h"
@@ -310,6 +312,24 @@ void EmuLoadPlugins()
 		GSabout = (_GSabout)GetProcAddress(GSdll, "GSabout");
 		GSwritePReg = (_GSwritePReg)GetProcAddress(GSdll, "GSwritePReg");
 		GSpreg = (_GSpreg)GetProcAddress(GSdll, "GSpreg");
+
+		Common::Gs::GSinit = (Common::GS_GSinit)GetProcAddress(GSdll, "GSinit");
+		Common::Gs::GSopen = (Common::GS_GSopen)GetProcAddress(GSdll, "GSopen");
+		Common::Gs::GSclose = (Common::GS_GSclose)GetProcAddress(GSdll, "GSclose");
+		Common::Gs::GSshutdown = (Common::GS_GSshutdown)GetProcAddress(GSdll, "GSshutdown");
+		Common::Gs::GSvsync = (Common::GS_GSvsync)GetProcAddress(GSdll, "GSvsync");
+		Common::Gs::GSwrite32 = (Common::GS_GSwrite32)GetProcAddress(GSdll, "GSwrite32");
+		Common::Gs::GSwrite64 = (Common::GS_GSwrite64)GetProcAddress(GSdll, "GSwrite64");
+		Common::Gs::GSread32 = (Common::GS_GSread32)GetProcAddress(GSdll, "GSread32");
+		Common::Gs::GSread64 = (Common::GS_GSread64)GetProcAddress(GSdll, "GSread64");
+		Common::Gs::GSgifTransfer = (Common::GS_GSgifTransfer)GetProcAddress(GSdll, "GSgifTransfer");
+		Common::Gs::GSkeyEvent = (Common::GS_GSkeyEvent)GetProcAddress(GSdll, "GSkeyEvent");
+		Common::Gs::GSmakeSnapshot = (Common::GS_GSmakeSnapshot)GetProcAddress(GSdll, "GSmakeSnapshot");
+		Common::Gs::GSconfigure = (Common::GS_GSconfigure)GetProcAddress(GSdll, "GSconfigure");
+		Common::Gs::GStest = (Common::GS_GStest)GetProcAddress(GSdll, "GStest");
+		Common::Gs::GSabout = (Common::GS_GSabout)GetProcAddress(GSdll, "GSabout");
+		Common::Gs::GSwritePReg = (Common::GS_GSwritePReg)GetProcAddress(GSdll, "GSwritePReg");
+		Common::Gs::GSpreg = (Common::GS_GSpreg)GetProcAddress(GSdll, "GSpreg");
 	}
 
 	if (!PADdll)
@@ -328,6 +348,17 @@ void EmuLoadPlugins()
 		PAD1configure = (_PADconfigure)GetProcAddress(PADdll, "PADconfigure");
 		PAD1test = (_PADtest)GetProcAddress(PADdll, "PADtest");
 		PAD1about = (_PADabout)GetProcAddress(PADdll, "PADabout");
+
+		Common::Pad::PAD1init = (Common::_PADinit)GetProcAddress(PADdll, "PADinit");
+		Common::Pad::PAD1open = (Common::_PADopen)GetProcAddress(PADdll, "PADopen");
+		Common::Pad::PAD1close = (Common::_PADclose)GetProcAddress(PADdll, "PADclose");
+		Common::Pad::PAD1shutdown = (Common::_PADshutdown)GetProcAddress(PADdll, "PADshutdown");
+		Common::Pad::PAD1keyEvent = (Common::_PADkeyEvent)GetProcAddress(PADdll, "PADkeyEvent");
+		Common::Pad::PAD1readStatus = (Common::_PADreadStatus)GetProcAddress(PADdll, "PADreadStatus");
+		Common::Pad::PAD1query = (Common::_PADquery)GetProcAddress(PADdll, "PADquery");
+		Common::Pad::PAD1configure = (Common::_PADconfigure)GetProcAddress(PADdll, "PADconfigure");
+		Common::Pad::PAD1test = (Common::_PADtest)GetProcAddress(PADdll, "PADtest");
+		Common::Pad::PAD1about = (Common::_PADabout)GetProcAddress(PADdll, "PADabout");
 	}
 }
 

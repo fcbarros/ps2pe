@@ -4,6 +4,28 @@
 
 namespace Common
 {
+    EMU_I32 DLLCALL DummyPADinit(EMU_U32 flags) { return 0; }
+    EMU_I32 DLLCALL DummyPADopen(void* pDsp) { return 0; }
+    void DLLCALL DummyPADclose() {}
+    void DLLCALL DummyPADshutdown() {}
+    keyEvent* DLLCALL DummyPADkeyEvent() { return nullptr; }
+    void DLLCALL DummyPADreadStatus(padButtonStatus* data, int pad) {}
+    EMU_U32 DLLCALL DummyPADquery() { return 0; }
+    void DLLCALL DummyPADconfigure() {}
+    EMU_I32 DLLCALL DummyPADtest() { return 0; }
+    void DLLCALL DummyPADabout() {}
+
+    _PADinit Pad::PAD1init = &DummyPADinit;
+    _PADopen Pad::PAD1open = &DummyPADopen;
+    _PADclose Pad::PAD1close = &DummyPADclose;
+    _PADshutdown Pad::PAD1shutdown = &DummyPADshutdown;
+    _PADkeyEvent Pad::PAD1keyEvent = &DummyPADkeyEvent;
+    _PADreadStatus Pad::PAD1readStatus = &DummyPADreadStatus;
+    _PADquery Pad::PAD1query = &DummyPADquery;
+    _PADconfigure Pad::PAD1configure = &DummyPADconfigure;
+    _PADtest Pad::PAD1test = &DummyPADtest;
+    _PADabout Pad::PAD1about = &DummyPADabout;
+
     Pad::Pad()
     {
     }

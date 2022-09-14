@@ -89,6 +89,8 @@ namespace Common
 	private:
 		Memory();
 
+		void SetCallbacks();
+
 		EMU_U32 MemorySize;
 		EMU_U32 MemoryMask;
 		EMU_U32 PageSize;

@@ -123,9 +123,6 @@
     <ClInclude Include="Common\Sif.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Bios.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common\VU.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -139,6 +136,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\PAD.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Bios.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
@@ -290,9 +290,6 @@
     <ClCompile Include="Common\Sif.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Common\Bios.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="Common\VU.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -331,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="Common\IntMmi.cpp">
       <Filter>Interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Bios.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

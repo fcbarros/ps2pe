@@ -133,19 +133,17 @@ namespace Interpreter
 			break;
 
 		case 0x68000000: // "ldl"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			SA = Address & 0x07;
 			TempU64 = Memory::GetInstance().GetDWord(Address - 7) & (0xFFFFFFFFFFFFFFFF << ((7 - SA) << 3));
-			PS2Regs.R5900Regs.Reg[RT].u64_00_63 = (PS2Regs.R5900Regs.Reg[RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF >> (SA << 3))) | TempU64;
+			PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 = (PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF >> (SA << 3))) | TempU64;
 			break;
 
 		case 0x6C000000: // "ldr"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			SA = Address & 0x07;
 			TempU64 = Memory::GetInstance().GetDWord(Address) & (0xFFFFFFFFFFFFFFFF >> (SA << 3));
-			PS2Regs.R5900Regs.Reg[RT].u64_00_63 = (PS2Regs.R5900Regs.Reg[RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF << ((7 - SA) << 3))) | TempU64;
+			PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 = (PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF << ((7 - SA) << 3))) | TempU64;
 			break;
 
 		case 0x70000000: // MMI
@@ -173,12 +171,11 @@ namespace Interpreter
 			break;
 
 		case 0x88000000: // "lwl"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			SA = Address & 0x03;
 			TempU32 = Memory::GetInstance().GetWord(Address - 3) & (0xFFFFFFFF << ((3 - SA) << 3));
-			PS2Regs.R5900Regs.Reg[RT].u32_00_31 &= 0xFFFFFFFF >> ((SA + 1) << 3);
-			PS2Regs.R5900Regs.Reg[RT].u64_00_63 = (EMU_I32)(PS2Regs.R5900Regs.Reg[RT].u32_00_31 | TempU32);
+			PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 &= 0xFFFFFFFF >> ((SA + 1) << 3);
+			PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 = (EMU_I32)(PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 | TempU32);
 			break;
 
 		case 0x8C000000: // "lw"
@@ -194,19 +191,18 @@ namespace Interpreter
 			break;
 
 		case 0x98000000: // "lwr"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			TempU32 = Memory::GetInstance().GetWord(Address);
 			SA = Address & 0x03;
 			if (SA)
 			{
 				TempU32 &= 0xFFFFFFFF >> (SA << 3);
-				PS2Regs.R5900Regs.Reg[RT].u32_00_31 &= 0xFFFFFFFFFFFFFFFF << ((4 - SA) << 3);
-				PS2Regs.R5900Regs.Reg[RT].u32_00_31 |= TempU32;
+				PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 &= 0xFFFFFFFFFFFFFFFF << ((4 - SA) << 3);
+				PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 |= TempU32;
 			}
 			else
 			{
-				PS2Regs.R5900Regs.Reg[RT].u64_00_63 = (EMU_I32)TempU32;
+				PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 = (EMU_I32)TempU32;
 			}
 			break;
 
@@ -223,10 +219,9 @@ namespace Interpreter
 			break;
 
 		case 0xA8000000: // "swl"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			SA = Address & 0x3;
-			TempU32 = (Memory::GetInstance().GetWord(Address - 3) & (0xFFFFFFFF >> ((SA + 1) << 3))) | (PS2Regs.R5900Regs.Reg[RT].u32_00_31 & (0xFFFFFFFF << ((3 - SA) << 3)));
+			TempU32 = (Memory::GetInstance().GetWord(Address - 3) & (0xFFFFFFFF >> ((SA + 1) << 3))) | (PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 & (0xFFFFFFFF << ((3 - SA) << 3)));
 			Memory::GetInstance().SetWord(Address - 3, TempU32);
 			break;
 
@@ -235,30 +230,27 @@ namespace Interpreter
 			break;
 
 		case 0xB0000000: // "sdl"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			SA = Address & 0x07;
 			TempU64 = (Memory::GetInstance().GetDWord(Address - 7) & (0xFFFFFFFFFFFFFFFF >> (SA << 3))) |
-				(PS2Regs.R5900Regs.Reg[RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF << ((7 - SA) << 3)));
+				(PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF << ((7 - SA) << 3)));
 			Memory::GetInstance().SetDWord(Address - 7, TempU64);
 			break;
 
 		case 0xB4000000: // "sdr"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			SA = Address & 0x07;
 			TempU64 = (Memory::GetInstance().GetDWord(Address) &
 				(0xFFFFFFFFFFFFFFFF << ((7 - SA) << 3))) |
-				(PS2Regs.R5900Regs.Reg[RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF >> (SA << 3)));
+				(PS2Regs.R5900Regs.Reg[R_RT].u64_00_63 & (0xFFFFFFFFFFFFFFFF >> (SA << 3)));
 			Memory::GetInstance().SetDWord(Address, TempU64);
 			break;
 
 		case 0xB8000000: // "swr"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
 			SA = Address & 0x3;
 			TempU32 = (Memory::GetInstance().GetWord(Address) & (0xFFFFFFFF << ((4 - SA) << 3))) |
-				(PS2Regs.R5900Regs.Reg[RT].u32_00_31 & (0xFFFFFFFF >> (SA << 3)));
+				(PS2Regs.R5900Regs.Reg[R_RT].u32_00_31 & (0xFFFFFFFF >> (SA << 3)));
 			Memory::GetInstance().SetWord(Address, TempU32);
 			break;
 
@@ -274,12 +266,11 @@ namespace Interpreter
 			break;
 
 		case 0xD8000000: // "lqc2"
-			RT = R_RT;
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
-			VU0Regs.CPR[RT].X.u = Memory::GetInstance().GetWord(Address);
-			VU0Regs.CPR[RT].Y.u = Memory::GetInstance().GetWord(Address + 4);
-			VU0Regs.CPR[RT].Z.u = Memory::GetInstance().GetWord(Address + 8);
-			VU0Regs.CPR[RT].W.u = Memory::GetInstance().GetWord(Address + 12);
+			VU0Regs.CPR[R_RT].X.u = Memory::GetInstance().GetWord(Address);
+			VU0Regs.CPR[R_RT].Y.u = Memory::GetInstance().GetWord(Address + 4);
+			VU0Regs.CPR[R_RT].Z.u = Memory::GetInstance().GetWord(Address + 8);
+			VU0Regs.CPR[R_RT].W.u = Memory::GetInstance().GetWord(Address + 12);
 			break;
 
 		case 0xDC000000: // "ld"
@@ -293,11 +284,10 @@ namespace Interpreter
 
 		case 0xF8000000: // "sqc2"
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
-			RT = R_RT;
-			Memory::GetInstance().SetWord(Address, VU0Regs.CPR[RT].X.u);
-			Memory::GetInstance().SetWord(Address + 4, VU0Regs.CPR[RT].Y.u);
-			Memory::GetInstance().SetWord(Address + 8, VU0Regs.CPR[RT].Z.u);
-			Memory::GetInstance().SetWord(Address + 12, VU0Regs.CPR[RT].W.u);
+			Memory::GetInstance().SetWord(Address, VU0Regs.CPR[R_RT].X.u);
+			Memory::GetInstance().SetWord(Address + 4, VU0Regs.CPR[R_RT].Y.u);
+			Memory::GetInstance().SetWord(Address + 8, VU0Regs.CPR[R_RT].Z.u);
+			Memory::GetInstance().SetWord(Address + 12, VU0Regs.CPR[R_RT].W.u);
 			break;
 
 		case 0xFC000000: // "sd"

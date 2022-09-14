@@ -169,18 +169,18 @@ namespace Common
 			switch (Register)
 			{
 			case EMU_DMA_CHANNEL_CHCR:
-				if (Emu_Dma_Channel_Reg[ChannelIndex]->CHCR & 0x00000100)
+				if (Dma::GetInstance().Emu_Dma_Channel_Reg[ChannelIndex]->CHCR & 0x00000100)
 				{
-					if (!EmuDmaChannel[ChannelIndex].Running)
+					if (!Dma::GetInstance().EmuDmaChannel[ChannelIndex].Running)
 					{
-						Start(ChannelIndex);
+						Dma::GetInstance().Start(ChannelIndex);
 					}
 				}
 				else
 				{
-					if (EmuDmaChannel[ChannelIndex].Running)
+					if (Dma::GetInstance().EmuDmaChannel[ChannelIndex].Running)
 					{
-						Stop(ChannelIndex);
+						Dma::GetInstance().Stop(ChannelIndex);
 					}
 				}
 				break;

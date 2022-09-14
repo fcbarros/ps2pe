@@ -39,7 +39,7 @@ namespace Common
         // Resets Timer registers
         void Reset(void);
         // Callback for Timer access
-        void Callback(EMU_U32 Address);
+        static void Callback(EMU_U32 Address);
 
         EMU_U08* GetPointer(EMU_U32 Address);
 
