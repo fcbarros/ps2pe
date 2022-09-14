@@ -239,8 +239,7 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 	{
 		return 0;
 	}
-	if ((ElfFile->Header.e_type != ET_EXEC) ||
-		(ElfFile->Header.e_machine != EM_MIPS))
+	if ((ElfFile->Header.e_type != ET_EXEC) || (ElfFile->Header.e_machine != EM_MIPS))
 	{
 		return 0;
 	}
@@ -283,13 +282,8 @@ DLLEXPORT EMU_I32 CALLBACK EmuLoad(const char* FileName)
 		case PT_LOAD:
 			if (ElfFile->Program[i].p_memsz > 0)
 			{
-				EmuMemAddFromFile(FileName,
-					ElfFile->Program[i].p_offset,
-					ElfFile->Program[i].p_filesz,
-					ElfFile->Program[i].p_vaddr,
-					EMMP_READ | EMMP_WRITE | EMMP_EXEC);
-				EmuGenStats(ElfFile->Program[i].p_vaddr,
-					ElfFile->Program[i].p_vaddr + ElfFile->Program[i].p_filesz);
+				EmuMemAddFromFile(FileName, ElfFile->Program[i].p_offset, ElfFile->Program[i].p_filesz, ElfFile->Program[i].p_vaddr, EMMP_READ | EMMP_WRITE | EMMP_EXEC);
+				EmuGenStats(ElfFile->Program[i].p_vaddr, ElfFile->Program[i].p_vaddr + ElfFile->Program[i].p_filesz);
 				if (StartAddress > ElfFile->Program[i].p_vaddr)
 				{
 					StartAddress = ElfFile->Program[i].p_vaddr;
@@ -391,8 +385,8 @@ DLLEXPORT void CALLBACK EmuStepInto(EMU_U32 Address)
 DLLEXPORT void CALLBACK EmuRun(unsigned int Address)
 {
 	EmuStopRun = false;
-	//EmuRunDebug(Address, true);
-	EmuExecuteFast(Address, true);
+	EmuRunDebug(Address, true);
+	//EmuExecuteFast(Address, true);
 	Emu_GS_CloseWindow();
 }
 
@@ -602,4 +596,3 @@ DLLEXPORT void CALLBACK EmuGetR5900RegName(EMU_U32 Reg, char* Buffer, EMU_U32 Bu
 {
 	strncpy(Buffer, EmuDis_GetRegName(Reg), BufferSize);
 }
-

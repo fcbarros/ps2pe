@@ -16,6 +16,9 @@
     <Filter Include="Interpreter">
       <UniqueIdentifier>{faf72ad7-2a82-49fe-9871-f937acf3887a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{a6240f52-f818-4a8f-bed6-7ef13f3cf5e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Elf.h">
@@ -92,6 +95,51 @@
     </ClInclude>
     <ClInclude Include="Common\Interpreter.h">
       <Filter>Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Memory.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Timer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Gif.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Dma.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Intc.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Ipu.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Vif.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Fifo.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Sif.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Bios.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\VU.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\GS.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Thread.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Sema.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\PAD.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +262,51 @@
     </ClCompile>
     <ClCompile Include="Common\Interpreter.cpp">
       <Filter>Interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Memory.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Timer.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Gif.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Dma.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Intc.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Ipu.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Vif.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Fifo.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Sif.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Bios.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\VU.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\GS.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Thread.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Sema.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\PAD.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

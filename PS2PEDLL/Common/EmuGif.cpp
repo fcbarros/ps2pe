@@ -85,25 +85,11 @@ void Emu_Gif_callback(EMU_U32 Address)
 extern _GSgifTransfer       GSgifTransfer;
 //extern _GSdmaGIF       GSdmaGIF;
 
-#define EmuDmaGifTransfer2( _addr, _qwc ) { \
-    if ( _addr & 0x80000000 ) \
-        GSdmaGIF( (EMU_U32*)Emu_Dma_Channel_Reg[ 2 ], (EMU_I08*)EMemory.GetRealPointer( _addr ) - _addr ); \
-    else \
-        GSdmaGIF( (EMU_U32*)Emu_Dma_Channel_Reg[ 2 ], (EMU_I08*)EMemory.GetRealPointer( _addr ) - _addr ); \
-}
-
 #define EmuDmaGifTransfer( _addr, _qwc ) { \
     if ( _addr & 0x80000000 ) \
         GSgifTransfer( (EMU_U32*)&EMemScratchPad[ _addr & 0x3FFF ], _qwc ); \
     else \
         GSgifTransfer( (EMU_U32*)EmuMemReadContinuosArea( _addr, _qwc * 16 ), _qwc ); \
-}
-
-#define EmuDmaGetPointer( ptr, _addr ) {\
-    if ( _addr & 0x80000000 ) \
-        ptr = (EMU_U32*)&EMemScratchPad[ _addr & 0x3FFF ]; \
-    else \
-        ptr = (EMU_U32*)EmuMemGetRealPointer( _addr & 0x7FFFFFFF ); \
 }
 
 void Emu_Gif_Transfer(stEmu_Dma_Channel_Regs* Channel)
@@ -122,7 +108,15 @@ void Emu_Gif_Transfer(stEmu_Dma_Channel_Regs* Channel)
 
 		while (Channel->CHCR & 0x00000100)
 		{
-			EmuDmaGetPointer(pTag, Channel->TADR);
+			if (Channel->TADR & 0x80000000)
+			{
+				pTag = (EMU_U32*)&EMemScratchPad[Channel->TADR & 0x3FFF];
+			}
+			else
+			{
+				pTag = (EMU_U32*)EmuMemGetRealPointer(Channel->TADR & 0x7FFFFFFF);
+			}
+
 			Channel->QWC = pTag[0] & 0x0000FFFF;
 			Channel->CHCR = (Channel->CHCR & 0x0000FFFF) | (pTag[0] & 0xFFFF0000);
 

@@ -155,6 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Common\Bios.h" />
+    <ClInclude Include="Common\Dma.h" />
     <ClInclude Include="Common\Elf.h" />
     <ClInclude Include="Common\EmuBios.h" />
     <ClInclude Include="Common\EmuDisassembly.h" />
@@ -177,11 +179,26 @@
     <ClInclude Include="Common\EmuTimer.h" />
     <ClInclude Include="Common\EmuVif.h" />
     <ClInclude Include="Common\EmuVU.h" />
+    <ClInclude Include="Common\Fifo.h" />
+    <ClInclude Include="Common\Gif.h" />
+    <ClInclude Include="Common\GS.h" />
+    <ClInclude Include="Common\Intc.h" />
     <ClInclude Include="Common\Interpreter.h" />
+    <ClInclude Include="Common\Ipu.h" />
+    <ClInclude Include="Common\Memory.h" />
+    <ClInclude Include="Common\PAD.h" />
+    <ClInclude Include="Common\Sema.h" />
+    <ClInclude Include="Common\Sif.h" />
+    <ClInclude Include="Common\Thread.h" />
+    <ClInclude Include="Common\Timer.h" />
+    <ClInclude Include="Common\Vif.h" />
+    <ClInclude Include="Common\VU.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Common\Bios.cpp" />
+    <ClCompile Include="Common\Dma.cpp" />
     <ClCompile Include="Common\Elf.cpp" />
     <ClCompile Include="Common\EmuBios.cpp" />
     <ClCompile Include="Common\EmuCop0.cpp" />
@@ -219,7 +236,20 @@
     <ClCompile Include="Common\EmuTimer.cpp" />
     <ClCompile Include="Common\EmuVif.cpp" />
     <ClCompile Include="Common\EmuVU.cpp" />
+    <ClCompile Include="Common\Fifo.cpp" />
+    <ClCompile Include="Common\Gif.cpp" />
+    <ClCompile Include="Common\GS.cpp" />
+    <ClCompile Include="Common\Intc.cpp" />
     <ClCompile Include="Common\Interpreter.cpp" />
+    <ClCompile Include="Common\Ipu.cpp" />
+    <ClCompile Include="Common\Memory.cpp" />
+    <ClCompile Include="Common\PAD.cpp" />
+    <ClCompile Include="Common\Sema.cpp" />
+    <ClCompile Include="Common\Sif.cpp" />
+    <ClCompile Include="Common\Thread.cpp" />
+    <ClCompile Include="Common\Timer.cpp" />
+    <ClCompile Include="Common\Vif.cpp" />
+    <ClCompile Include="Common\VU.cpp" />
     <ClCompile Include="PS2PEDLL.cpp" />
     <ClCompile Include="StdAfx.cpp" />
   </ItemGroup>

@@ -24,8 +24,8 @@
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-//#define EMUFUNCTION     EmuRunDebug
-#define EMUFUNCTION     EmuExecuteFast
+#define EMUFUNCTION     EmuRunDebug
+//#define EMUFUNCTION     EmuExecuteFast
 
 #define R_RD            ( ( Code >> 11 ) & 0x1F )
 #define R_RT            ( ( Code >> 16 ) & 0x1F )

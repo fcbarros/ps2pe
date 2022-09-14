@@ -15,4 +15,9 @@ namespace Interpreter
 	{
 		m_PS2Regs = PS2Regs;
 	}
+
+	void Interpreter::Run()
+	{
+
+	}
 }

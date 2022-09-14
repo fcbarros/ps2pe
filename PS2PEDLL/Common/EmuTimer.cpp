@@ -21,10 +21,6 @@ stEmu_Timer_Control_Regs* Emu_Timer_Control_Reg[4];
 
 void Emu_Timer_Init()
 {
-	//    Emu_Timer_Control_Reg[ 0 ] = (stEmu_Timer_Control_Regs *) EMemory.GetRealPointer( EMU_TIMER0 );
-	//    Emu_Timer_Control_Reg[ 1 ] = (stEmu_Timer_Control_Regs *) EMemory.GetRealPointer( EMU_TIMER1 );
-	//    Emu_Timer_Control_Reg[ 2 ] = (stEmu_Timer_Control_Regs *) EMemory.GetRealPointer( EMU_TIMER2 );
-	//    Emu_Timer_Control_Reg[ 3 ] = (stEmu_Timer_Control_Regs *) EMemory.GetRealPointer( EMU_TIMER3 );
 	Emu_Timer_Control_Reg[0] = (stEmu_Timer_Control_Regs*)&EmuTimerMemory[EMU_TIMER0 - EMU_TIMER_START_ADDR];
 	Emu_Timer_Control_Reg[1] = (stEmu_Timer_Control_Regs*)&EmuTimerMemory[EMU_TIMER1 - EMU_TIMER_START_ADDR];
 	Emu_Timer_Control_Reg[2] = (stEmu_Timer_Control_Regs*)&EmuTimerMemory[EMU_TIMER2 - EMU_TIMER_START_ADDR];
@@ -49,20 +45,18 @@ void Emu_Timer_callback(EMU_U32 Address)
 	{
 		Register -= EMU_TIMER0;
 	}
+	else if (Address < EMU_TIMER2)
+	{
+		Register -= EMU_TIMER1;
+	}
+	else if (Address < EMU_TIMER3)
+	{
+		Register -= EMU_TIMER2;
+	}
 	else
-		if (Address < EMU_TIMER2)
-		{
-			Register -= EMU_TIMER1;
-		}
-		else
-			if (Address < EMU_TIMER3)
-			{
-				Register -= EMU_TIMER2;
-			}
-			else
-			{
-				Register -= EMU_TIMER3;
-			}
+	{
+		Register -= EMU_TIMER3;
+	}
 
 	switch (Register)
 	{
