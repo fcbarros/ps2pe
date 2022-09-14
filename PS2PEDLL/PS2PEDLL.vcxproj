@@ -240,7 +240,15 @@
     <ClCompile Include="Common\Gif.cpp" />
     <ClCompile Include="Common\GS.cpp" />
     <ClCompile Include="Common\Intc.cpp" />
+    <ClCompile Include="Common\IntCop0.cpp" />
+    <ClCompile Include="Common\IntCop1.cpp" />
+    <ClCompile Include="Common\IntCop2.cpp" />
+    <ClCompile Include="Common\IntCore.cpp" />
     <ClCompile Include="Common\Interpreter.cpp" />
+    <ClCompile Include="Common\IntExecute.cpp" />
+    <ClCompile Include="Common\IntMmi.cpp" />
+    <ClCompile Include="Common\IntRegimm.cpp" />
+    <ClCompile Include="Common\IntSpecial.cpp" />
     <ClCompile Include="Common\Ipu.cpp" />
     <ClCompile Include="Common\Memory.cpp" />
     <ClCompile Include="Common\PAD.cpp" />
