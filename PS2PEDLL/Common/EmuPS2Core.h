@@ -225,6 +225,10 @@ struct Emu_R5900_Regs
 
 	EMU_U64 SA;
 	EMU_U32 PC;
+
+	// Extra flags for signaling
+	bool Overflow;
+	bool Carry;
 };
 
 // COP0 registers
@@ -324,41 +328,41 @@ struct Emu_COP0_Regs
 // COP1 registers
 struct Emu_COP1_Regs
 {
-	EMU_UF32        Reg[32];
+	EMU_UF32 Reg[32];
 	union
 	{
-		EMU_U32      FCR0;
+		EMU_U32 FCR0;
 		struct
 		{
-			EMU_U32  FCR0_REV : 8;
-			EMU_U32  FCR0_IMP : 8;
-			EMU_U32  FCR0_RESERVED : 16;
+			EMU_U32 FCR0_REV : 8;
+			EMU_U32 FCR0_IMP : 8;
+			EMU_U32 FCR0_RESERVED : 16;
 		};
 	};
 	union
 	{
-		EMU_U32		  FCR31;
+		EMU_U32 FCR31;
 		struct
 		{
-			EMU_U32  FCR31_00 : 1;
-			EMU_U32  FCR31_01 : 1;
-			EMU_U32  FCR31_02 : 1;
-			EMU_U32  FCR31_SU : 1;
-			EMU_U32  FCR31_SO : 1;
-			EMU_U32  FCR31_SD : 1;
-			EMU_U32  FCR31_SI : 1;
-			EMU_U32  FCR31_07_13 : 7;
-			EMU_U32  FCR31_U : 1;
-			EMU_U32  FCR31_O : 1;
-			EMU_U32  FCR31_D : 1;
-			EMU_U32  FCR31_I : 1;
-			EMU_U32  FCR31_18_22 : 5;
-			EMU_U32  FCR31_C : 1;
-			EMU_U32  FCR31_24 : 1;
-			EMU_U32  FCR31_25_31 : 7;
+			EMU_U32 FCR31_00 : 1;
+			EMU_U32 FCR31_01 : 1;
+			EMU_U32 FCR31_02 : 1;
+			EMU_U32 FCR31_SU : 1;
+			EMU_U32 FCR31_SO : 1;
+			EMU_U32 FCR31_SD : 1;
+			EMU_U32 FCR31_SI : 1;
+			EMU_U32 FCR31_07_13 : 7;
+			EMU_U32 FCR31_U : 1;
+			EMU_U32 FCR31_O : 1;
+			EMU_U32 FCR31_D : 1;
+			EMU_U32 FCR31_I : 1;
+			EMU_U32 FCR31_18_22 : 5;
+			EMU_U32 FCR31_C : 1;
+			EMU_U32 FCR31_24 : 1;
+			EMU_U32 FCR31_25_31 : 7;
 		};
 	};
-	EMU_UF32        Accumulator;
+	EMU_UF32 Accumulator;
 };
 
 struct EMU_VF

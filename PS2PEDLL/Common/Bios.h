@@ -8,7 +8,7 @@ namespace Common
 
 	extern const char* Emu_Bios_Calls_Names[256];
 
-	class Bios
+	class Bios final
 	{
 	public:
 		static const EMU_U32 EMU_BIOS_START_ADDR = 0x1FC00000;

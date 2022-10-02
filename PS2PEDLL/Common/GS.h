@@ -80,7 +80,7 @@ namespace Common
 	void Emu_GS_Bios_PutIMR();
 	void Emu_GS_Bios_SetGsCrt();
 
-	class Gs
+	class Gs final
 	{
 	public:
 		// PS2 GS clock 147.456 Mhz

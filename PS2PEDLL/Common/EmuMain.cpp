@@ -8,9 +8,9 @@
 // Variables
 //////////////////////////////////////////////////////
 
-Common::Ps2Core &ps2Core = Common::Ps2Core::GetInstance();
-
 EMU_PS2_Regs PS2Regs;
+
+Common::Ps2Core &ps2Core = Common::Ps2Core::GetInstance();
 
 // Initialize the Emulator, must be called once
 // Initializes Registers and anythings else needed

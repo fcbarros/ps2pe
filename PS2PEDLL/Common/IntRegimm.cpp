@@ -12,19 +12,39 @@ namespace Interpreter
         switch (OpCode & 0x001F0000)
         {
         case 0x00000000: // "bltz"
-            BRANCH_CONDITION_RS_ZERO(< );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 < 0)
+            {
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
             break;
 
         case 0x00010000: // "bgez"
-            BRANCH_CONDITION_RS_ZERO(>= );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 >= 0)
+            {
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
             break;
 
         case 0x00020000: // "bltzl"
-            BRANCH_CONDITION_RS_ZERO_LIKELY(< );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 < 0)
+            {
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
+            else
+            {
+                PS2Regs.R5900Regs.PC += 4;
+            }
             break;
 
         case 0x00030000: // "bgezl"
-            BRANCH_CONDITION_RS_ZERO_LIKELY(>= );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 >= 0)
+            {
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
+            else
+            {
+                PS2Regs.R5900Regs.PC += 4;
+            }
             break;
 
         case 0x00080000: // "tgei"
@@ -36,19 +56,43 @@ namespace Interpreter
             break;
 
         case 0x00100000: // "bltzal"
-            BRANCH_CONDITION_RS_ZERO_LINK(< );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 < 0)
+            {
+                PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
             break;
 
         case 0x00110000: // "bgezal"
-            BRANCH_CONDITION_RS_ZERO_LINK(>= );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 >= 0)
+            {
+                PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
             break;
 
         case 0x00120000: // "bltzall"
-            BRANCH_CONDITION_RS_ZERO_LINK_LIKELY(< );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 < 0)
+            {
+                PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
+            else
+            {
+                PS2Regs.R5900Regs.PC += 4;
+            }
             break;
 
         case 0x00130000: // "bgezall"
-            BRANCH_CONDITION_RS_ZERO_LINK_LIKELY(>= );
+            if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 >= 0)
+            {
+                PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;
+                ExecuteBranch(PS2Regs.R5900Regs.PC);
+            }
+            else
+            {
+                PS2Regs.R5900Regs.PC += 4;
+            }
             break;
 
         case 0x00180000: // "mtsab"

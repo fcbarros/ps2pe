@@ -16,7 +16,7 @@ namespace Common
         EMU_U08 null3[12];
     };
 
-    class Timer
+    class Timer final
     {
     public:
         static const EMU_U32 EMU_TIMER_START_ADDR = 0x10000000;

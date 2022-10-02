@@ -10,7 +10,7 @@ namespace Common
 		EMU_U08 null0[12];
 	};
 
-	class Fifo
+	class Fifo final
 	{
 	public:
 		// Base Address

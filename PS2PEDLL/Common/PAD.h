@@ -99,7 +99,7 @@ namespace Common
 
 	void Emu_PAD_Bios_ReadStatus(EMU_I32 pad);
 
-	class Pad
+	class Pad final
 	{
 	public:
 		//

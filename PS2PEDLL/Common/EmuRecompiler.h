@@ -62,97 +62,6 @@ extern BOOL EmuStopCompile;
 
 #define JUMP_ADDRESS    ( ( Code & 0x03FFFFFF ) << 2 ) | ( PS2Regs.R5900Regs.PC & 0xF0000000 )
 
-
-#define EMU_FLOAT_LOAD_CONDITION_REGISTER( a )      __asm FSTSW a
-#define EMU_FLOAT_CHECK_OVERFLOW( a )               (( a ) & 0x0008)
-#define EMU_FLOAT_CHECK_UNDERFLOW( a )              (( a ) & 0x0010)
-
-#define EMU_INTEGER_LOAD_CONDITION_REGISTER( a )    __asm LAHF; __asm mov a, eax;
-#define EMU_INTEGER_CHECK_OVERFLOW( a )             (( a ) & 0x0800)
-#define EMU_INTEGER_CHECK_CARRY( a )                (( a ) & 0x0001)
-
-#define EXECUTE_BRANCH_DELAY_SLOT( addr )                                           \
-        EmuInBranchDelay = true;                                                    \
-        EMUFUNCTION( addr, false );                                                 \
-        EmuInBranchDelay = false;
-
-#define EXECUTE_BRANCH( addr )                                                      \
-        JumpTo = PS2Regs.R5900Regs.PC + (((EMU_I16)R_BRANCH) << 2);                         \
-        EXECUTE_BRANCH_DELAY_SLOT( addr );                                          \
-        PS2Regs.R5900Regs.PC = JumpTo;
-
-#define BRANCH_CONDITION_RS_RT( cond )                                              \
-        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond PS2Regs.R5900Regs.Reg[ R_RT ].i64_00_63 ) \
-        {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
-        }
-
-#define BRANCH_CONDITION_RS_RT_LIKELY( cond )                                       \
-        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond PS2Regs.R5900Regs.Reg[ R_RT ].i64_00_63 ) \
-        {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
-        }                                                                           \
-        else                                                                        \
-        {                                                                           \
-            PS2Regs.R5900Regs.PC += 4;                                                      \
-        }
-
-#define BRANCH_CONDITION_RS_ZERO( cond )                                            \
-        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
-        {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
-        }
-
-#define BRANCH_CONDITION_RS_ZERO_LIKELY( cond )                                     \
-        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
-        {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
-        }                                                                           \
-        else                                                                        \
-        {                                                                           \
-            PS2Regs.R5900Regs.PC += 4;                                                      \
-        }
-
-#define BRANCH_CONDITION_RS_ZERO_LINK( cond )                                       \
-        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
-        {                                                                           \
-            PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;                              \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
-        }
-
-#define BRANCH_CONDITION_RS_ZERO_LINK_LIKELY( cond )                                \
-        if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
-        {                                                                           \
-            PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;                              \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
-        }                                                                           \
-        else                                                                        \
-        {                                                                           \
-            PS2Regs.R5900Regs.PC += 4;                                                      \
-        }
-
-#define SetFloatFlags2( var )                        \
-        EMU_FLOAT_LOAD_CONDITION_REGISTER( var );   \
-        if ( EMU_FLOAT_CHECK_OVERFLOW( var ) )      \
-        {                                           \
-            PS2Regs.COP1Regs.FCR31_O = 1;                   \
-            PS2Regs.COP1Regs.FCR31_SO = 1;                  \
-            PS2Regs.COP1Regs.FCR31_U = 0;                   \
-        }                                           \
-        else                                        \
-        if ( EMU_FLOAT_CHECK_UNDERFLOW( var ) )     \
-        {                                           \
-            PS2Regs.COP1Regs.FCR31_O = 0;                   \
-            PS2Regs.COP1Regs.FCR31_U = 1;                   \
-            PS2Regs.COP1Regs.FCR31_SU = 1;                  \
-        }                                           \
-        else                                        \
-        {                                           \
-            PS2Regs.COP1Regs.FCR31_O = 0;                   \
-            PS2Regs.COP1Regs.FCR31_U = 0;                   \
-        }
-
-
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 // Structs
@@ -160,14 +69,14 @@ extern BOOL EmuStopCompile;
 ///////////////////////////////////////////////////////////////////////
 
 
-typedef struct
+struct stEmuRecMemory
 {
 	EMU_U32 Size;
 	EMU_U32 Position;
 	EMU_U08* Memory;
-} stEmuRecMemory;
+};
 
-typedef struct
+struct stEmuRecReg
 {
 	EMU_U64 LastAccessed;       // Last time accessed
 	EMU_U32 Used;               // Is Register Used?
@@ -175,12 +84,12 @@ typedef struct
 	EMU_U32 Code;               // Internal Register code
 	EMU_I32 MainIndex;          // Main Index of emulator register, -1 = not used
 	EMU_I32 SecIndex;           // Secundary Index of emulator register, -1 = not used
-} stEmuRecReg;
+};
 
-typedef struct
+struct stEmuRecEmuReg
 {
 	EMU_I32 Register[4];      // Index of the 32bits Machine register, -1 = not in cache
-} stEmuRecEmuReg;
+};
 
 
 /////////////////////////////////////////////////////////////////////
@@ -212,18 +121,18 @@ extern EMU_U32 JumpTo;
 extern EMU_U64 CpuCycles;
 
 
-typedef struct
+struct stEmuRecJumpRecord
 {
 	EMU_U32 EmuTargetAddress;
 	EMU_U32* LinkAddress;
-} stEmuRecJumpRecord;
+};
 
-typedef struct
+struct stEmuRecDepend
 {
 	EMU_U32 Main;
 	EMU_U32 Secondary;
 	EMU_I32 CPUIndex;
-} stEmuRecDepend;
+};
 
 struct stEmuRecInstruction
 {
@@ -254,8 +163,8 @@ struct stEmuRecInstruction
 	}
 };
 
-typedef std::map<EMU_U32, stEmuRecInstruction>   stEmuRecAddressTranslationTable;
-typedef std::vector<stEmuRecJumpRecord>         stEmuRecPendingJump;
+typedef std::map<EMU_U32, stEmuRecInstruction> stEmuRecAddressTranslationTable;
+typedef std::vector<stEmuRecJumpRecord> stEmuRecPendingJump;
 
 EMU_U08* EmuRec_CurrentAddress();
 

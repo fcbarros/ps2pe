@@ -17,7 +17,7 @@ namespace Common
 	void Emu_Thread_Bios_GetId();
 	void Emu_Thread_Bios_ReferStatus();
 
-	class Thread
+	class Thread final
 	{
 	public:
 		// Base Address

@@ -52,7 +52,7 @@ namespace Common
 	typedef std::vector<stTLB_WriteCallBack> EMM_WriteCallBackType;
 	typedef std::vector<stTLB_ReadCallBack>	EMM_ReadCallBackType;
 
-	class Memory
+	class Memory final
 	{
 	public:
 		static const EMU_U08 EMMT_CODE = 0;

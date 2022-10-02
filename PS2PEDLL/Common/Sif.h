@@ -155,7 +155,7 @@ namespace Common
 	void Emu_Sif_BiosIsceSetDma(void);
 	void Emu_Sif_BiosIsceDmaStat(void);
 
-	class Sif
+	class Sif final
 	{
 	public:
 		// Base Address

@@ -54,7 +54,7 @@ namespace Common
 		EMU_U08 null22[12];
 	};
 
-	class Vif
+	class Vif final
 	{
 	public:
 		// Base Address

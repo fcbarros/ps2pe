@@ -1299,19 +1299,19 @@ namespace Interpreter
 				case 0x0000013C: // "vitof0"
 					if (VU_DEST_X)
 					{
-						PS2Regs.VU0Regs.CPR[VU_FT].X.f = *(EMU_I32*)&PS2Regs.VU0Regs.CPR[VU_FS].X.i;
+						PS2Regs.VU0Regs.CPR[VU_FT].X.f = (float)PS2Regs.VU0Regs.CPR[VU_FS].X.i;
 					}
 					if (VU_DEST_Y)
 					{
-						PS2Regs.VU0Regs.CPR[VU_FT].Y.f = *(EMU_I32*)&PS2Regs.VU0Regs.CPR[VU_FS].Y.i;
+						PS2Regs.VU0Regs.CPR[VU_FT].Y.f = (float)PS2Regs.VU0Regs.CPR[VU_FS].Y.i;
 					}
 					if (VU_DEST_Z)
 					{
-						PS2Regs.VU0Regs.CPR[VU_FT].Z.f = *(EMU_I32*)&PS2Regs.VU0Regs.CPR[VU_FS].Z.i;
+						PS2Regs.VU0Regs.CPR[VU_FT].Z.f = (float)PS2Regs.VU0Regs.CPR[VU_FS].Z.i;
 					}
 					if (VU_DEST_W)
 					{
-						PS2Regs.VU0Regs.CPR[VU_FT].W.f = *(EMU_I32*)&PS2Regs.VU0Regs.CPR[VU_FS].W.i;
+						PS2Regs.VU0Regs.CPR[VU_FT].W.f = (float)PS2Regs.VU0Regs.CPR[VU_FS].W.i;
 					}
 					break;
 

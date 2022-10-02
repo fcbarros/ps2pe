@@ -11,7 +11,7 @@ namespace Common
 {
 	typedef void (*EMUCONSOLECALLBACK)(const char*);
 
-	class Ps2Core
+	class Ps2Core final
 	{
 	public:
 		void Initialize();

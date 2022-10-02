@@ -16,7 +16,7 @@ namespace Common
 		EMU_U08 null3[12];
 	};
 
-	class Ipu
+	class Ipu final
 	{
 	public:
 		// Base Address

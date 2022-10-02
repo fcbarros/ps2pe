@@ -66,7 +66,7 @@ namespace Common
 	void Emu_Intc_BiosEnableHandler();
 	void Emu_Intc_BiosDisableHandler();
 
-	class Intc
+	class Intc final
 	{
 	public:
 		// Base Address

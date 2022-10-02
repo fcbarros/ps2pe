@@ -41,19 +41,31 @@ namespace Interpreter
 			break;
 
 		case 0x10000000: // "beq"
-			BRANCH_CONDITION_RS_RT(== );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 == PS2Regs.R5900Regs.Reg[R_RT].i64_00_63)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
 			break;
 
 		case 0x14000000: // "bne"
-			BRANCH_CONDITION_RS_RT(!= );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 != PS2Regs.R5900Regs.Reg[R_RT].i64_00_63)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
 			break;
 
 		case 0x18000000: // "blez"
-			BRANCH_CONDITION_RS_ZERO(<= );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 <= 0)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
 			break;
 
 		case 0x1C000000: // "bgtz"
-			BRANCH_CONDITION_RS_ZERO(> );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 > 0)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
 			break;
 
 		case 0x20000000: // "addi"
@@ -106,19 +118,47 @@ namespace Interpreter
 			break;
 
 		case 0x50000000: // "beql"
-			BRANCH_CONDITION_RS_RT_LIKELY(== );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 == PS2Regs.R5900Regs.Reg[R_RT].i64_00_63)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
+			else
+			{
+				PS2Regs.R5900Regs.PC += 4;
+			}
 			break;
 
 		case 0x54000000: // "bnel"
-			BRANCH_CONDITION_RS_RT_LIKELY(!= );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 != PS2Regs.R5900Regs.Reg[R_RT].i64_00_63)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
+			else
+			{
+				PS2Regs.R5900Regs.PC += 4;
+			}
 			break;
 
 		case 0x58000000: // "blezl"
-			BRANCH_CONDITION_RS_ZERO_LIKELY(<= );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 <= 0)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
+			else
+			{
+				PS2Regs.R5900Regs.PC += 4;
+			}
 			break;
 
 		case 0x5C000000: // "bgtzl"
-			BRANCH_CONDITION_RS_ZERO_LIKELY(> );
+			if (PS2Regs.R5900Regs.Reg[R_RS].i64_00_63 > 0)
+			{
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
+			}
+			else
+			{
+				PS2Regs.R5900Regs.PC += 4;
+			}
 			break;
 
 		case 0x60000000: // "daddi"

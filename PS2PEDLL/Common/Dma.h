@@ -65,7 +65,7 @@ namespace Common
 	void Emu_Dma_BiosRemoveHandler(void);
 	void Emu_Dma_BiosEnableHandler(void);
 
-	class Dma
+	class Dma final
 	{
 	public:
 		// Base Channel Address

@@ -29,7 +29,7 @@ namespace Common
 		EMU_U08 null9[12];
 	};
 
-	class Gif
+	class Gif final
 	{
 	public:
 		// Base Address

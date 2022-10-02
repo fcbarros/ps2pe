@@ -20,7 +20,7 @@ namespace Common
 	void Emu_Sema_Bios_Wait(void);
 	void Emu_Sema_Bios_Poll(void);
 
-	class Sema
+	class Sema final
 	{
 	public:
 		// Initializes Semaphores
