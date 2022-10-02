@@ -1,8 +1,7 @@
 #include "gs.h"
 
 #include "EmuMain.h"
-#include "EmuGS.h"
-#include "EmuPAD.h"
+#include "Ps2Core.h"
 
 #include <string>
 
@@ -21,9 +20,12 @@ typedef char* (CALLBACK* LIBNAME)();
 #define PS2E_LT_PAD  0x2
 #define PS2E_LT_SPU2 0x4
 
+void EmuSaveConfig();
+void EmuLoadConfig();
+
 char EmuDLLDir[256];
 
-void EmuSetDir(char* Dir)
+void EmuSetDir(const char* Dir, int size)
 {
 	memset(EmuDLLDir, 0, sizeof(EmuDLLDir));
 
@@ -50,6 +52,14 @@ HMODULE GSdll = 0;
 HMODULE PADdll = 0;
 
 #pragma optimize( "", off )
+double getClockFreq()
+{
+	LARGE_INTEGER frequency;
+	QueryPerformanceFrequency(&frequency);
+	double clock_freq = 1.0 / (double)frequency.QuadPart;
+	return clock_freq;
+}
+
 // Calculates the frequency of the processor clock
 DLLEXPORT double CALLBACK EmuGetClock()
 {
@@ -73,6 +83,8 @@ DLLEXPORT double CALLBACK EmuGetClock()
 
 	d_loop_period = ((double)(i64_perf_freq)) / 250000.0;
 	d_clock_freq = ((double)(i64_clock_end & 0xffffffff)) * d_loop_period;
+
+	double freq2 = getClockFreq();
 
 	return d_clock_freq;
 }
@@ -131,7 +143,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Build = (LibVersion()) & 0xFF;
 						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCGS, Buffer);
-						if (!strcmp(fileinfo.name, GSFileName))
+						if (!strcmp(fileinfo.name, Common::Ps2Core::GetInstance().GetGSFileName()))
 						{
 							GSidx = gsPlugins.size();
 						}
@@ -144,7 +156,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Build = (LibVersion()) & 0xFF;
 						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCPAD, Buffer);
-						if (!strcmp(fileinfo.name, PADFileName))
+						if (!strcmp(fileinfo.name, Common::Ps2Core::GetInstance().GetPADFileName()))
 						{
 							PADidx = padPlugins.size();
 						}
@@ -157,7 +169,7 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 						Build = (LibVersion()) & 0xFF;
 						sprintf(Buffer, "%s v%u.%u.%u", LibName(), Version, Revision, Build);
 						ComboBox_AddString(hWCSPU, Buffer);
-						if (!strcmp(fileinfo.name, SPUFileName))
+						if (!strcmp(fileinfo.name, Common::Ps2Core::GetInstance().GetSPUFileName()))
 						{
 							SPUidx = spuPlugins.size();
 						}
@@ -189,9 +201,9 @@ BOOL CALLBACK EmuConfigureDlgProc(HWND hW, UINT uMsg, WPARAM wParam, LPARAM lPar
 			hWCGS = GetDlgItem(hW, IDC_COMBO_GS);
 			hWCPAD = GetDlgItem(hW, IDC_COMBO_PAD);
 			hWCSPU = GetDlgItem(hW, IDC_COMBO_SPU);
-			strcpy(GSFileName, gsPlugins[ComboBox_GetCurSel(hWCGS)].c_str());
-			strcpy(PADFileName, padPlugins[ComboBox_GetCurSel(hWCPAD)].c_str());
-			strcpy(SPUFileName, spuPlugins[ComboBox_GetCurSel(hWCSPU)].c_str());
+			Common::Ps2Core::GetInstance().SetGSFileName(gsPlugins[ComboBox_GetCurSel(hWCGS)].c_str());
+			Common::Ps2Core::GetInstance().SetPADFileName(padPlugins[ComboBox_GetCurSel(hWCPAD)].c_str());
+			Common::Ps2Core::GetInstance().SetSPUFileName(spuPlugins[ComboBox_GetCurSel(hWCSPU)].c_str());
 
 			EmuSaveConfig();
 			EmuLoadConfig();
@@ -232,6 +244,11 @@ void EmuSaveConfig()
 
 	RegCreateKeyEx(HKEY_CURRENT_USER, "Software\\PS2PE", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &myKey, &myDisp);
 
+	const char* GSFileName = Common::Ps2Core::GetInstance().GetGSFileName();
+	const char* PADFileName = Common::Ps2Core::GetInstance().GetPADFileName();
+	const char* SPUFileName = Common::Ps2Core::GetInstance().GetSPUFileName();
+	const char* BiosFileName = Common::Ps2Core::GetInstance().GetBiosFileName();
+
 	SetKeyV("GSplugin", GSFileName, strlen(GSFileName) + 1, REG_SZ);
 	SetKeyV("PADplugin", PADFileName, strlen(PADFileName) + 1, REG_SZ);
 	SetKeyV("SPUplugin", SPUFileName, strlen(SPUFileName) + 1, REG_SZ);
@@ -246,11 +263,6 @@ void EmuLoadConfig()
 	DWORD type, size;
 	char Buffer[256];
 
-	memset(GSFileName, 0, sizeof(GSFileName));
-	memset(PADFileName, 0, sizeof(PADFileName));
-	memset(SPUFileName, 0, sizeof(SPUFileName));
-	memset(BiosFileName, 0, sizeof(BiosFileName));
-
 	if (RegOpenKeyEx(HKEY_CURRENT_USER, "Software\\PS2PE", 0, KEY_ALL_ACCESS, &myKey) != ERROR_SUCCESS)
 	{
 		MessageBox(0, "PS2PE needs to be configured", "First Time", MB_OK);
@@ -260,12 +272,13 @@ void EmuLoadConfig()
 	}
 
 	GetKeyV("GSplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcpy(GSFileName, Buffer);
+	Common::Ps2Core::GetInstance().SetGSFileName(Buffer);
 	GetKeyV("PADplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcpy(PADFileName, Buffer);
+	Common::Ps2Core::GetInstance().SetPADFileName(Buffer);
 	GetKeyV("SPUplugin", Buffer, sizeof(Buffer), REG_SZ);
-	strcpy(SPUFileName, Buffer);
-	GetKeyV("BIOSfile", BiosFileName, sizeof(BiosFileName), REG_SZ);
+	Common::Ps2Core::GetInstance().SetSPUFileName(Buffer);
+	GetKeyV("BIOSfile", Buffer, sizeof(Buffer), REG_SZ);
+	Common::Ps2Core::GetInstance().SetBiosFileName(Buffer);
 
 	RegCloseKey(myKey);
 }
@@ -292,26 +305,26 @@ void EmuLoadPlugins()
 	if (!GSdll)
 	{
 		strcpy(LibraryPath, "plugins\\");
-		strcat(LibraryPath, GSFileName);
+		strcat(LibraryPath, Common::Ps2Core::GetInstance().GetGSFileName());
 		GSdll = LoadLibrary(LibraryPath);
 
-		GSinit = (_GSinit)GetProcAddress(GSdll, "GSinit");
-		GSopen = (_GSopen)GetProcAddress(GSdll, "GSopen");
-		GSclose = (_GSclose)GetProcAddress(GSdll, "GSclose");
-		GSshutdown = (_GSshutdown)GetProcAddress(GSdll, "GSshutdown");
-		GSvsync = (_GSvsync)GetProcAddress(GSdll, "GSvsync");
-		GSwrite32 = (_GSwrite32)GetProcAddress(GSdll, "GSwrite32");
-		GSwrite64 = (_GSwrite64)GetProcAddress(GSdll, "GSwrite64");
-		GSread32 = (_GSread32)GetProcAddress(GSdll, "GSread32");
-		GSread64 = (_GSread64)GetProcAddress(GSdll, "GSread64");
-		GSgifTransfer = (_GSgifTransfer)GetProcAddress(GSdll, "GSgifTransfer");
-		GSkeyEvent = (_GSkeyEvent)GetProcAddress(GSdll, "GSkeyEvent");
-		GSmakeSnapshot = (_GSmakeSnapshot)GetProcAddress(GSdll, "GSmakeSnapshot");
-		GSconfigure = (_GSconfigure)GetProcAddress(GSdll, "GSconfigure");
-		GStest = (_GStest)GetProcAddress(GSdll, "GStest");
-		GSabout = (_GSabout)GetProcAddress(GSdll, "GSabout");
-		GSwritePReg = (_GSwritePReg)GetProcAddress(GSdll, "GSwritePReg");
-		GSpreg = (_GSpreg)GetProcAddress(GSdll, "GSpreg");
+		//GSinit = (_GSinit)GetProcAddress(GSdll, "GSinit");
+		//GSopen = (_GSopen)GetProcAddress(GSdll, "GSopen");
+		//GSclose = (_GSclose)GetProcAddress(GSdll, "GSclose");
+		//GSshutdown = (_GSshutdown)GetProcAddress(GSdll, "GSshutdown");
+		//GSvsync = (_GSvsync)GetProcAddress(GSdll, "GSvsync");
+		//GSwrite32 = (_GSwrite32)GetProcAddress(GSdll, "GSwrite32");
+		//GSwrite64 = (_GSwrite64)GetProcAddress(GSdll, "GSwrite64");
+		//GSread32 = (_GSread32)GetProcAddress(GSdll, "GSread32");
+		//GSread64 = (_GSread64)GetProcAddress(GSdll, "GSread64");
+		//GSgifTransfer = (_GSgifTransfer)GetProcAddress(GSdll, "GSgifTransfer");
+		//GSkeyEvent = (_GSkeyEvent)GetProcAddress(GSdll, "GSkeyEvent");
+		//GSmakeSnapshot = (_GSmakeSnapshot)GetProcAddress(GSdll, "GSmakeSnapshot");
+		//GSconfigure = (_GSconfigure)GetProcAddress(GSdll, "GSconfigure");
+		//GStest = (_GStest)GetProcAddress(GSdll, "GStest");
+		//GSabout = (_GSabout)GetProcAddress(GSdll, "GSabout");
+		//GSwritePReg = (_GSwritePReg)GetProcAddress(GSdll, "GSwritePReg");
+		//GSpreg = (_GSpreg)GetProcAddress(GSdll, "GSpreg");
 
 		Common::Gs::GSinit = (Common::GS_GSinit)GetProcAddress(GSdll, "GSinit");
 		Common::Gs::GSopen = (Common::GS_GSopen)GetProcAddress(GSdll, "GSopen");
@@ -335,19 +348,19 @@ void EmuLoadPlugins()
 	if (!PADdll)
 	{
 		strcpy(LibraryPath, "plugins\\");
-		strcat(LibraryPath, PADFileName);
+		strcat(LibraryPath, Common::Ps2Core::GetInstance().GetPADFileName());
 		PADdll = LoadLibrary(LibraryPath);
 
-		PAD1init = (_PADinit)GetProcAddress(PADdll, "PADinit");
-		PAD1open = (_PADopen)GetProcAddress(PADdll, "PADopen");
-		PAD1close = (_PADclose)GetProcAddress(PADdll, "PADclose");
-		PAD1shutdown = (_PADshutdown)GetProcAddress(PADdll, "PADshutdown");
-		PAD1keyEvent = (_PADkeyEvent)GetProcAddress(PADdll, "PADkeyEvent");
-		PAD1readStatus = (_PADreadStatus)GetProcAddress(PADdll, "PADreadStatus");
-		PAD1query = (_PADquery)GetProcAddress(PADdll, "PADquery");
-		PAD1configure = (_PADconfigure)GetProcAddress(PADdll, "PADconfigure");
-		PAD1test = (_PADtest)GetProcAddress(PADdll, "PADtest");
-		PAD1about = (_PADabout)GetProcAddress(PADdll, "PADabout");
+		//PAD1init = (_PADinit)GetProcAddress(PADdll, "PADinit");
+		//PAD1open = (_PADopen)GetProcAddress(PADdll, "PADopen");
+		//PAD1close = (_PADclose)GetProcAddress(PADdll, "PADclose");
+		//PAD1shutdown = (_PADshutdown)GetProcAddress(PADdll, "PADshutdown");
+		//PAD1keyEvent = (_PADkeyEvent)GetProcAddress(PADdll, "PADkeyEvent");
+		//PAD1readStatus = (_PADreadStatus)GetProcAddress(PADdll, "PADreadStatus");
+		//PAD1query = (_PADquery)GetProcAddress(PADdll, "PADquery");
+		//PAD1configure = (_PADconfigure)GetProcAddress(PADdll, "PADconfigure");
+		//PAD1test = (_PADtest)GetProcAddress(PADdll, "PADtest");
+		//PAD1about = (_PADabout)GetProcAddress(PADdll, "PADabout");
 
 		Common::Pad::PAD1init = (Common::_PADinit)GetProcAddress(PADdll, "PADinit");
 		Common::Pad::PAD1open = (Common::_PADopen)GetProcAddress(PADdll, "PADopen");

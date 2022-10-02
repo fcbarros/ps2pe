@@ -55,6 +55,16 @@ namespace Common
 	class Memory
 	{
 	public:
+		static const EMU_U08 EMMT_CODE = 0;
+		static const EMU_U08 EMMT_DATA = 1;
+		static const EMU_U08 EMMT_STACK = 2;
+		static const EMU_U08 EMMT_RESERVED = 3;
+
+		// Permisions for memory area - Not used
+		static const EMU_U08 EMMP_READ = 0x1;
+		static const EMU_U08 EMMP_WRITE = 0x2;
+		static const EMU_U08 EMMP_EXEC = 0x4;
+
 		void Init(EMU_U32 gMemorySize, EMU_U32 gPageSize);
 		void Shutdown();
 		void Clear();

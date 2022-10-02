@@ -1,6 +1,7 @@
 #include "Intc.h"
 
 #include "EmuMain.h"
+#include "Memory.h"
 
 namespace Common
 {
@@ -46,7 +47,7 @@ namespace Common
 		}
 		if (Address == 0x1000F180)
 		{
-			EmuConsole("%c", EmuMemGetByte(Address));
+			EmuConsole("%c", Memory::GetInstance().GetByte(Address));
 		}
 	}
 

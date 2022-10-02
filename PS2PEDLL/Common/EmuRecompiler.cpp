@@ -1,8 +1,7 @@
 #include "EmuMain.h"
-#include "EmuIntc.h"
-#include "EmuGS.h"
 #include "EmuRecompiler.h"
 #include "EmuRecX86.h"
+#include "ps2Core.h"
 
 extern stEmuRecMemory RecMemory;
 
@@ -63,7 +62,7 @@ void EmuRec_RecompileExecute(EMU_U32 EntryPoint, EMU_U32 EndAddress, BOOL Loop)
 	*Link = CallAddress - (EMU_U32)Link - 4;
 
 	// Set the stop flag to false
-	EmuStopRun = !Loop;
+	Common::Ps2Core::GetInstance().StopRun(!Loop);
 
 	// Execute the code
 	RecFunction();
@@ -80,7 +79,7 @@ void EmuRec_RecompileInstruction(EMU_U32 Address, BOOL InBrachDelay)
 
 	// 1 - Get the Instruction
 	// Current Instruction Code
-	EMU_U32 Code = EmuMemGetWord(PS2Regs.R5900Regs.PC);
+	EMU_U32 Code = EmuGetWord(PS2Regs.R5900Regs.PC);
 	// 1.1 - Updates the PC to the next instruction
 	PS2Regs.R5900Regs.PC += 4;
 	// 1.2 - If the instruction is not NOP procede
@@ -113,8 +112,9 @@ void EmuRec_RecompileInstruction(EMU_U32 Address, BOOL InBrachDelay)
 		TEST32ItoR(EBP, 0x1FF);
 		EMU_U08* LinkNE1 = JNE8(0);
 		MOV32ItoM((EMU_U32)&PS2Regs.R5900Regs.PC, PS2Regs.R5900Regs.PC);
-		CALLFunc((EMU_U32)Emu_GS_ProcessMessages, (EMU_U32)EmuRec_CurrentAddress());
-		CMP32ItoM((EMU_U32)&EmuStopRun, TRUE);
+		// TODO Uncomment lines below
+		//CALLFunc((EMU_U32)Emu_GS_ProcessMessages, (EMU_U32)EmuRec_CurrentAddress());
+		//CMP32ItoM((EMU_U32)&EmuStopRun, TRUE);
 		EMU_U08* LinkNE2 = JNE8(0);
 		RET();
 		*LinkNE1 = EmuRec_CurrentAddress() - LinkNE1 - 1;

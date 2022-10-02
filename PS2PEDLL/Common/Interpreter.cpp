@@ -1,4 +1,5 @@
 #include "Interpreter.h"
+#include "Ps2Core.h"
 
 #include <stdio.h>
 
@@ -12,44 +13,90 @@ namespace Interpreter
 	{
 	}
 
-	void Interpreter::EmuConsole2(const char* Format, ...)
+	void Interpreter::ClearBreakPoints()
 	{
-		//if (EmuConsoleCallback)
-		{
-			char Text[4096];
-			va_list vaParams;
+		BreakPoints.clear();
+	}
 
-			va_start(vaParams, Format);
-			vsprintf(Text, Format, vaParams);
-			va_end(vaParams);
-			printf(Text);
-			//EmuConsoleCallback(Text);
+	void Interpreter::AddBreakPoint(EMU_U32 Address)
+	{
+		BreakPoints[Address] = true;
+	}
+
+	void Interpreter::RemoveBreakPoint(EMU_U32 Address)
+	{
+		BreakPoints.erase(Address);
+	}
+
+	bool Interpreter::IsBreakPoint(EMU_U32 Address)
+	{
+		return BreakPoints.contains(Address);
+	}
+
+	void Interpreter::ClearInstructionBreakpoints()
+	{
+		InstrBreakPoints.clear();
+	}
+
+	void Interpreter::AddInstructionBreakpoint(EMU_U32 InstIndex)
+	{
+		InstrBreakPoints[InstIndex] = true;
+	}
+
+	void Interpreter::RemoveInstructionBreakpoint(EMU_U32 InstIndex)
+	{
+		InstrBreakPoints.erase(InstIndex);
+	}
+
+	bool Interpreter::IsInstructionBreakpoint(EMU_U32 InstIndex)
+	{
+		return InstrBreakPoints.contains(InstIndex);
+	}
+
+	void Interpreter::StepOver(EMU_U32 tAddress)
+	{
+		EmuStopRun = false;
+		EmuInBranchDelay = false;
+		EmuExecuteFast(tAddress, false);
+		if (PS2Regs.R5900Regs.PC != (tAddress + 4))
+		{
+			AddBreakPoint(tAddress + 8);
+			EmuExecuteFast(PS2Regs.R5900Regs.PC, true);
+			RemoveBreakPoint(tAddress + 8);
 		}
 	}
 
-	bool Interpreter::EmuIsBreakPoint2(EMU_U32 Address)
+	void Interpreter::StepInto(EMU_U32 Address)
 	{
-		for (EMU_U32 i = 0; i < BreakPoints.size(); i++)
-		{
-			if (BreakPoints[i] == Address)
-			{
-				return true;
-			}
-		}
-
-		return false;
+		EmuStopRun = false;
+		EmuInBranchDelay = false;
+		EmuRunDebug(Address, false);
 	}
 
-	EMU_U32 Interpreter::EmuInstructionIndex3(EMU_U32 tInst)
+	void Interpreter::ClearStats()
 	{
-		for (EMU_U32 i = 0; i < TotalInstructions; i++)
+		EMU_U32 totalInstructions = Common::Ps2Core::GetInstance().GetTotalInstructions();
+		EmuRunningStats.clear();
+		EmuRunningStats.resize(totalInstructions + 1);
+		for (EMU_U32 i = 0; i <= totalInstructions; i++)
 		{
-			if ((tInst & EmuInstructions[i].Mask) == EmuInstructions[i].Code)
+			EmuRunningStats[i].Index = i;
+			EmuRunningStats[i].Total = 0;
+		}
+	}
+
+	void Interpreter::GetRunningStats(stEmuInstructionCount** stats)
+	{
+		std::copy(EmuRunningStats.begin(), EmuRunningStats.end(), *stats);
+
+		for (EMU_U32 i = 0; i < EmuRunningStats.size(); i++)
+		{
+			if (EmuRunningStats[i].Total)
 			{
-				return i;
+				Common::Ps2Core::GetInstance().Console("%-20s - %u\n",
+					EmuInstructions[EmuRunningStats[i].Index].Name,
+					EmuRunningStats[i].Total);
 			}
 		}
-
-		return TotalInstructions;
 	}
 }

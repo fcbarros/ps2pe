@@ -18,6 +18,8 @@
 
 #include "EmuPs2Core.h"
 
+extern BOOL EmuStopCompile;
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 // Defines
@@ -129,7 +131,7 @@
             PS2Regs.R5900Regs.PC += 4;                                                      \
         }
 
-#define SetFloatFlags( var )                        \
+#define SetFloatFlags2( var )                        \
         EMU_FLOAT_LOAD_CONDITION_REGISTER( var );   \
         if ( EMU_FLOAT_CHECK_OVERFLOW( var ) )      \
         {                                           \

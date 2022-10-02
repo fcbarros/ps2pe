@@ -46,21 +46,21 @@ namespace Interpreter
 			case 0x00000000: // "bc1f",
 				if (PS2Regs.COP1Regs.FCR31_C == 0)
 				{
-					EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
+					ExecuteBranch(PS2Regs.R5900Regs.PC);
 				}
 				break;
 
 			case 0x00010000: // "bc1t",
 				if (PS2Regs.COP1Regs.FCR31_C == 1)
 				{
-					EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
+					ExecuteBranch(PS2Regs.R5900Regs.PC);
 				}
 				break;
 
 			case 0x00020000: // "bc1fl"
 				if (PS2Regs.COP1Regs.FCR31_C == 0)
 				{
-					EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
+					ExecuteBranch(PS2Regs.R5900Regs.PC);
 				}
 				else
 				{
@@ -71,7 +71,7 @@ namespace Interpreter
 			case 0x00030000: // "bc1tl"
 				if (PS2Regs.COP1Regs.FCR31_C == 1)
 				{
-					EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
+					ExecuteBranch(PS2Regs.R5900Regs.PC);
 				}
 				else
 				{

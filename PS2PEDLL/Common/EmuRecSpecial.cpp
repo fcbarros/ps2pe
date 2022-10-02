@@ -1,5 +1,4 @@
 #include "EmuMain.h"
-#include "EmuBios.h"
 #include "EmuRecompiler.h"
 #include "EmuRecX86.h"
 
@@ -151,7 +150,7 @@ void EmuRec_movn(EMU_U32 Code)
 
 void EmuRec_syscall(EMU_U32 Code)
 {
-	CALLFunc((EMU_U32)Emu_Bios_Syscall, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuBiosSyscall, (EMU_U32)EmuRec_CurrentAddress());
 }
 
 void EmuRec_break(EMU_U32 Code)

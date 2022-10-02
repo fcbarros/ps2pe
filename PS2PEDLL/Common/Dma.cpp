@@ -383,7 +383,7 @@ namespace Common
 
 	void Dma::CallHandler(EMU_U32 HandlerIndex)
 	{
-		if (EmuInterruptIndex > 0)
+		if (Intc::GetInstance().GetInterruptIndex() > 0)
 		{
 			ExitHandler();
 			//        return;
@@ -395,13 +395,13 @@ namespace Common
 			case 2:
 				if (Intc::GetInstance().GetControlReg()->STAT_GS & ~Intc::GetInstance().GetControlReg()->MASK)
 				{
-					memcpy(&PS2Regs.R5900RegsBackup[EmuInterruptIndex], &PS2Regs.R5900Regs, sizeof(PS2Regs.R5900Regs));
+					memcpy(&PS2Regs.R5900RegsBackup[Intc::GetInstance().GetInterruptIndex()], &PS2Regs.R5900Regs, sizeof(PS2Regs.R5900Regs));
 					//                memcpy( &COP0RegsBackup, &COP0Regs, sizeof( COP0Regs ) );
 					//                memcpy( &COP1RegsBackup, &COP1Regs, sizeof( COP1Regs ) );
 
 					PS2Regs.R5900Regs.Reg[31].u64_00_63 = (EMU_I32)0xFFFFFFFE;
 					PS2Regs.R5900Regs.PC = Emu_Dma_Handler[HandlerIndex].func;
-					EmuInterruptIndex++;
+					Intc::GetInstance().IncInterruptIndex();
 				}
 			}
 		}
@@ -409,10 +409,10 @@ namespace Common
 
 	void Dma::ExitHandler()
 	{
-		if (EmuInterruptIndex > 0)
+		if (Intc::GetInstance().GetInterruptIndex() > 0)
 		{
-			EmuInterruptIndex--;
-			memcpy(&PS2Regs.R5900Regs, &PS2Regs.R5900RegsBackup[EmuInterruptIndex], sizeof(PS2Regs.R5900Regs));
+			Intc::GetInstance().DecInterruptIndex();
+			memcpy(&PS2Regs.R5900Regs, &PS2Regs.R5900RegsBackup[Intc::GetInstance().GetInterruptIndex()], sizeof(PS2Regs.R5900Regs));
 			//        memcpy( &COP0Regs, &COP0RegsBackup, sizeof( COP0Regs ) );
 			//        memcpy( &COP1Regs, &COP1RegsBackup, sizeof( COP1Regs ) );
 		}

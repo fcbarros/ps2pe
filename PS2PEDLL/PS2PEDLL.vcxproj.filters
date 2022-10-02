@@ -24,37 +24,10 @@
     <ClInclude Include="Common\Elf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\EmuBios.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common\EmuDisassembly.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\EmuDma.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuFifo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuGif.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuGS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuIntc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuIpu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common\EmuMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuPAD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\EmuPS2Core.h">
@@ -66,31 +39,10 @@
     <ClInclude Include="Common\EmuRecX86.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\EmuSema.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuSif.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuThread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuTimer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuVif.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuVU.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StdAfx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\EmuExecute.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\Interpreter.h">
@@ -146,46 +98,16 @@
     <ClCompile Include="Common\Elf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\EmuBios.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Common\EmuDepend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\EmuDisassembly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\EmuDma.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuExecute.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuFifo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuGif.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuGS.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Common\EmuInstructions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\EmuIntc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuIpu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Common\EmuMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuMemory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuPAD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\EmuRecCOP0.cpp">
@@ -215,49 +137,10 @@
     <ClCompile Include="Common\EmuRecX86.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\EmuSema.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuSif.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuThread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuVif.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuVU.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PS2PEDLL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StdAfx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuCop0.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuCop1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuCop2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuCore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuMmi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuRegimm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\EmuSpecial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\Interpreter.cpp">
@@ -330,6 +213,12 @@
       <Filter>Interpreter</Filter>
     </ClCompile>
     <ClCompile Include="Common\Bios.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Ps2Core.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Ps2Core.h">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>

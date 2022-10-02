@@ -96,6 +96,11 @@ namespace Common
 
 		stEmu_Intc_Control_Regs* GetControlReg();
 
+		inline void ClearInterruptIndex() { EmuInterruptIndex = 0; }
+		inline EMU_U08 GetInterruptIndex() { return EmuInterruptIndex; }
+		inline void IncInterruptIndex() { EmuInterruptIndex++; }
+		inline void DecInterruptIndex() { EmuInterruptIndex--; }
+
 		static Intc& GetInstance();
 
 		Intc(const Intc&) = delete;
@@ -107,6 +112,8 @@ namespace Common
 		Intc();
 
 		EMU_U08 EmuIntcMemory[EMU_INTC_END_ADDR - EMU_INTC_START_ADDR];
+
+		EMU_U08 EmuInterruptIndex = 0;
 
 		// Pointer to control1 registers
 		stEmu_Intc_Control_Regs* Emu_Intc_Control_Reg;

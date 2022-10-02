@@ -87,5 +87,4 @@ namespace Common
             Pad::GetInstance().PAD1readStatus(padStat, pad);
         }
     }
-
 }

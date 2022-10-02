@@ -3,7 +3,6 @@
 #endif
 
 #include "EmuMain.h"
-#include "EmuGS.h"
 #include "EmuRecompiler.h"
 #include "EmuRecX86.h"
 

@@ -26,7 +26,7 @@ namespace Interpreter
 			case 0x00000000: // "bc0f"
 				// Branch if there is no DMA running, always for now
 			{
-				EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
 			}
 			break;
 
@@ -36,7 +36,7 @@ namespace Interpreter
 			case 0x00020000: // "bc0fl"
 				// Branch if there is no DMA running, always for now
 			{
-				EXECUTE_BRANCH(PS2Regs.R5900Regs.PC);
+				ExecuteBranch(PS2Regs.R5900Regs.PC);
 			}
 			break;
 

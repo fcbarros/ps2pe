@@ -83,6 +83,13 @@ namespace Common
 	class Gs
 	{
 	public:
+		// PS2 GS clock 147.456 Mhz
+		static const EMU_U32 GS_CORE_CLOCK = 147456000;	// hz
+		// Core clock / 16
+		static const EMU_U32 GS_CORE_CLOCK_16 = 9216000;	// hz
+		// Core clock / 256
+		static const EMU_U32 GS_CORE_CLOCK_256 = 576000;	// hz
+
 		// Base Address por privileged Registers
 		static const EMU_U32 EMU_GS_PRIV_START_ADDR = 0x12000000;
 		static const EMU_U32 EMU_GS_PRIV_END_ADDR = 0x13FFFFFF;

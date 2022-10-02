@@ -27,7 +27,7 @@ namespace Interpreter
 
 		case 0x08000000: // "j"
 			JumpTo = JUMP_ADDRESS;
-			EXECUTE_BRANCH_DELAY_SLOT(PS2Regs.R5900Regs.PC);
+			ExecuteBranchDelaySlot(PS2Regs.R5900Regs.PC);
 			PS2Regs.R5900Regs.PC = JumpTo;
 			break;
 
@@ -36,7 +36,7 @@ namespace Interpreter
 			// crosses the 32bit bondary
 			PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;
 			JumpTo = JUMP_ADDRESS;
-			EXECUTE_BRANCH_DELAY_SLOT(PS2Regs.R5900Regs.PC);
+			ExecuteBranchDelaySlot(PS2Regs.R5900Regs.PC);
 			PS2Regs.R5900Regs.PC = JumpTo;
 			break;
 
@@ -267,10 +267,10 @@ namespace Interpreter
 
 		case 0xD8000000: // "lqc2"
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
-			VU0Regs.CPR[R_RT].X.u = Memory::GetInstance().GetWord(Address);
-			VU0Regs.CPR[R_RT].Y.u = Memory::GetInstance().GetWord(Address + 4);
-			VU0Regs.CPR[R_RT].Z.u = Memory::GetInstance().GetWord(Address + 8);
-			VU0Regs.CPR[R_RT].W.u = Memory::GetInstance().GetWord(Address + 12);
+			PS2Regs.VU0Regs.CPR[R_RT].X.u = Memory::GetInstance().GetWord(Address);
+			PS2Regs.VU0Regs.CPR[R_RT].Y.u = Memory::GetInstance().GetWord(Address + 4);
+			PS2Regs.VU0Regs.CPR[R_RT].Z.u = Memory::GetInstance().GetWord(Address + 8);
+			PS2Regs.VU0Regs.CPR[R_RT].W.u = Memory::GetInstance().GetWord(Address + 12);
 			break;
 
 		case 0xDC000000: // "ld"
@@ -284,10 +284,10 @@ namespace Interpreter
 
 		case 0xF8000000: // "sqc2"
 			Address = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31 + (EMU_I16)R_IMMEDIATE;
-			Memory::GetInstance().SetWord(Address, VU0Regs.CPR[R_RT].X.u);
-			Memory::GetInstance().SetWord(Address + 4, VU0Regs.CPR[R_RT].Y.u);
-			Memory::GetInstance().SetWord(Address + 8, VU0Regs.CPR[R_RT].Z.u);
-			Memory::GetInstance().SetWord(Address + 12, VU0Regs.CPR[R_RT].W.u);
+			Memory::GetInstance().SetWord(Address, PS2Regs.VU0Regs.CPR[R_RT].X.u);
+			Memory::GetInstance().SetWord(Address + 4, PS2Regs.VU0Regs.CPR[R_RT].Y.u);
+			Memory::GetInstance().SetWord(Address + 8, PS2Regs.VU0Regs.CPR[R_RT].Z.u);
+			Memory::GetInstance().SetWord(Address + 12, PS2Regs.VU0Regs.CPR[R_RT].W.u);
 			break;
 
 		case 0xFC000000: // "sd"

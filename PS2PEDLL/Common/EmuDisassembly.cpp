@@ -1,89 +1,19 @@
 #include <string.h>
 
 #include "EmuDisassembly.h"
+#include "Memory.h"
+#include "Ps2Core.h"
 
-DLLEXPORT BOOL CALLBACK EmuFindLabel(char* Label, EMU_U32* LabelIndex)
+DLLEXPORT BOOL CALLBACK EmuFindLabel(const char* Label, EMU_U32* LabelIndex)
 {
-	if (ElfFile->Symbol_num > 0)
-	{
-		for (EMU_U32 i = 0; i < ElfFile->Symbol_num; i++)
-		{
-			if (!strncmp(&ElfFile->SymbolSTable[ElfFile->Symbol[i].st_name],
-				Label, strlen(Label)))
-			{
-				*LabelIndex = ElfFile->Symbol[i].st_value;
-				return TRUE;
-			}
-		}
-	}
-	else if (ElfFile->Header.e_shnum > 0)
-	{
-		for (int i = 0; i < ElfFile->Header.e_shnum; i++)
-		{
-			if (!strncmp(&ElfFile->SessionSTable[ElfFile->Session[i].sh_name], Label, strlen(Label)))
-			{
-				*LabelIndex = ElfFile->Session[i].sh_addr;
-				return TRUE;
-			}
-		}
-	}
-
-	return FALSE;
+	return Common::Ps2Core::GetInstance().FindLabel(Label, LabelIndex);
 }
 
 DLLEXPORT void CALLBACK EmuGetDisassemblySymbol(EMU_U32 Address, char* Buffer, EMU_U32 BufferSize)
 {
-	strncpy(Buffer, EmuDisassemblySymbol(Address), BufferSize);
+	strncpy(Buffer, Common::Ps2Core::GetInstance().DisassemblySymbol(Address), BufferSize);
 }
 
-const char* EmuDisassemblySymbol(EMU_U32 Address)
-{
-	static char Symbol_str[256];
-	memset(Symbol_str, 0, sizeof(Symbol_str));
-	if ((ElfFile->Symbol_num == 0) &&
-		(ElfFile->Header.e_shnum == 0) &&
-		(Address == ElfFile->Header.e_entry))
-	{
-		strcpy_s(Symbol_str, "ENTRY_POINT");
-	}
-	else if (ElfFile->Symbol_num > 0)
-	{
-		for (EMU_U32 i = 0; i < ElfFile->Symbol_num; i++)
-		{
-			if (ElfFile->Symbol[i].st_value == Address)
-			{
-				if (ElfFile->Symbol[i].st_name > 0)
-				{
-					strcpy_s(Symbol_str,
-						&ElfFile->SymbolSTable[ElfFile->Symbol[i].st_name]);
-					strcat_s(Symbol_str, ":");
-				}
-				else
-				{
-					strcpy_s(Symbol_str,
-						&ElfFile->SessionSTable[ElfFile->Session[ElfFile->Symbol[i].st_shndx].sh_name]);
-				}
-			}
-		}
-	}
-	else
-	{
-		for (int i = 0; i < ElfFile->Header.e_shnum; i++)
-		{
-			if (ElfFile->Session[i].sh_addr == Address)
-			{
-				if (ElfFile->Session[i].sh_name > 0)
-				{
-					strcpy_s(Symbol_str,
-						&ElfFile->SessionSTable[ElfFile->Session[i].sh_name]);
-				}
-				break;
-			}
-		}
-	}
-
-	return Symbol_str;
-}
 //0x4b04043c
 // 010010 1 1000 00100 00000 10000 111100
 // COP2     W    
@@ -93,7 +23,7 @@ DLLEXPORT void CALLBACK EmuDisassembly(EMU_U32 Address, char* Buffer, EMU_U32 Bu
 {
 	static char stDisassembly[256];
 
-	EMU_U32 tInstruction = EmuMemGetWord(Address);
+	EMU_U32 tInstruction = Common::Memory::GetInstance().GetWord(Address);
 	EMU_U32 Index = EmuInstructionIndex(tInstruction);
 
 	strcpy(stDisassembly, EmuInstructions[Index].Name);
@@ -196,7 +126,7 @@ const char* EmuDis_I26(EMU_U32 Address, EMU_U32 Code)
 
 	sprintf(Local_dis_str, " $%x", I26);
 
-	const char* Label = EmuDisassemblySymbol(I26);
+	const char* Label = Common::Ps2Core::GetInstance().DisassemblySymbol(I26);
 	if (strlen(Label) > 0)
 	{
 		strcat_s(Local_dis_str, "     ( ");
@@ -276,7 +206,7 @@ const char* EmuDis_RS_RT_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 		EmuDis_GetRegName(RS), EmuDis_GetRegName(RT),
 		OFF32);
 
-	const char* Label = EmuDisassemblySymbol(OFF32);
+	const char* Label = Common::Ps2Core::GetInstance().DisassemblySymbol(OFF32);
 	if (strlen(Label) > 0)
 	{
 		strcat_s(Local_dis_str, "     ( ");
@@ -299,7 +229,7 @@ const char* EmuDis_RS_0_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 		EmuDis_GetRegName(RS),
 		OFF32);
 
-	const char* Label = EmuDisassemblySymbol(OFF32);
+	const char* Label = Common::Ps2Core::GetInstance().DisassemblySymbol(OFF32);
 	if (strlen(Label) > 0)
 	{
 		strcat_s(Local_dis_str, "     ( ");
@@ -538,7 +468,7 @@ const char* EmuDis_BRANCH16(EMU_U32 Address, EMU_U32 Code)
 	sprintf(Local_dis_str, " $%x",
 		OFF32);
 
-	const char* Label = EmuDisassemblySymbol(OFF32);
+	const char* Label = Common::Ps2Core::GetInstance().DisassemblySymbol(OFF32);
 	if (strlen(Label) > 0)
 	{
 		strcat(Local_dis_str, "     ( ");

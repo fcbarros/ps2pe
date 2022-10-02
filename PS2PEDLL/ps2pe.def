@@ -14,7 +14,7 @@ EXPORTS
 	EmuAddBreakPoint				@8
 	EmuRemoveBreakPoint				@9
 	EmuIsBreakPoint					@10
-	EmuLog							@11
+	;EmuLog							@11
 	EmuConsole						@12
 	EmuSetConsoleCallback			@13
 	EmuGetClock						@14

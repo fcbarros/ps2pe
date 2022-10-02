@@ -7,14 +7,45 @@
 
 #include <cfenv>
 #include <vector>
+#include <map>
 
 namespace Interpreter
 {
-    struct stEmuInstructionCount
-    {
-        EMU_U32 Index;
-        EMU_U32 Total;
-    };
+    //#define EMUFUNCTION     EmuRunDebug
+#define EMUFUNCTION     EmuExecuteFast
+
+#define R_RD            ( ( OpCode >> 11 ) & 0x1F )
+#define R_RT            ( ( OpCode >> 16 ) & 0x1F )
+#define R_RS            ( ( OpCode >> 21 ) & 0x1F )
+#define R_SA            ( ( OpCode >> 06 ) & 0x1F )
+
+#define R_FD            ( ( OpCode >> 06 ) & 0x1F )
+#define R_FS            ( ( OpCode >> 11 ) & 0x1F )
+#define R_FT            ( ( OpCode >> 16 ) & 0x1F )
+
+#define R_BRANCH        (   OpCode & 0xFFFF )
+#define R_IMMEDIATE     (   OpCode & 0xFFFF )
+
+#define VU_DEST_X       ( ( OpCode >> 24 ) & 0x01 )
+#define VU_DEST_Y       ( ( OpCode >> 23 ) & 0x01 )
+#define VU_DEST_Z       ( ( OpCode >> 22 ) & 0x01 )
+#define VU_DEST_W       ( ( OpCode >> 21 ) & 0x01 )
+#define VU_FT           ( ( OpCode >> 16 ) & 0x1F )
+#define VU_FS           ( ( OpCode >> 11 ) & 0x1F )
+#define VU_FD           ( ( OpCode >> 06 ) & 0x1F )
+#define VU_BC           (   OpCode & 0x03 )
+#define VU_FTF          ( ( OpCode >> 23 ) & 0x03 )
+#define VU_FSF          ( ( OpCode >> 21 ) & 0x03 )
+#define VU_IT           ( ( OpCode >> 16 ) & 0x1F )
+#define VU_IS           ( ( OpCode >> 11 ) & 0x1F )
+#define VU_IMM5         ( ( OpCode >> 06 ) & 0x1F )
+#define VU_IMM15        ( ( OpCode >> 06 ) & 0x7FFF )
+#define VU_RT           ( ( OpCode >> 16 ) & 0x1F )
+#define VU_ID           ( ( OpCode >> 11 ) & 0x1F )
+#define VU_BASE         ( ( OpCode >> 21 ) & 0x1F )
+#define VU_OFFSET       (   OpCode & 0xFFFF )
+
+#define JUMP_ADDRESS    ( ( OpCode & 0x03FFFFFF ) << 2 ) | ( PS2Regs.R5900Regs.PC & 0xF0000000 )
 
 	class Interpreter
 	{
@@ -23,7 +54,24 @@ namespace Interpreter
 		~Interpreter();
 
 		void EmuExecuteFast(EMU_U32 tAddress, bool InLoop);
-		void EmuRunDebug(EMU_U32 tAddress, bool InLoop);		
+        void EmuRunDebug(EMU_U32 tAddress, bool InLoop);
+
+        void ClearBreakPoints();
+        void AddBreakPoint(EMU_U32 Address);
+        void RemoveBreakPoint(EMU_U32 Address);
+        bool IsBreakPoint(EMU_U32 Address);
+
+        void ClearInstructionBreakpoints();
+        void AddInstructionBreakpoint(EMU_U32 InstIndex);
+        void RemoveInstructionBreakpoint(EMU_U32 InstIndex);
+        bool IsInstructionBreakpoint(EMU_U32 InstIndex);
+
+        inline void StopRun(bool stopRun) { EmuStopRun = stopRun; }
+        void StepOver(EMU_U32 tAddress);
+        void StepInto(EMU_U32 Address);
+
+        void ClearStats();
+        void GetRunningStats(stEmuInstructionCount** stats);
 
 	private:
 		static inline EMU_U32 clamp(EMU_U32 X)
@@ -63,6 +111,22 @@ namespace Interpreter
             }
         }
 
+        inline void ExecuteBranch(EMU_U32 addr)
+        {
+            JumpTo = PS2Regs.R5900Regs.PC + (((EMU_I16)R_BRANCH) << 2);
+            EmuInBranchDelay = true;
+            EMUFUNCTION(addr, false);
+            EmuInBranchDelay = false;
+            PS2Regs.R5900Regs.PC = JumpTo;
+        }
+
+        inline void ExecuteBranchDelaySlot(EMU_U32 addr)
+        {
+            EmuInBranchDelay = true;
+            EMUFUNCTION( addr, false );
+            EmuInBranchDelay = false;
+        }
+
 		void EmuRunLoop(EMU_U32 tAddress, bool InLoop);
 
 		void EmuCore();
@@ -73,21 +137,12 @@ namespace Interpreter
 		void EmuRegimm();
 		void EmuSpecial();
 
-        // TODO: Remove
-        EMU_PS2_Regs PS2Regs;
-        Common::EMU_VU_Regs VU0Regs;
-        Common::EMU_VU_Regs VU1Regs;
+        std::map<EMU_U32, bool> InstrBreakPoints;
+        std::map<EMU_U32, bool> BreakPoints;
+        std::vector<stEmuInstructionCount> EmuRunningStats;
         bool EmuRunning = false;
         bool EmuStopRun = false;
         bool EmuInBranchDelay = false;
-        std::vector<stEmuInstructionCount> EmuRunningStats;
-        std::vector<EMU_U32>   InstrBreakPoints;
-        std::vector<EMU_U32>   BreakPoints;
-
-        void EmuConsole2(const char* Format, ...);
-        bool EmuIsBreakPoint2(EMU_U32 Address);
-        EMU_U32 EmuInstructionIndex3(EMU_U32 tInst);
-        //
 
 		static const EMU_U16 MaxU16 = 0xFFFF;
 		static const EMU_U32 MaxU32 = 0xFFFFFFFF;
@@ -110,71 +165,20 @@ namespace Interpreter
 		bool enableDebug = false;
 		EMU_U64 CpuCycles = 0;
 	};
-
-//#define EMUFUNCTION     EmuRunDebug
-#define EMUFUNCTION     EmuExecuteFast
-
-#define R_RD            ( ( OpCode >> 11 ) & 0x1F )
-#define R_RT            ( ( OpCode >> 16 ) & 0x1F )
-#define R_RS            ( ( OpCode >> 21 ) & 0x1F )
-#define R_SA            ( ( OpCode >> 06 ) & 0x1F )
-
-#define R_FD            ( ( OpCode >> 06 ) & 0x1F )
-#define R_FS            ( ( OpCode >> 11 ) & 0x1F )
-#define R_FT            ( ( OpCode >> 16 ) & 0x1F )
-
-#define R_BRANCH        (   OpCode & 0xFFFF )
-#define R_IMMEDIATE     (   OpCode & 0xFFFF )
-
-#define VU_DEST_X       ( ( OpCode >> 24 ) & 0x01 )
-#define VU_DEST_Y       ( ( OpCode >> 23 ) & 0x01 )
-#define VU_DEST_Z       ( ( OpCode >> 22 ) & 0x01 )
-#define VU_DEST_W       ( ( OpCode >> 21 ) & 0x01 )
-#define VU_FT           ( ( OpCode >> 16 ) & 0x1F )
-#define VU_FS           ( ( OpCode >> 11 ) & 0x1F )
-#define VU_FD           ( ( OpCode >> 06 ) & 0x1F )
-#define VU_BC           (   OpCode & 0x03 )
-#define VU_FTF          ( ( OpCode >> 23 ) & 0x03 )
-#define VU_FSF          ( ( OpCode >> 21 ) & 0x03 )
-#define VU_IT           ( ( OpCode >> 16 ) & 0x1F )
-#define VU_IS           ( ( OpCode >> 11 ) & 0x1F )
-#define VU_IMM5         ( ( OpCode >> 06 ) & 0x1F )
-#define VU_IMM15        ( ( OpCode >> 06 ) & 0x7FFF )
-#define VU_RT           ( ( OpCode >> 16 ) & 0x1F )
-#define VU_ID           ( ( OpCode >> 11 ) & 0x1F )
-#define VU_BASE         ( ( OpCode >> 21 ) & 0x1F )
-#define VU_OFFSET       (   OpCode & 0xFFFF )
-
-#define JUMP_ADDRESS    ( ( OpCode & 0x03FFFFFF ) << 2 ) | ( PS2Regs.R5900Regs.PC & 0xF0000000 )
-
-//#define EMU_FLOAT_LOAD_CONDITION_REGISTER( a )      __asm FSTSW a
-//#define EMU_FLOAT_CHECK_OVERFLOW( a )               (( a ) & 0x0008)
-//#define EMU_FLOAT_CHECK_UNDERFLOW( a )              (( a ) & 0x0010)
-
 #define EMU_INTEGER_LOAD_CONDITION_REGISTER( a )    __asm LAHF; __asm mov a, eax;
 #define EMU_INTEGER_CHECK_OVERFLOW( a )             (( a ) & 0x0800)
 #define EMU_INTEGER_CHECK_CARRY( a )                (( a ) & 0x0001)
 
-#define EXECUTE_BRANCH_DELAY_SLOT( addr )                                           \
-        EmuInBranchDelay = true;                                                    \
-        EMUFUNCTION( addr, false );                                                 \
-        EmuInBranchDelay = false;
-
-#define EXECUTE_BRANCH( addr )                                                      \
-        JumpTo = PS2Regs.R5900Regs.PC + (((EMU_I16)R_BRANCH) << 2);                         \
-        EXECUTE_BRANCH_DELAY_SLOT( addr );                                          \
-        PS2Regs.R5900Regs.PC = JumpTo;
-
 #define BRANCH_CONDITION_RS_RT( cond )                                              \
         if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond PS2Regs.R5900Regs.Reg[ R_RT ].i64_00_63 ) \
         {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
+            ExecuteBranch( PS2Regs.R5900Regs.PC );                                         \
         }
 
 #define BRANCH_CONDITION_RS_RT_LIKELY( cond )                                       \
         if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond PS2Regs.R5900Regs.Reg[ R_RT ].i64_00_63 ) \
         {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
+            ExecuteBranch( PS2Regs.R5900Regs.PC );                                         \
         }                                                                           \
         else                                                                        \
         {                                                                           \
@@ -184,13 +188,13 @@ namespace Interpreter
 #define BRANCH_CONDITION_RS_ZERO( cond )                                            \
         if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
+            ExecuteBranch( PS2Regs.R5900Regs.PC );                                         \
         }
 
 #define BRANCH_CONDITION_RS_ZERO_LIKELY( cond )                                     \
         if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
+            ExecuteBranch( PS2Regs.R5900Regs.PC );                                         \
         }                                                                           \
         else                                                                        \
         {                                                                           \
@@ -201,14 +205,14 @@ namespace Interpreter
         if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
             PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;                              \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
+            ExecuteBranch( PS2Regs.R5900Regs.PC );                                         \
         }
 
 #define BRANCH_CONDITION_RS_ZERO_LINK_LIKELY( cond )                                \
         if ( PS2Regs.R5900Regs.Reg[ R_RS ].i64_00_63 cond 0 )                               \
         {                                                                           \
             PS2Regs.R5900Regs.RA.u64_00_63 = PS2Regs.R5900Regs.PC + 4;                              \
-            EXECUTE_BRANCH( PS2Regs.R5900Regs.PC );                                         \
+            ExecuteBranch( PS2Regs.R5900Regs.PC );                                         \
         }                                                                           \
         else                                                                        \
         {                                                                           \

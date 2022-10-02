@@ -2,8 +2,6 @@
 #include "EmuRecompiler.h"
 #include "EmuRecX86.h"
 
-extern BOOL EmuStopCompile;
-
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 void EmuRec_j(EMU_U32 Code)
@@ -655,7 +653,7 @@ void EmuRec_sq(EMU_U32 Code)
 		PUSH32I(0);
 	}
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemSetDWord, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuSetDWord, (EMU_U32)EmuRec_CurrentAddress());
 	POP32R(EAX);
 
 	ADD32ItoR(EAX, 8);
@@ -665,7 +663,7 @@ void EmuRec_sq(EMU_U32 Code)
 		PUSH32M((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_64_95);
 	}
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemSetDWord, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuSetDWord, (EMU_U32)EmuRec_CurrentAddress());
 
 	if (R_RT)
 	{
@@ -692,7 +690,7 @@ void EmuRec_lb(EMU_U32 Code)
 		}
 
 		PUSH32R(EAX);
-		CALLFunc((EMU_U32)EmuMemGetByte, (EMU_U32)EmuRec_CurrentAddress());
+		CALLFunc((EMU_U32)EmuGetByte, (EMU_U32)EmuRec_CurrentAddress());
 
 		AND32ItoR(EAX, 0xFF);
 		SHL32ItoR(EAX, 24);
@@ -721,7 +719,7 @@ void EmuRec_lh(EMU_U32 Code)
 		}
 
 		PUSH32R(EAX);
-		CALLFunc((EMU_U32)EmuMemGetShort, (EMU_U32)EmuRec_CurrentAddress());
+		CALLFunc((EMU_U32)EmuGetShort, (EMU_U32)EmuRec_CurrentAddress());
 
 		AND32ItoR(EAX, 0xFFFF);
 		CWDE();
@@ -764,7 +762,7 @@ void EmuRec_lw(EMU_U32 Code)
 		}
 
 		PUSH32R(EAX);
-		CALLFunc((EMU_U32)EmuMemGetWord, (EMU_U32)EmuRec_CurrentAddress());
+		CALLFunc((EMU_U32)EmuGetWord, (EMU_U32)EmuRec_CurrentAddress());
 
 		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31, EAX);
 
@@ -790,7 +788,7 @@ void EmuRec_lbu(EMU_U32 Code)
 		}
 
 		PUSH32R(EAX);
-		CALLFunc((EMU_U32)EmuMemGetByte, (EMU_U32)EmuRec_CurrentAddress());
+		CALLFunc((EMU_U32)EmuGetByte, (EMU_U32)EmuRec_CurrentAddress());
 
 		AND32ItoR(EAX, 0xFF);
 		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31, EAX);
@@ -816,7 +814,7 @@ void EmuRec_lhu(EMU_U32 Code)
 		}
 
 		PUSH32R(EAX);
-		CALLFunc((EMU_U32)EmuMemGetShort, (EMU_U32)EmuRec_CurrentAddress());
+		CALLFunc((EMU_U32)EmuGetShort, (EMU_U32)EmuRec_CurrentAddress());
 
 		AND32ItoR(EAX, 0xFFFF);
 		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31, EAX);
@@ -880,7 +878,7 @@ void EmuRec_sb(EMU_U32 Code)
 		PUSH32I(0);
 	}
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemSetByte, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuSetByte, (EMU_U32)EmuRec_CurrentAddress());
 
 	ADD32ItoR(ESP, 8);
 }
@@ -906,7 +904,7 @@ void EmuRec_sh(EMU_U32 Code)
 		PUSH32I(0);
 	}
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemSetShort, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuSetShort, (EMU_U32)EmuRec_CurrentAddress());
 
 	ADD32ItoR(ESP, 8);
 }
@@ -947,7 +945,7 @@ void EmuRec_sw(EMU_U32 Code)
 		PUSH32I(0);
 	}
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemSetWord, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuSetWord, (EMU_U32)EmuRec_CurrentAddress());
 
 	ADD32ItoR(ESP, 8);
 }
@@ -1014,7 +1012,7 @@ void EmuRec_lwc1(EMU_U32 Code)
 	}
 
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemGetWord, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuGetWord, (EMU_U32)EmuRec_CurrentAddress());
 
 	MOV32RtoM((EMU_U32)&PS2Regs.COP1Regs.Reg[R_RT].u, EAX);
 	ADD32ItoR(ESP, 4);
@@ -1055,7 +1053,7 @@ void EmuRec_ld(EMU_U32 Code)
 		}
 
 		PUSH32R(EAX);
-		CALLFunc((EMU_U32)EmuMemGetDWord, (EMU_U32)EmuRec_CurrentAddress());
+		CALLFunc((EMU_U32)EmuGetDWord, (EMU_U32)EmuRec_CurrentAddress());
 
 		MOV32RtoM((EMU_U32)&PS2Regs.R5900Regs.Reg[R_RT].u32_00_31, EAX);
 
@@ -1079,7 +1077,7 @@ void EmuRec_swc1(EMU_U32 Code)
 
 	PUSH32M((EMU_U32)&PS2Regs.COP1Regs.Reg[R_FT].u);
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemSetWord, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuSetWord, (EMU_U32)EmuRec_CurrentAddress());
 
 	ADD32ItoR(ESP, 8);
 }
@@ -1121,7 +1119,7 @@ void EmuRec_sd(EMU_U32 Code)
 		PUSH32I(0);
 	}
 	PUSH32R(EAX);
-	CALLFunc((EMU_U32)EmuMemSetDWord, (EMU_U32)EmuRec_CurrentAddress());
+	CALLFunc((EMU_U32)EmuSetDWord, (EMU_U32)EmuRec_CurrentAddress());
 
 	ADD32ItoR(ESP, 12);
 }

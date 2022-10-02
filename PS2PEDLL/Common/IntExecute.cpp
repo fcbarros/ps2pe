@@ -1,5 +1,6 @@
 #include "Interpreter.h"
 
+#include "Ps2Core.h"
 #include "Intc.h"
 #include "Dma.h"
 #include "Gs.h"
@@ -31,7 +32,7 @@ namespace Interpreter
 		{
 			if ((PS2Regs.R5900Regs.R0.u64_00_63 != 0) || (PS2Regs.R5900Regs.R0.u64_64_127 != 0))
 			{
-				EmuConsole2("Register R0 is not zero.");
+				Common::Ps2Core::GetInstance().Console("Register R0 is not zero.");
 			}
 			// If the PC is FFFFFFFF then we are exiting from an interrupt handler
 			if (PS2Regs.R5900Regs.PC == 0xFFFFFFFF)
@@ -51,7 +52,7 @@ namespace Interpreter
 			{
 				if (enableStat)
 				{
-					EmuRunningStats[EmuInstructionIndex3(OpCode)].Total++;
+					EmuRunningStats[Common::Ps2Core::GetInstance().InstructionIndex(OpCode)].Total++;
 				}
 
 				EmuCore();
@@ -71,7 +72,7 @@ namespace Interpreter
 				break;
 			}
 
-			if (enableDebug && (InstrBreakPoints[EmuInstructionIndex3(Memory::GetInstance().GetWord(PS2Regs.R5900Regs.PC))]) || (EmuIsBreakPoint2(PS2Regs.R5900Regs.PC)))
+			if (enableDebug && (IsInstructionBreakpoint(Common::Ps2Core::GetInstance().InstructionIndex(Memory::GetInstance().GetWord(PS2Regs.R5900Regs.PC))) || IsBreakPoint(PS2Regs.R5900Regs.PC)))
 			{
 				break;
 			}

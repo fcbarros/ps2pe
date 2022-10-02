@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -92,6 +92,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>.\ps2pe.def</ModuleDefinitionFile>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);Onecore.lib;Onecoreuap.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,6 +112,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,6 +122,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>.\ps2pe.def</ModuleDefinitionFile>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);Onecore.lib;Onecoreuap.lib</AdditionalDependencies>
+      <AddModuleNamesToAssembly>
+      </AddModuleNamesToAssembly>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -158,27 +164,11 @@
     <ClInclude Include="Common\Bios.h" />
     <ClInclude Include="Common\Dma.h" />
     <ClInclude Include="Common\Elf.h" />
-    <ClInclude Include="Common\EmuBios.h" />
     <ClInclude Include="Common\EmuDisassembly.h" />
-    <ClInclude Include="Common\EmuDma.h" />
-    <ClInclude Include="Common\EmuExecute.h" />
-    <ClInclude Include="Common\EmuFifo.h" />
-    <ClInclude Include="Common\EmuGif.h" />
-    <ClInclude Include="Common\EmuGS.h" />
-    <ClInclude Include="Common\EmuIntc.h" />
-    <ClInclude Include="Common\EmuIpu.h" />
     <ClInclude Include="Common\EmuMain.h" />
-    <ClInclude Include="Common\EmuMemory.h" />
-    <ClInclude Include="Common\EmuPAD.h" />
     <ClInclude Include="Common\EmuPS2Core.h" />
     <ClInclude Include="Common\EmuRecompiler.h" />
     <ClInclude Include="Common\EmuRecX86.h" />
-    <ClInclude Include="Common\EmuSema.h" />
-    <ClInclude Include="Common\EmuSif.h" />
-    <ClInclude Include="Common\EmuThread.h" />
-    <ClInclude Include="Common\EmuTimer.h" />
-    <ClInclude Include="Common\EmuVif.h" />
-    <ClInclude Include="Common\EmuVU.h" />
     <ClInclude Include="Common\Fifo.h" />
     <ClInclude Include="Common\Gif.h" />
     <ClInclude Include="Common\GS.h" />
@@ -200,25 +190,10 @@
     <ClCompile Include="Common\Bios.cpp" />
     <ClCompile Include="Common\Dma.cpp" />
     <ClCompile Include="Common\Elf.cpp" />
-    <ClCompile Include="Common\EmuBios.cpp" />
-    <ClCompile Include="Common\EmuCop0.cpp" />
-    <ClCompile Include="Common\EmuCop1.cpp" />
-    <ClCompile Include="Common\EmuCop2.cpp" />
-    <ClCompile Include="Common\EmuCore.cpp" />
     <ClCompile Include="Common\EmuDepend.cpp" />
     <ClCompile Include="Common\EmuDisassembly.cpp" />
-    <ClCompile Include="Common\EmuDma.cpp" />
-    <ClCompile Include="Common\EmuExecute.cpp" />
-    <ClCompile Include="Common\EmuFifo.cpp" />
-    <ClCompile Include="Common\EmuGif.cpp" />
-    <ClCompile Include="Common\EmuGS.cpp" />
     <ClCompile Include="Common\EmuInstructions.cpp" />
-    <ClCompile Include="Common\EmuIntc.cpp" />
-    <ClCompile Include="Common\EmuIpu.cpp" />
     <ClCompile Include="Common\EmuMain.cpp" />
-    <ClCompile Include="Common\EmuMemory.cpp" />
-    <ClCompile Include="Common\EmuMmi.cpp" />
-    <ClCompile Include="Common\EmuPAD.cpp" />
     <ClCompile Include="Common\EmuRecCOP0.cpp" />
     <ClCompile Include="Common\EmuRecCOP1.cpp" />
     <ClCompile Include="Common\EmuRecCore.cpp" />
@@ -228,14 +203,6 @@
     <ClCompile Include="Common\EmuRecRegimm.cpp" />
     <ClCompile Include="Common\EmuRecSpecial.cpp" />
     <ClCompile Include="Common\EmuRecX86.cpp" />
-    <ClCompile Include="Common\EmuRegimm.cpp" />
-    <ClCompile Include="Common\EmuSema.cpp" />
-    <ClCompile Include="Common\EmuSif.cpp" />
-    <ClCompile Include="Common\EmuSpecial.cpp" />
-    <ClCompile Include="Common\EmuThread.cpp" />
-    <ClCompile Include="Common\EmuTimer.cpp" />
-    <ClCompile Include="Common\EmuVif.cpp" />
-    <ClCompile Include="Common\EmuVU.cpp" />
     <ClCompile Include="Common\Fifo.cpp" />
     <ClCompile Include="Common\Gif.cpp" />
     <ClCompile Include="Common\GS.cpp" />
@@ -252,6 +219,8 @@
     <ClCompile Include="Common\Ipu.cpp" />
     <ClCompile Include="Common\Memory.cpp" />
     <ClCompile Include="Common\PAD.cpp" />
+    <ClCompile Include="Common\Ps2Core.cpp" />
+    <ClCompile Include="Common\Ps2Core.h" />
     <ClCompile Include="Common\Sema.cpp" />
     <ClCompile Include="Common\Sif.cpp" />
     <ClCompile Include="Common\Thread.cpp" />

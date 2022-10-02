@@ -8,6 +8,7 @@
 #include "Sema.h"
 
 #include "EmuMain.h"
+#include "Ps2Core.h"
 
 namespace Common
 {
@@ -201,7 +202,7 @@ namespace Common
 
 	void Emu_Bios_Exit()
 	{ // 0x64
-		EmuStopRun = true;
+		Common::Ps2Core::GetInstance().StopRun(true);
 	}
 
 	//

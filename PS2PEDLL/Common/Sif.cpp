@@ -524,13 +524,13 @@ namespace Common
 	//
 	void Emu_Sif_BiosIsceSetDChain()
 	{ // 0x78
-		EmuMemSetWord(0xb000c000, 0);
-		EmuMemSetWord(0xb000c020, 0);
+		Common::Memory::GetInstance().SetWord(0xb000c000, 0);
+		Common::Memory::GetInstance().SetWord(0xb000c020, 0);
 
 		PS2Regs.R5900Regs.SP.u64_00_63 -= 0x10;
 
-		EmuMemSetWord(0xb000c000, 0x184);
-		EmuMemSetWord(PS2Regs.R5900Regs.SP.u32_00_31, EmuMemGetWord(0xb000c000));
+		Common::Memory::GetInstance().SetWord(0xb000c000, 0x184);
+		Common::Memory::GetInstance().SetWord(PS2Regs.R5900Regs.SP.u32_00_31, Common::Memory::GetInstance().GetWord(0xb000c000));
 
 		PS2Regs.R5900Regs.SP.u64_00_63 += 0x10;
 	}

@@ -27,14 +27,14 @@
 
 typedef const char* (*EMUDISASSEMBLYFUNCTION)(EMU_U32, EMU_U32);
 
-typedef struct
+struct stDisassembly
 {
 	char                    Name[16];
 	EMU_U32                 Code;
 	EMU_U32                 Mask;
 	bool                    Implemented;
 	EMUDISASSEMBLYFUNCTION  Disassembly;
-} stDisassembly;
+};
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -58,8 +58,6 @@ DLLEXPORT void CALLBACK EmuGetDisassemblySymbol(EMU_U32 Address, char* Buffer, E
 // Return an disassembly text for Address
 DLLEXPORT void CALLBACK EmuDisassembly(EMU_U32 Address, char* Buffer, EMU_U32 BufferSize);
 
-// Returns a Label if Address has a symbol associated
-const char* EmuDisassemblySymbol(EMU_U32 Address);
 // Returns a Name for a COP0 reg index
 const char* EmuDis_GetCOP0RegName(EMU_U32 Reg);
 // Returns a Name for a COP1 reg index

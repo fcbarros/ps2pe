@@ -44,7 +44,7 @@ namespace Interpreter
 			// It does not zero extend the address if it
 			// crosses the 32bit bondary
 			JumpTo = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31;
-			EXECUTE_BRANCH_DELAY_SLOT(PS2Regs.R5900Regs.PC);
+			ExecuteBranchDelaySlot(PS2Regs.R5900Regs.PC);
 			PS2Regs.R5900Regs.PC = JumpTo;
 			break;
 
@@ -56,7 +56,7 @@ namespace Interpreter
 				PS2Regs.R5900Regs.Reg[R_RD].u64_00_63 = PS2Regs.R5900Regs.PC + 4;
 			}
 			JumpTo = PS2Regs.R5900Regs.Reg[R_RS].u32_00_31;
-			EXECUTE_BRANCH_DELAY_SLOT(PS2Regs.R5900Regs.PC);
+			ExecuteBranchDelaySlot(PS2Regs.R5900Regs.PC);
 			PS2Regs.R5900Regs.PC = JumpTo;
 			break;
 
